@@ -43,7 +43,23 @@ useHead(() => ({
     },
     {
       name: 'og:image',
-      content: 'https://cdn.hemocione.com.br/events/prod/uploads/private/1708731998610-takeit-small.png'
+      content: 'https://cdn.hemocione.com.br/events/prod/uploads/private/1708731949449-takeit.png'
+    },
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image'
+    },
+    {
+      name: 'twitter:title',
+      content: 'Onde doar Sangue | Hemocione'
+    },
+    {
+      name: 'twitter:description',
+      content: 'Encontre o hemocentro mais próximo de você e doe sangue. Salve vidas!'
+    },
+    {
+      name: 'twitter:image',
+      content: 'https://cdn.hemocione.com.br/events/prod/uploads/private/1708731949449-takeit.png'
     }
   ]
 }))
