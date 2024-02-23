@@ -8,6 +8,9 @@ export default defineNuxtConfig({
       Roboto: true,
     },
   },
+  nitro: {
+    preset: 'vercel-edge'
+  },
   routeRules: {
     // prerender index route by default
     '/': { prerender: true },
