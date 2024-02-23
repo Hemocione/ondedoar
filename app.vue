@@ -23,7 +23,29 @@
 
 <script setup lang="ts">
 useHead(() => ({
-  title: 'Onde doar Sangue | Hemocione' ,
+  title: 'Onde doar Sangue | Hemocione',
+  meta: [
+    {
+      name: 'description',
+      content: 'Encontre o hemocentro mais próximo de você e doe sangue. Salve vidas!'
+    },
+    {
+      name: 'keywords',
+      content: 'doação de sangue, hemocentro, hemocione, onde doar sangue'
+    },
+    {
+      name: 'og:title',
+      content: 'Onde doar Sangue | Hemocione'
+    },
+    {
+      name: 'og:description',
+      content: 'Encontre o hemocentro mais próximo de você e doe sangue. Salve vidas!'
+    },
+    {
+      name: 'og:image',
+      content: 'https://cdn.hemocione.com.br/events/prod/uploads/private/1708731520140-divulgacao-onddoar.png'
+    }
+  ]
 }))
 </script>
 
