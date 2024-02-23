@@ -43,7 +43,7 @@ useHead(() => ({
     },
     {
       name: 'og:image',
-      content: 'https://cdn.hemocione.com.br/events/prod/uploads/private/1708731520140-divulgacao-onddoar.png'
+      content: 'https://cdn.hemocione.com.br/events/prod/uploads/private/1708731998610-takeit-small.png'
     }
   ]
 }))
