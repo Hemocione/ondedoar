@@ -33,6 +33,7 @@ useHead(() => ({
   top: -16px;
   right: 0;
   font-size: 0.7rem;
+  padding-right: 0.5rem;
   text-align: right;
 }
 .disclaimer a {
