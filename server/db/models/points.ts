@@ -57,3 +57,8 @@ const PointsSchema = new Schema({
 	}
 
 })
+
+
+export type PointsSchema = InferSchemaType<typeof PointsSchema>;
+
+export const Points = model<PointsSchema>("Point", PointsSchema);
