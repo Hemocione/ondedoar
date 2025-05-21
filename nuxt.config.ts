@@ -15,4 +15,11 @@ export default defineNuxtConfig({
     // prerender index route by default
     '/': { prerender: true },
   },
+  runtimeConfig: {
+    db: {
+      mongo: {
+        uri: process.env.MONGODB_URI ?? "mongodb://localhost:27017"
+      }
+    }
+  }
 });
