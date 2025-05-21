@@ -3,10 +3,6 @@ import { Schema, Types, model } from "mongoose";
 
 const PointsSchema = new Schema({
 
-	id: {
-		type: String,
-		required: true,
-	},
 
 	name: {
 		type: String,
