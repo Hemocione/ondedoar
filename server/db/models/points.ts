@@ -57,4 +57,7 @@ const PointsSchema = new Schema({
 
 export type PointsSchema = InferSchemaType<typeof PointsSchema>;
 
+// Add a 2dsphere index to the loc field for geospatial queries
+PointsSchema.index({ loc: '2dsphere' })
+
 export const Points = model<PointsSchema>("Point", PointsSchema);
