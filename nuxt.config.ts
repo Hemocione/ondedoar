@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
-    preset: 'vercel-edge',
+    preset: 'vercel',
     plugins: ["~/server/plugins/mongoose.ts"],
   },
   routeRules: {
