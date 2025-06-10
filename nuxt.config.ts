@@ -9,10 +9,19 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
-    preset: 'vercel-edge'
+    preset: 'vercel',
+    plugins: ["~/server/plugins/mongoose.ts"],
   },
   routeRules: {
     // prerender index route by default
     '/': { prerender: true },
   },
+  runtimeConfig: {
+    db: {
+      mongo: {
+        uri: process.env.MONGODB_URI ?? "mongodb://localhost:27017",
+        dbName: process.env.MONGODB_NAME ?? "local",
+      }
+    }
+  }
 });

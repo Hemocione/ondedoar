@@ -6,7 +6,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "mongo:populate": "npx tsx ./server/db/populate.ts"
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.0.3",
@@ -15,5 +16,8 @@
     "nuxt-vercel-analytics": "^1.0.0",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
+  },
+  "dependencies": {
+    "mongoose": "^8.14.3"
   }
 }
