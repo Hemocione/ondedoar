@@ -18,6 +18,7 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
+    "@hokify/agenda": "^6.3.0",
     "mongoose": "^8.14.3"
   }
 }
