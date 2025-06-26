@@ -14,6 +14,8 @@ class TaskManager {
   private agenda: Agenda;
 
   private constructor() {
+    // TODO: each job could be dynamically loaded from a directory here
+    // and defined in the setupAgenda method
     this.agenda = new Agenda({
       db: {
         address: config.db.mongo.uri,
