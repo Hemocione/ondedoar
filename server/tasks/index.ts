@@ -4,6 +4,11 @@ const config = useRuntimeConfig();
 
 type CallbackArgs = (...args: any[]) => void;
 
+interface Job {
+  name: string;
+  callback: CallbackArgs;
+}
+
 class TaskManager {
   private static _instance: TaskManager;
   private agenda: Agenda;
@@ -17,7 +22,7 @@ class TaskManager {
     });
 
     this.agenda.on("start", (job) => {
-       console.log("Job %s starting", job.attrs.name);
+      console.log("Job %s starting", job.attrs.name);
     })
 
     this.agenda.on("complete", (job) => {
@@ -32,15 +37,17 @@ class TaskManager {
     return this._instance;
   }
 
-  addJob(job: { name: string, callback: CallbackArgs }) {
-    const taskManager = TaskManager.getInstance();
-    taskManager.agenda.define(job.name, job.callback);
+  setJobFrequency(frequency: string, job: Job) {
+    this.agenda.every(frequency, job.name);
   }
 
-  public static setupAgenda() {
-    console.log("Setting up Agenda...");
-    const taskManager = TaskManager.getInstance();
+  addJob(job: Job) {
+    this.agenda.define(job.name, job.callback);
+  }
 
-    taskManager.agenda.start();
+  setupAgenda() {
+    console.log("Setting up Agenda...");
+
+    this.agenda.start();
   }
 }
