@@ -15,6 +15,14 @@ class TaskManager {
         collection: "agendaJobs",
       }
     });
+
+    this.agenda.on("start", (job) => {
+       console.log("Job %s starting", job.attrs.name);
+    })
+
+    this.agenda.on("complete", (job) => {
+      console.log("Job %s finished", job.attrs.name);
+    })
   }
 
   public static getInstance(): TaskManager {
@@ -24,8 +32,15 @@ class TaskManager {
     return this._instance;
   }
 
-  public static addJob(fn: { name: string, callback: CallbackArgs }) {
+  addJob(job: { name: string, callback: CallbackArgs }) {
     const taskManager = TaskManager.getInstance();
-    taskManager.agenda.define(fn.name, fn.callback);
+    taskManager.agenda.define(job.name, job.callback);
+  }
+
+  public static setupAgenda() {
+    console.log("Setting up Agenda...");
+    const taskManager = TaskManager.getInstance();
+
+    taskManager.agenda.start();
   }
 }
