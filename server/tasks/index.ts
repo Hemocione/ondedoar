@@ -51,3 +51,5 @@ class TaskManager {
     this.agenda.start();
   }
 }
+
+export const taskManager = TaskManager.getInstance();
