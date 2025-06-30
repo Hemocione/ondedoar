@@ -21,6 +21,9 @@ export default defineNuxtConfig({
       mongo: {
         uri: process.env.MONGODB_URI ?? "mongodb://localhost:27017/local"
       }
+    },
+    inngest: {
+      id: process.env.INNGEST_ID ?? "<your-default-inngest-id>"
     }
   }
 });
