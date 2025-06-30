@@ -1,4 +1,4 @@
-import { Inngest } from "inngest";
+import { Inngest, InngestFunction } from "inngest";
 
 const config = useRuntimeConfig();
 
@@ -13,6 +13,7 @@ interface Job {
 class TaskManager {
   private static _instance: TaskManager;
   private inngest: Inngest;
+  public jobs: any = [];
 
   private constructor() {
     // TODO: each job could be dynamically loaded from a directory here
@@ -28,14 +29,12 @@ class TaskManager {
   }
 
   addJob(job: Job) {
-    this.inngest.createFunction({ id: job.name }, { cron: job.cron }, job.callback);
+    this.jobs.push(this.inngest.createFunction({ id: job.name }, { cron: job.cron }, job.callback));
   }
 
-  // setupAgenda() {
-  //   console.log("Setting up Agenda...");
-
-  //   this.agenda.start();
-  // }
+  getInngest() {
+    return this.inngest;
+  }
 }
 
 export const taskManager = TaskManager.getInstance();
