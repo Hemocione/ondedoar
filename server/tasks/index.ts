@@ -2,7 +2,7 @@ import { Inngest, InngestFunction } from "inngest";
 
 const config = useRuntimeConfig();
 
-type CallbackArgs = (...args: any[]) => void;
+type CallbackArgs = (...args: any[]) => Promise<any> | any;
 
 interface Job {
   name: string;
@@ -13,7 +13,7 @@ interface Job {
 class TaskManager {
   private static _instance: TaskManager;
   private inngest: Inngest;
-  public jobs: any = [];
+  public jobs: InngestFunction.Any[] = [];
 
   private constructor() {
     // TODO: each job could be dynamically loaded from a directory here
@@ -29,7 +29,8 @@ class TaskManager {
   }
 
   addJob(job: Job) {
-    this.jobs.push(this.inngest.createFunction({ id: job.name }, { cron: job.cron }, job.callback));
+    const inngestFunction = this.inngest.createFunction({ id: job.name }, { cron: job.cron }, job.callback)
+    this.jobs.push(inngestFunction);
   }
 
   getInngest() {
