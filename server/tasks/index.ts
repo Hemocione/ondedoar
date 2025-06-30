@@ -1,4 +1,5 @@
 import { Inngest, InngestFunction } from "inngest";
+import { testJob } from "./jobs/test";
 
 const config = useRuntimeConfig();
 
@@ -19,6 +20,12 @@ class TaskManager {
     // TODO: each job could be dynamically loaded from a directory here
     // and defined in the setupAgenda method
     this.inngest = new Inngest({ id: config.inngest.id });
+
+    this.addJob({
+      name: "test",
+      callback: testJob,
+      cron: "*/5 * * * *", // Every 5 minutes
+    });
   }
 
   public static getInstance(): TaskManager {
