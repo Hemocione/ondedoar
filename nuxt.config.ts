@@ -23,7 +23,7 @@ export default defineNuxtConfig({
       }
     },
     inngest: {
-      id: process.env.INNGEST_ID ?? "<your-default-inngest-id>"
+      id: process.env.INNGEST_ID ?? "onde-doar-local"
     }
   }
 });
