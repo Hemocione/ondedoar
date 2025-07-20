@@ -15,9 +15,11 @@
     "nuxt": "^3.8.2",
     "nuxt-vercel-analytics": "^1.0.0",
     "vue": "^3.3.8",
+    "inngest-cli": "^1.8.2",
     "vue-router": "^4.2.5"
   },
   "dependencies": {
+    "inngest": "^3.39.2",
     "mongoose": "^8.14.3"
   }
 }
