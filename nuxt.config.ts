@@ -24,6 +24,10 @@ export default defineNuxtConfig({
     },
     inngest: {
       id: process.env.INNGEST_ID ?? "onde-doar-local"
+    },
+    google: {
+      apiKey: process.env.GOOGLE_API_KEY,
+      geocoding_url: "https://maps.googleapis.com/maps/api/geocode/json?"
     }
   }
 });
