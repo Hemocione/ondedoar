@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import { Points } from "./models/points";
+import { Point } from "./models/points";
 
 
 async function populate() {
-	await mongoose.connect("mongodb://localhost:27017/local");
+	await mongoose.connect("mongodb://localhost:27017");
 
-	const pointOne = await Points.create(
+	const pointOne = await Point.create(
 		{
 			name: "Posto de Coleta Central",
 			address: "Av. Brasil, 1234 - Centro, Rio de Janeiro - RJ",
