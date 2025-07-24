@@ -11,12 +11,12 @@ interface HemocioneIdPoint {
 
 async function getHemocioneIdsPoints(after?: string): Promise<HemocioneIdPoint[] | undefined> {
   try {
-    const hemocioneIdPoints: HemocioneIdPoint[] = await $fetch(`${config.hemocioneId.apiUrl}/points/onde-doar/sync`, {
+    const hemocioneIdPoints = await $fetch(`${config.hemocioneId.apiUrl}/points/onde-doar/sync`, {
       method: 'GET',
       headers: {
         'x-secret': config.hemocioneId.backOfficeSecret
       }
-    })
+    }) as HemocioneIdPoint[];
     return hemocioneIdPoints
   } catch (error) {
     console.error(`Error fetching Hemocione ID points using after ${after}:`, error)
