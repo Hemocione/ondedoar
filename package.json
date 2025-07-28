@@ -4,7 +4,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
-    "inngest:dev": "inngest dev",
+    "inngest:dev": "inngest dev -u http://localhost:3000/api/inngest",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
