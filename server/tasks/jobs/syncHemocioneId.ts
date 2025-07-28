@@ -1,8 +1,21 @@
-import { handleHemocioneIdsPoints } from "~/server/services/hemocioneid";
+import { handleHemocioneIdsPoints, HemocioneIdPointResponse } from "~/server/services/hemocioneid";
 import { Point } from "~/server/db/models/points";
 
 interface Step {
   run(name: string, callback: () => Promise<any>): Promise<any>;
+}
+
+interface UploadedPoints {
+  matchedCount: number,
+  modifiedCount: number,
+  upsertedCount: number,
+  insertedIds: string[]
+}
+
+interface InactivatedPoints {
+  matchedCount: number,
+  modifiedCount: number,
+  modifiedIds: string[]
 }
 
 export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: Step }) => {
@@ -10,7 +23,7 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
 
   const after = event.data?.after || undefined;
 
-  const hemocioneIdPoints = await step.run("get-handled-hemocione-id-points", async () => {
+  const hemocioneIdPoints: HemocioneIdPointResponse[] = await step.run("get-handled-hemocione-id-points", async () => {
     console.log("Getting and Handling Hemocione ID points...");
     return await handleHemocioneIdsPoints(after);
   })
@@ -21,7 +34,7 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
 
   console.log("✅ Hemocione ID points handled successfully");
 
-  const uploadedPoints = await step.run("upload-hemocione-id-points", async () => {
+  const uploadedPoints: UploadedPoints = await step.run("upload-hemocione-id-points", async () => {
     console.log("Uploading Hemocione ID points...");
     // TODO: Think of a better key to filter and create a relation between points in hemocioneId and onde-doar
     const operations = hemocioneIdPoints.map((hemocioneIdPoint) => {
@@ -66,9 +79,28 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
   })
 
   // TODO: Finish inactivating points that are not in the hemocioneIdPoints response
-  const inactivatedPoints = await step.run("inactivate-hemocione-id-points", async () => {
+  const inactivatedPoints: InactivatedPoints = await step.run("inactivate-hemocione-id-points", async () => {
     console.log("Inactivating Hemocione ID points...");
+
+    const result = await Point.updateMany(
+      { active: true, name: { $nin: hemocioneIdPoints.map(p => p.name) } },
+      { $set: { active: false } }
+    );
+
+    const modifiedIds = await Point.find(
+      { active: false, name: { $nin: hemocioneIdPoints.map(p => p.name) } },
+      { _id: 1 }
+    ).then(points => points.map(point => point._id.toString()));
+
+    return {
+      matchedCount: result.matchedCount,
+      modifiedCount: result.modifiedCount,
+      modifiedIds: modifiedIds
+    }
   })
+
+  console.log("✅ Hemocione ID points uploaded and inactivated successfully")
+  const message = `✅ Job '${event.name}' concluído com sucesso!`
 
   // await step.run("finalizar-job", async () => {
   //   // Aqui você poderia, por exemplo, salvar algo no banco de dados.
