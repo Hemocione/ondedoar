@@ -1,5 +1,6 @@
 const config = useRuntimeConfig()
 
+// TODO: move interfaces to separate file
 interface HemocioneIdPoint {
   id: string;
   name: string;
@@ -7,6 +8,20 @@ interface HemocioneIdPoint {
   latitude: number;
   longitude: number;
   displayName: string | null; // Pode ser string ou null
+}
+
+// TODO: Improve typing for HemocioneIdPointResponse at key type
+export interface HemocioneIdPointResponse {
+  name: string,
+  address: string,
+  phone: string,
+  link: string,
+  active: boolean,
+  type: string,
+  loc: {
+    type: 'Point',
+    coordinates: number[]
+  }
 }
 
 async function getHemocioneIdsPoints(after?: string): Promise<HemocioneIdPoint[] | undefined> {
@@ -24,7 +39,7 @@ async function getHemocioneIdsPoints(after?: string): Promise<HemocioneIdPoint[]
   }
 }
 
-export async function handleHemocioneIdsPoints(after?: string) {
+export async function handleHemocioneIdsPoints(after?: string): Promise<HemocioneIdPointResponse[]> {
   const hemocioneIdPoints = await getHemocioneIdsPoints(after)
 
   if (!hemocioneIdPoints) {
