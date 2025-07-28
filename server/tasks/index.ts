@@ -30,11 +30,11 @@ class TaskManager {
       }
     )
 
-    this.addJob({
-      name: "test",
-      callback: testJob,
-      cron: "*/5 * * * *", // Every 5 minutes
-    });
+    // this.addJob({
+    //   name: "test",
+    //   callback: testJob,
+    //   cron: "*/5 * * * *", // Every 5 minutes
+    // });
   }
 
   public static getInstance(): TaskManager {
