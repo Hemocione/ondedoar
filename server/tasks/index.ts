@@ -1,5 +1,6 @@
 import { Inngest, InngestFunction } from "inngest";
 import { testJob } from "./jobs/test";
+import { syncHemocioneIdJob } from "./jobs/syncHemocioneId";
 
 const config = useRuntimeConfig();
 
@@ -21,11 +22,19 @@ class TaskManager {
     // and defined in the setupAgenda method
     this.inngest = new Inngest({ id: config.inngest.id });
 
-    // this.addJob({
-    //   name: "test",
-    //   callback: testJob,
-    //   cron: "*/5 * * * *", // Every 5 minutes
-    // });
+    this.addJob(
+      {
+        name: "syncHemocioneId",
+        callback: syncHemocioneIdJob,
+        cron: "0 */2 * * *"
+      }
+    )
+
+    this.addJob({
+      name: "test",
+      callback: testJob,
+      cron: "*/5 * * * *", // Every 5 minutes
+    });
   }
 
   public static getInstance(): TaskManager {
