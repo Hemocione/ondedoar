@@ -26,7 +26,7 @@ class TaskManager {
       {
         name: "syncHemocioneId",
         callback: syncHemocioneIdJob,
-        cron: "0 */2 * * *"
+        cron: "0 */8 * * *"
       }
     )
 
