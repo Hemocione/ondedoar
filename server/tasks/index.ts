@@ -6,10 +6,27 @@ const config = useRuntimeConfig();
 
 type CallbackArgs = (...args: any[]) => Promise<any> | any;
 
+interface JobConfiguration {
+  id: string;
+  name?: string;
+}
+
+interface EventTrigger {
+  event: string
+}
+
+interface CronTrigger {
+  cron: string
+}
+
+type JobTrigger = EventTrigger | CronTrigger
+
+type JobTriggers = EventTrigger | CronTrigger | JobTrigger[]
+
 interface Job {
-  name: string;
+  configuration: JobConfiguration;
+  trigger: JobTriggers;
   callback: CallbackArgs;
-  cron: string;
 }
 
 class TaskManager {
@@ -24,9 +41,15 @@ class TaskManager {
 
     this.addJob(
       {
-        name: "syncHemocioneId",
-        callback: syncHemocioneIdJob,
-        cron: "0 */8 * * *"
+        configuration: {
+          id: "syncHemocioneId",
+          name: "syncHemocioneId",
+        },
+        trigger: {
+          cron: "0 */8 * * *",
+          event: 'syncHemocioneId',
+        },
+        handler: { syncHemocioneIdJob },
       }
     )
 
@@ -45,12 +68,19 @@ class TaskManager {
   }
 
   addJob(job: Job) {
-    const inngestFunction = this.inngest.createFunction({ id: job.name }, { cron: job.cron }, job.callback)
+    const inngestFunction = this.inngest.createFunction(job.configuration, job.trigger, job.callback)
     this.jobs.push(inngestFunction);
   }
 
   getInngest() {
     return this.inngest;
+  }
+
+  triggerJob(eventName: string, data?: any) {
+    return this.inngest.send({
+      name: eventName,
+      data: data || {}
+    });
   }
 }
 
