@@ -76,7 +76,7 @@ class TaskManager {
     return this.inngest;
   }
 
-  triggerJob(eventName: string, data?: any) {
+  async triggerJob(eventName: string, data?: any) {
     return this.inngest.send({
       name: eventName,
       data: data || {}
