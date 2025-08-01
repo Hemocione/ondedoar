@@ -49,7 +49,7 @@ class TaskManager {
           cron: "0 */8 * * *",
           event: 'syncHemocioneId',
         },
-        handler: { syncHemocioneIdJob },
+        callback: syncHemocioneIdJob,
       }
     )
 
