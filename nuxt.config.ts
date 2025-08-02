@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     db: {
       mongo: {
-        uri: process.env.MONGODB_URI ?? "mongodb://localhost:27017/local"
+        uri: process.env.MONGODB_URI ?? "mongodb://localhost:27018/local"
       }
     },
     inngest: {

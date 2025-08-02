@@ -3,7 +3,7 @@ import { Point } from "./models/points";
 
 
 async function populate() {
-	await mongoose.connect("mongodb://localhost:27017");
+	await mongoose.connect("mongodb://localhost:27018/local");
 
 	const pointOne = await Point.create(
 		{
