@@ -1,5 +1,6 @@
 import { handleHemocioneIdsPoints, HemocioneIdPointResponse } from "~/server/services/hemocioneid";
 import { Point } from "~/server/db/models/points";
+import { SyncManager } from "~/server/db/models/syncManager";
 
 interface Step {
   run(name: string, callback: () => Promise<any>): Promise<any>;
@@ -18,6 +19,8 @@ interface InactivatedPoints {
   modifiedIds: string[]
 }
 
+
+// TODO: REMOVE STEPS SINCE THEY COST MONEY. ENCAPSULATE IT WITH A TRY CATCH TO GRAB ERRORS
 export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: Step }) => {
   console.log(`✅ Job '${event.name}' iniciado com sucesso!`);
 
@@ -26,6 +29,12 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
   const after = event.data?.after || undefined;
 
   const hemocioneIdPoints: HemocioneIdPointResponse[] = await step.run("get-handled-hemocione-id-points", async () => {
+    await SyncManager.updateOne(
+      { providerName: "HemocioneId" },
+      {
+        syncStatus: 'in_progress',
+      }
+    )
     console.log("Getting and Handling Hemocione ID points...");
     return await handleHemocioneIdsPoints(after);
   })
@@ -93,6 +102,16 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
       { active: false, name: { $nin: hemocioneIdPoints.map(p => p.name) } },
       { _id: 1 }
     ).then(points => points.map(point => point._id.toString()));
+
+    await SyncManager.updateOne(
+      { providerName: "HemocioneId" },
+      {
+        lastSuccessfulSyncDate: new Date(),
+        lastSyncDate: new Date(),
+        syncStatus: 'completed',
+        syncErrors: null
+      }
+    )
 
     return {
       matchedCount: result.matchedCount,
