@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { Point } from "./models/points";
-
+import { SyncManager } from "./models/syncManager";
 
 async function populate() {
 	await mongoose.connect("mongodb://localhost:27018/local");
@@ -20,6 +20,10 @@ async function populate() {
 			}
 		}
 	);
+
+	const hemocioneIdSyncManager = await SyncManager.create({
+		providerName: "HemocioneId",
+	})
 
 	console.log("Populate done");
 	await mongoose.disconnect();
