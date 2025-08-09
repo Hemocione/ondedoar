@@ -9,6 +9,7 @@ type CallbackArgs = (...args: any[]) => Promise<any> | any;
 interface JobConfiguration {
   id: string;
   name?: string;
+  onFailure?: CallbackArgs;
 }
 
 interface EventTrigger {
