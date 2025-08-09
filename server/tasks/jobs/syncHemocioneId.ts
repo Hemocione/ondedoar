@@ -1,22 +1,10 @@
 import { handleHemocioneIdsPoints, HemocioneIdPointResponse } from "~/server/services/hemocioneid";
 import { Point } from "~/server/db/models/points";
 import { SyncManager } from "~/server/db/models/syncManager";
+import { FailureEventArgs } from "inngest";
 
 interface Step {
   run(name: string, callback: () => Promise<any>): Promise<any>;
-}
-
-interface UploadedPoints {
-  matchedCount: number,
-  modifiedCount: number,
-  upsertedCount: number,
-  insertedIds: string[]
-}
-
-interface InactivatedPoints {
-  matchedCount: number,
-  modifiedCount: number,
-  modifiedIds: string[]
 }
 
 // TODO: wrap job in try catch to handle errors
@@ -113,3 +101,16 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
   console.log("✅ Hemocione ID points uploaded and inactivated successfully")
   const message = `✅ Job '${event.name}' concluído com sucesso!`
 };
+
+export const syncHemocioneIdJobErrorHandler = async ({ error, event }: FailureEventArgs) => {
+  console.error(`❌ Job '${event.name}' falhou definitivamente!`, error);
+  await SyncManager.updateOne(
+    { providerName: "HemocioneId" },
+    {
+      syncStatus: 'failed',
+      syncErrors: error.stack,
+      lastSyncDate: new Date(),
+      lastSyncResults: []
+    }
+  );
+}
