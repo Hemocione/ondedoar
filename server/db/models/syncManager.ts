@@ -18,6 +18,11 @@ const SyncManagerSchema = new Schema({
     enum: ['pending', 'in_progress', 'completed', 'failed'],
     default: 'pending',
   },
+  lastSyncResults: {
+    type: [Object],
+    default: []
+  },
+
   syncErrors: {
     type: String
   }
