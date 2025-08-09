@@ -1,6 +1,6 @@
 import { Inngest, InngestFunction } from "inngest";
 import { testJob } from "./jobs/test";
-import { syncHemocioneIdJob } from "./jobs/syncHemocioneId";
+import { syncHemocioneIdJob, syncHemocioneIdJobErrorHandler } from "./jobs/syncHemocioneId";
 
 const config = useRuntimeConfig();
 
@@ -10,6 +10,7 @@ interface JobConfiguration {
   id: string;
   name?: string;
   onFailure?: CallbackArgs;
+  retries?: number
 }
 
 interface EventTrigger {
@@ -45,6 +46,8 @@ class TaskManager {
         configuration: {
           id: "syncHemocioneId",
           name: "syncHemocioneId",
+          onFailure: syncHemocioneIdJobErrorHandler,
+          retries: 3, // Number of retries on failure
         },
         trigger: {
           cron: "0 */8 * * *",
