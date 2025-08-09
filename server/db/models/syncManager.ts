@@ -22,7 +22,6 @@ const SyncManagerSchema = new Schema({
     type: [Object],
     default: []
   },
-
   syncErrors: {
     type: String
   }
