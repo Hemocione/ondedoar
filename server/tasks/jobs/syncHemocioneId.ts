@@ -19,6 +19,7 @@ interface InactivatedPoints {
   modifiedIds: string[]
 }
 
+// TODO: wrap job in try catch to handle errors
 export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: Step }) => {
   console.log(`✅ Job '${event.name}' iniciado com sucesso!`);
   // Since will enable to run this job manually, we can use the event data to get the 'after' parameter
