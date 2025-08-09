@@ -1,8 +1,6 @@
 import { Schema, InferSchemaType, model } from "mongoose";
 
 const PointsSchema = new Schema({
-
-
 	name: {
 		type: String,
 		required: true,
