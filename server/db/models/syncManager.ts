@@ -19,8 +19,7 @@ const SyncManagerSchema = new Schema({
     default: 'pending',
   },
   syncErrors: {
-    type: [String],
-    default: [],
+    type: String
   }
 })
 
