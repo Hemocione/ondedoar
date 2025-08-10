@@ -25,7 +25,7 @@ const SyncManagerSchema = new Schema({
   syncErrors: {
     type: String
   }
-})
+}, { timestamps: true })
 
 export type SyncManagerSchema = InferSchemaType<typeof SyncManagerSchema>;
 

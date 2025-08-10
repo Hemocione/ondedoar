@@ -49,7 +49,7 @@ const PointsSchema = new Schema({
 		}
 	}
 
-})
+}, { timestamps: true })
 
 
 export type PointsSchema = InferSchemaType<typeof PointsSchema>;
