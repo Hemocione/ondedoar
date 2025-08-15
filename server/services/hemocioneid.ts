@@ -38,7 +38,7 @@ async function getHemocioneIdsPoints(after?: string): Promise<HemocioneIdPoint[]
     return hemocioneIdPoints
   } catch (error) {
     console.error(`Error fetching Hemocione ID points using after ${after}:`, error)
-    return
+    throw new Error('Failed to fetch Hemocione ID points')
   }
 }
 
