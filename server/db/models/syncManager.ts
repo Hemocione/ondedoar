@@ -25,7 +25,18 @@ const SyncManagerSchema = new Schema({
   syncErrors: {
     type: String
   }
-}, { timestamps: true })
+}, {
+  timestamps: true,
+  statics: {
+    getLastCursor: async function (providerName: string) {
+      const syncDoc = await this.findOne({ providerName: providerName });
+      if (syncDoc) {
+        return syncDoc.lastSuccessfulSyncDate || syncDoc.lastSyncDate;
+      }
+      return null;
+    }
+  }
+})
 
 export type SyncManagerSchema = InferSchemaType<typeof SyncManagerSchema>;
 
