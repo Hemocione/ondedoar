@@ -67,25 +67,18 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
 
   console.log(printThis)
 
-  const toInactivatePoints = await Point.find(
-    { active: true, name: { $nin: hemocioneIdPoints.map(p => p.name) } },
-    { _id: 1 }
-  )
-
-  const inactivateOperations = toInactivatePoints.map((point) => {
-    return {
-      updateOne: {
-        filter: { id: point.id },
-        update: {
-          $set: {
-            active: false
-          }
+  const inactivateOperations = {
+    updateMany: {
+      filter: { name: { $nin: hemocioneIdPoints.map(p => p.name) } },
+      update: {
+        $set: {
+          active: false
         }
       }
     }
-  });
+  }
 
-  const updatePoints = await Point.bulkWrite([...upsertOperations, ...inactivateOperations])
+  const updatePoints = await Point.bulkWrite([...upsertOperations, inactivateOperations])
 
   await SyncManager.updateOne(
     { providerName: "HemocioneId" },
