@@ -63,10 +63,6 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
     return [];
   }
 
-  const printThis = hemocioneIdPoints.map(p => p.name)
-
-  console.log(printThis)
-
   const inactivateOperations = {
     updateMany: {
       filter: { name: { $nin: hemocioneIdPoints.map(p => p.name) } },
