@@ -9,7 +9,11 @@
     />
     <section class="mapa">
       <iframe
-        src="https://www.google.com/maps/d/u/0/embed?mid=1s8gU7TwBgBVbE9fO3S7yUfrKP8Yhodiy"
+        :src="
+          isIframed
+            ? 'https://www.google.com/maps/d/u/0/embed?mid=1k1EsX7A8X84c0e9cVVJ1VVbP-hFTO6c&ehbc=2E312F&ui=0'
+            : 'https://www.google.com/maps/d/u/0/embed?mid=1k1EsX7A8X84c0e9cVVJ1VVbP-hFTO6c&ehbc=2E312F'
+        "
         width="100%"
         height="100%"
         frameborder="0"
