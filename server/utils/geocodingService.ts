@@ -40,17 +40,11 @@ export interface NominatimResult {
   namedetails?: Record<string, string>;
 }
 
-
-export interface Location {
-  latitude: number;
-  longitude: number;
-}
-
 function parseAddress(address: string): string {
   return encodeURIComponent(address.trim());
 }
 
-async function getGeocodingByAddress(parsedAddress: string): Promise<Location> {
+async function getGeocodingByAddress(parsedAddress: string): Promise<number[]> {
   const nominatimUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${parsedAddress}&limit=1`;
   const response = await $fetch(nominatimUrl, {
     headers: {
@@ -66,13 +60,13 @@ async function getGeocodingByAddress(parsedAddress: string): Promise<Location> {
   const latitude = parseFloat(result.lat);
   const longitude = parseFloat(result.lon);
 
-  return {
+  return [
     latitude,
     longitude
-  };
+  ];
 }
 
-export async function handleGeocoding(address: string): Promise<Location> {
+export async function handleGeocoding(address: string): Promise<number[]> {
   const parsedAddress = parseAddress(address);
   return await getGeocodingByAddress(parsedAddress);
 }
