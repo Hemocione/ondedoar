@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     db: {
       mongo: {
-        uri: process.env.MONGODB_URI ?? "mongodb://localhost:27017/local"
+        uri: process.env.MONGODB_URI ?? "mongodb://localhost:27018/local"
       }
     },
     inngest: {
@@ -28,6 +28,10 @@ export default defineNuxtConfig({
     google: {
       apiKey: process.env.GOOGLE_API_KEY,
       geocoding_url: "https://maps.googleapis.com/maps/api/geocode/json?"
+    },
+    hemocioneId: {
+      apiUrl: process.env.HEMOCIONEID_API_URL ?? "http://localhost:8080",
+      backOfficeSecret: process.env.HEMOCIONEID_BACKOFFICE_SECRET ?? "secret"
     }
   }
 });

@@ -1,14 +1,34 @@
 import { Inngest, InngestFunction } from "inngest";
 import { testJob } from "./jobs/test";
+import { syncHemocioneIdJob, syncHemocioneIdJobErrorHandler } from "./jobs/syncHemocioneId";
 
 const config = useRuntimeConfig();
 
 type CallbackArgs = (...args: any[]) => Promise<any> | any;
 
+interface JobConfiguration {
+  id: string;
+  name?: string;
+  onFailure?: CallbackArgs;
+  retries?: number
+}
+
+interface EventTrigger {
+  event: string
+}
+
+interface CronTrigger {
+  cron: string
+}
+
+type JobTrigger = EventTrigger | CronTrigger
+
+type JobTriggers = EventTrigger | CronTrigger | JobTrigger[]
+
 interface Job {
-  name: string;
+  configuration: JobConfiguration;
+  trigger: JobTriggers;
   callback: CallbackArgs;
-  cron: string;
 }
 
 class TaskManager {
@@ -20,6 +40,22 @@ class TaskManager {
     // TODO: each job could be dynamically loaded from a directory here
     // and defined in the setupAgenda method
     this.inngest = new Inngest({ id: config.inngest.id });
+
+    this.addJob(
+      {
+        configuration: {
+          id: "syncHemocioneId",
+          name: "syncHemocioneId",
+          onFailure: syncHemocioneIdJobErrorHandler,
+          retries: 3, // Number of retries on failure
+        },
+        trigger: {
+          cron: "0 */8 * * *",
+          event: 'syncHemocioneId',
+        },
+        callback: syncHemocioneIdJob,
+      }
+    )
 
     // this.addJob({
     //   name: "test",
@@ -36,12 +72,19 @@ class TaskManager {
   }
 
   addJob(job: Job) {
-    const inngestFunction = this.inngest.createFunction({ id: job.name }, { cron: job.cron }, job.callback)
+    const inngestFunction = this.inngest.createFunction(job.configuration, job.trigger, job.callback)
     this.jobs.push(inngestFunction);
   }
 
   getInngest() {
     return this.inngest;
+  }
+
+  async triggerJob(eventName: string, data?: any) {
+    return await this.inngest.send({
+      name: eventName,
+      data: data || {}
+    });
   }
 }
 

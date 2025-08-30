@@ -1,9 +1,6 @@
-import type { InferSchemaType } from "mongoose";
-import { Schema, Types, model } from "mongoose";
+import { Schema, InferSchemaType, model } from "mongoose";
 
 const PointsSchema = new Schema({
-
-
 	name: {
 		type: String,
 		required: true,
@@ -52,7 +49,7 @@ const PointsSchema = new Schema({
 		}
 	}
 
-})
+}, { timestamps: true })
 
 
 export type PointsSchema = InferSchemaType<typeof PointsSchema>;
