@@ -57,10 +57,12 @@ export async function handleHemocioneAskForHelpPoints(after?: string): Promise<H
 
   return await Promise.all(
     hemocioneAskForHelpPoints.map(async (hemocioneAskForHelpPoint) => {
+      // TODO: STUDY THE NEED FOR A QUEUE SYSTEM TO HANDLE GEOCODING REQUESTS
       const coordinates = (hemocioneAskForHelpPoint.local_longitude && hemocioneAskForHelpPoint.local_latitude) ? [
         hemocioneAskForHelpPoint.local_longitude,
         hemocioneAskForHelpPoint.local_latitude
       ] : await handleGeocoding(hemocioneAskForHelpPoint.address)
+
       return {
         name: hemocioneAskForHelpPoint.local_name,
         address: hemocioneAskForHelpPoint.address,
