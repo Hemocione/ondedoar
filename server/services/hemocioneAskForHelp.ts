@@ -12,6 +12,7 @@ interface HemocioneAskForHelp {
   review_status: "Approved" | "Pending" | "Declined";
 }
 
+// TODO: MAKE THIS A PATTERNED INTERFACE FOR ALL RESPONSES
 export interface HemocioneAskForHelpPointResponse {
   name: string,
   address: string,
@@ -44,10 +45,10 @@ async function getHemocioneAskForHelpPoints(after?: string): Promise<HemocioneAs
 }
 
 function parseLink(id: string): string {
-  return `config.hemocioneAskforHelp/description/${id}`;
+  return `${config.hemocioneAskforHelp.apiUrl}/description/${id}`;
 }
 
-async function handleHemocioneAskForHelpPoints(after?: string): Promise<HemocioneAskForHelpPointResponse[]> {
+export async function handleHemocioneAskForHelpPoints(after?: string): Promise<HemocioneAskForHelpPointResponse[]> {
   const hemocioneAskForHelpPoints = await getHemocioneAskForHelpPoints(after)
 
   if (!hemocioneAskForHelpPoints) {
