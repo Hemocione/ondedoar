@@ -3,6 +3,7 @@ import { Point } from "~/server/db/models/points";
 import { SyncManager } from "~/server/db/models/syncManager";
 import { FailureEventArgs } from "inngest";
 
+// TODO: MOVE TO A SPECIFIC FILE FOR INTERFACES
 interface Step {
   run(name: string, callback: () => Promise<any>): Promise<any>;
 }
@@ -37,18 +38,7 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
       updateOne: {
         filter: { name: hemocioneIdPoint.name },
         update: {
-          $set: {
-            name: hemocioneIdPoint.name,
-            address: hemocioneIdPoint.address,
-            phone: hemocioneIdPoint.phone || '',
-            link: hemocioneIdPoint.link || '',
-            active: hemocioneIdPoint.active,
-            type: hemocioneIdPoint.type,
-            loc: {
-              type: 'Point',
-              coordinates: [hemocioneIdPoint.loc.coordinates[0], hemocioneIdPoint.loc.coordinates[1]]
-            }
-          },
+          $set: hemocioneIdPoint,
           $setOnInsert: {
             createdAt: new Date(),
           }
