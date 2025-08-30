@@ -1,3 +1,5 @@
+import { handleGeocoding } from "~/server/utils/geocodingService"
+
 const config = useRuntimeConfig()
 
 interface HemocioneAskForHelp {
@@ -5,23 +7,23 @@ interface HemocioneAskForHelp {
   local_name: string;
   address: string;
   active_campagin: boolean;
-  local_latitude: number;
-  local_longitude: number;
+  local_latitude?: number;
+  local_longitude?: number;
   review_status: "Approved" | "Pending" | "Declined";
 }
 
-// export interface HemocioneAskForHelpResponse {
-//   name: string,
-//   address: string,
-//   phone: string,
-//   link: string,
-//   active: boolean,
-//   type: string,
-//   loc: {
-//     type: 'Point',
-//     coordinates: number[]
-//   }
-// }
+export interface HemocioneAskForHelpPointResponse {
+  name: string,
+  address: string,
+  phone: string,
+  link: string,
+  active: boolean,
+  type: string,
+  loc: {
+    type: 'Point',
+    coordinates: number[]
+  }
+}
 
 async function getHemocioneAskForHelpPoints(after?: string): Promise<HemocioneAskForHelp[]> {
   try {
@@ -39,4 +41,37 @@ async function getHemocioneAskForHelpPoints(after?: string): Promise<HemocioneAs
     console.error(`Error fetching Hemocione Ask For Help points using after ${after}:`, error)
     throw new Error('Failed to fetch Hemocione Ask For Help points')
   }
+}
+
+function parseLink(id: string): string {
+  return `config.hemocioneAskforHelp/description/${id}`;
+}
+
+async function handleHemocioneAskForHelpPoints(after?: string): Promise<HemocioneAskForHelpPointResponse[]> {
+  const hemocioneAskForHelpPoints = await getHemocioneAskForHelpPoints(after)
+
+  if (!hemocioneAskForHelpPoints) {
+    throw new Error('Failed to fetch Hemocione Ask For Help points')
+  }
+
+  return await Promise.all(
+    hemocioneAskForHelpPoints.map(async (hemocioneAskForHelpPoint) => {
+      const coordinates = (hemocioneAskForHelpPoint.local_longitude && hemocioneAskForHelpPoint.local_latitude) ? [
+        hemocioneAskForHelpPoint.local_longitude,
+        hemocioneAskForHelpPoint.local_latitude
+      ] : await handleGeocoding(hemocioneAskForHelpPoint.address)
+      return {
+        name: hemocioneAskForHelpPoint.local_name,
+        address: hemocioneAskForHelpPoint.address,
+        phone: '', // TODO: Add phone if available in Hemocione Ask For Help provider
+        link: parseLink(hemocioneAskForHelpPoint.id),
+        active: hemocioneAskForHelpPoint.active_campagin && hemocioneAskForHelpPoint.review_status === 'Approved',
+        type: 'campaign',
+        loc: {
+          type: 'Point',
+          coordinates
+        }
+      }
+    })
+  )
 }
