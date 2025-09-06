@@ -61,8 +61,8 @@ async function getGeocodingByAddress(parsedAddress: string): Promise<number[]> {
   const longitude = parseFloat(result.lon);
 
   return [
-    latitude,
-    longitude
+    longitude,
+    latitude
   ];
 }
 
