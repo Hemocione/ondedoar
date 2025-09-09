@@ -1,11 +1,11 @@
 const config = useRuntimeConfig()
 
 interface DonateEvents {
-	name: string,
-	startAt: string,
-	endAt: string,
-	slug: string,
-	location: {
+    name: string,
+    startAt: string,
+    endAt: string,
+    slug: string,
+    location: {
         address: string;
         city: string;
         state: string;
@@ -13,29 +13,29 @@ interface DonateEvents {
 }
 
 export interface DonateEventsResponse {
-  name: string,
-  address: string,
-  phone: string,
-  link: string,
-  active: boolean,
-  type: string,
-  loc: {
-    type: 'Point',
-    coordinates: number[]
-  }
+    name: string,
+    address: string,
+    phone: string,
+    link: string,
+    active: boolean,
+    type: string,
+    loc: {
+        type: 'Point',
+        coordinates: number[]
+    }
 }
 
 async function getEvents() {
-    try{
-    const localEvents = await $fetch(`${config.events.apiUrl}/points/ondedoar/sync`, {
-        method: 'GET',
-        headers: {
-        'x-secret': config.events.backOfficeSecret,
-        }
-    })
+    try {
+        const localEvents = await $fetch(`${config.hemocioneDigitalEvents.apiUrl}/v1/points/ondedoar/sync`, {
+            method: 'GET',
+            headers: {
+                'x-secret': config.hemocioneDigitalEvents.backOfficeSecret,
+            }
+        })
 
-    return localEvents
-    } catch(err) {
+        return localEvents
+    } catch (err) {
         console.error(err)
         throw new Error('Failed to fetch Events points')
     }
@@ -44,10 +44,10 @@ async function getEvents() {
 export async function handleEvents() {
     const hemocioneEvents = await getEvents()
 
-    if(!hemocioneEvents){
+    if (!hemocioneEvents) {
         throw new Error('Failed to fetch Events points')
     }
-    
+
     return hemocioneEvents.map((eventos) => ({
         name: eventos.name,
         address: eventos.location.address,
@@ -58,7 +58,7 @@ export async function handleEvents() {
         loc: {
             type: 'point',
             coordinates: []
-        }   
+        }
 
 
     })
