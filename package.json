@@ -20,6 +20,7 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
+    "@indoorequal/vue-maplibre-gl": "^8.4.2",
     "inngest": "^3.39.2",
     "mongoose": "^8.17.1"
   }
