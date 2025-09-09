@@ -1,6 +1,6 @@
 const config = useRuntimeConfig()
 
-interface DonateEvents {
+interface HemocioneDigitalEvents {
     name: string,
     startAt: string,
     endAt: string,
@@ -12,7 +12,7 @@ interface DonateEvents {
     }
 }
 
-export interface DonateEventsResponse {
+export interface HemocioneDigitalEventsPointResponse {
     name: string,
     address: string,
     phone: string,
@@ -25,15 +25,14 @@ export interface DonateEventsResponse {
     }
 }
 
-async function getEvents() {
+async function getEvents(after?: string): Promise<HemocioneDigitalEvents[]> {
     try {
-        const localEvents = await $fetch(`${config.hemocioneDigitalEvents.apiUrl}/v1/points/ondedoar/sync`, {
+        const localEvents = await $fetch(`${config.hemocioneDigitalEvents.apiUrl}/api/v1/points/ondedoar/sync`, {
             method: 'GET',
             headers: {
                 'x-secret': config.hemocioneDigitalEvents.backOfficeSecret,
             }
-        })
-
+        }) as HemocioneDigitalEvents[]
         return localEvents
     } catch (err) {
         console.error(err)
@@ -41,23 +40,23 @@ async function getEvents() {
     }
 }
 
-export async function handleEvents() {
-    const hemocioneEvents = await getEvents()
+export async function handleEvents(after?: string): Promise<HemocioneDigitalEventsPointResponse[]> {
+    const hemocioneDigitalEvents = await getEvents()
 
-    if (!hemocioneEvents) {
+    if (!hemocioneDigitalEvents) {
         throw new Error('Failed to fetch Events points')
     }
 
-    return hemocioneEvents.map((eventos) => ({
-        name: eventos.name,
-        address: eventos.location.address,
+    return hemocioneDigitalEvents.map(async (evento) => ({
+        name: evento.name,
+        address: evento.location.address,
         phone: '',
-        link: '',
+        link: `${config.hemocioneDigitalEvents.apiUrl}/event/${evento.slug}`,
         active: true,
-        type: 'eventos',
+        type: 'Event',
         loc: {
-            type: 'point',
-            coordinates: []
+            type: 'Point',
+            coordinates: await getEvents()
         }
 
 
