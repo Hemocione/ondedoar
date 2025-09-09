@@ -32,6 +32,10 @@ export default defineNuxtConfig({
     hemocioneId: {
       apiUrl: process.env.HEMOCIONEID_API_URL ?? "http://localhost:8080",
       backOfficeSecret: process.env.HEMOCIONEID_BACKOFFICE_SECRET ?? "secret"
+    },
+    hemocioneAskforHelp: {
+      apiUrl: process.env.HEMOCIONE_ASK_FOR_HELP_API_URL ?? "http://localhost:3001",
+      backOfficeSecret: process.env.HEMOCIONE_ASK_FOR_HELP_BACKOFFICE_SECRET ?? 'config.hemocioneAskforHelp.apiUrl'
     }
   }
 });
