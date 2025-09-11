@@ -29,24 +29,24 @@ export interface HemocioneDigitalEventsPointResponse {
 
 async function getHemocioneDigitalEvents(after?: string): Promise<HemocioneDigitalEvents[]> {
     try {
-        const localEvents = await $fetch(`${config.hemocioneDigitalEvents.apiUrl}/api/v1/points/ondedoar/sync`, {
+        const hemocioneDigitalEventsPoints = await $fetch(`${config.hemocioneDigitalEvents.apiUrl}/api/v1/points/ondedoar/sync`, {
             method: 'GET',
             headers: {
                 'x-secret': config.hemocioneDigitalEvents.backOfficeSecret,
             }
         }) as HemocioneDigitalEvents[]
-        return localEvents
+        return hemocioneDigitalEventsPoints
     } catch (err) {
         console.error(err)
-        throw new Error('Failed to fetch Events points')
+        throw new Error('Failed to fetch hemocioneDigitalEventsPoints')
     }
 }
 
-export async function handleEvents(after?: string): Promise<HemocioneDigitalEventsPointResponse[]> {
+export async function handleHemocioneDigitalEventsPoints(after?: string): Promise<HemocioneDigitalEventsPointResponse[]> {
     const hemocioneDigitalEvents = await getHemocioneDigitalEvents()
 
     if (!hemocioneDigitalEvents) {
-        throw new Error('Failed to fetch Events points')
+        throw new Error('Failed to fetch hemocioneDigitalEventsPoints')
     }
 
     return await Promise.all(

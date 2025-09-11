@@ -1,4 +1,4 @@
-import { handleEvents } from "~/server/services/events";
+import { handleHemocioneDigitalEventsPoints } from "~/server/services/events";
 
 export default defineEventHandler(async (event) => {
   const params = getQuery(event);
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const events = await handleEvents();
+  const events = await handleHemocioneDigitalEventsPoints();
 
   return events
 })
