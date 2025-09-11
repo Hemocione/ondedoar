@@ -5,6 +5,8 @@ interface HemocioneDigitalEvents {
     startAt: string,
     endAt: string,
     slug: string,
+    local_latitude?: number;
+    local_longitude?: number;
     location: {
         address: string;
         city: string;
@@ -25,7 +27,7 @@ export interface HemocioneDigitalEventsPointResponse {
     }
 }
 
-async function getEvents(after?: string): Promise<HemocioneDigitalEvents[]> {
+async function getHemocioneDigitalEvents(after?: string): Promise<HemocioneDigitalEvents[]> {
     try {
         const localEvents = await $fetch(`${config.hemocioneDigitalEvents.apiUrl}/api/v1/points/ondedoar/sync`, {
             method: 'GET',
@@ -41,25 +43,28 @@ async function getEvents(after?: string): Promise<HemocioneDigitalEvents[]> {
 }
 
 export async function handleEvents(after?: string): Promise<HemocioneDigitalEventsPointResponse[]> {
-    const hemocioneDigitalEvents = await getEvents()
+    const hemocioneDigitalEvents = await getHemocioneDigitalEvents()
 
     if (!hemocioneDigitalEvents) {
         throw new Error('Failed to fetch Events points')
     }
 
-    return hemocioneDigitalEvents.map(async (evento) => ({
-        name: evento.name,
-        address: evento.location.address,
-        phone: '',
-        link: `${config.hemocioneDigitalEvents.apiUrl}/event/${evento.slug}`,
-        active: true,
-        type: 'Event',
-        loc: {
-            type: 'Point',
-            coordinates: await getEvents()
-        }
-
-
-    })
+    return await Promise.all(
+        hemocioneDigitalEvents.map(async (hemocioneDigitalEvent) => {
+            const coordinates = (hemocioneDigitalEvent.local_longitude && hemocioneDigitalEvent.local_latitude) ?
+            [hemocioneDigitalEvent.local_longitude, hemocioneDigitalEvent.local_latitude] : await handleGeocoding(hemocioneDigitalEvent.location.address)
+            return {  
+                name: hemocioneDigitalEvent.name,
+                address: hemocioneDigitalEvent.location.address,
+                phone: '',
+                link: `${config.hemocioneDigitalEvents.apiUrl}/event/${hemocioneDigitalEvent.slug}`,
+                active: true,
+                type: 'Event',
+                loc: {
+                    type: 'Point',
+                    coordinates: coordinates
+                }
+            }    
+        })
     )
 }
