@@ -16,12 +16,17 @@
     "inngest-cli": "^1.8.2",
     "nuxt": "^3.8.2",
     "nuxt-vercel-analytics": "^1.0.0",
+    "sass-embedded": "^1.89.2",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
   },
   "dependencies": {
     "@indoorequal/vue-maplibre-gl": "^8.4.2",
     "inngest": "^3.39.2",
+    "maplibre-gl": "^5.7.1",
     "mongoose": "^8.17.1"
+  },
+  "resolutions": {
+    "maplibre-gl": "~3.6.2"
   }
 }
