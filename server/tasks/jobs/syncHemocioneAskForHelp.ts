@@ -26,7 +26,11 @@ export const syncHemocioneAskForHelpJob = async ({ event, step }: { event: any, 
   const hemocioneAskForHelpPoints: HemocioneAskForHelpPointResponse[] = await handleHemocioneAskForHelpPoints(after);
 
   if (!hemocioneAskForHelpPoints) {
-    throw new Error('Failed to fetch Hemocione Ask For Help points');
+    throw createError({
+        statusCode: 500,
+        statusMessage: 'Failed to fetch Hemocione Ask For Help points',
+        cause: error
+     })
   }
 
   console.log("✅ Hemocione Ask for Help points handled successfully;", "\nUploading Hemocione Ask for Help points...");
