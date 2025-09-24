@@ -52,7 +52,7 @@ export const syncHemocioneAskForHelpJob = async ({ event, step }: { event: any, 
 
   const inactivateOperations = {
     updateMany: {
-      filter: { name: { $nin: hemocioneAskForHelpPoints.map(p => p.name) } },
+      filter: { name: { $nin: hemocioneAskForHelpPointsAfter.map(p => p.name) } },
       update: {
         $set: {
           active: false
