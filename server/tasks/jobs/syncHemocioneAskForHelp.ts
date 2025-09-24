@@ -23,15 +23,19 @@ export const syncHemocioneAskForHelpJob = async ({ event, step }: { event: any, 
 
   console.log("Getting and Handling Hemocione Ask for Help points...");
 
-  const hemocioneAskForHelpPoints: HemocioneAskForHelpPointResponse[] = await handleHemocioneAskForHelpPoints(after);
+  const hemocioneAskForHelpPointsAfter: HemocioneAskForHelpPointResponse[] = await handleHemocioneAskForHelpPoints(after);
 
-  if (!hemocioneAskForHelpPoints) {
-    throw new Error('Failed to fetch Hemocione Ask For Help points');
+  if (!hemocioneAskForHelpPointsAfter) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Failed to fetch Hemocione Ask For Help points',
+      cause: error
+    })
   }
 
   console.log("✅ Hemocione Ask for Help points handled successfully;", "\nUploading Hemocione Ask for Help points...");
 
-  const upsertOperations = hemocioneAskForHelpPoints.map((hemocioneAskForHelpPoint) => {
+  const upsertOperations = hemocioneAskForHelpPointsAfter.map((hemocioneAskForHelpPoint) => {
     return {
       updateOne: {
         filter: { name: hemocioneAskForHelpPoint.name },
@@ -48,7 +52,7 @@ export const syncHemocioneAskForHelpJob = async ({ event, step }: { event: any, 
 
   const inactivateOperations = {
     updateMany: {
-      filter: { name: { $nin: hemocioneAskForHelpPoints.map(p => p.name) } },
+      filter: { name: { $nin: hemocioneAskForHelpPointsAfter.map(p => p.name) } },
       update: {
         $set: {
           active: false

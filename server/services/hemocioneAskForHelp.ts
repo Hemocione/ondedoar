@@ -40,7 +40,11 @@ async function getHemocioneAskForHelpPoints(after?: string): Promise<HemocioneAs
     return hemocioneAskForHelpPoints
   } catch (error) {
     console.error(`Error fetching Hemocione Ask For Help points using after ${after}:`, error)
-    throw new Error('Failed to fetch Hemocione Ask For Help points')
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Failed to fetch Hemocione Ask For Help points',
+        cause: error
+     })
   }
 }
 
@@ -52,7 +56,11 @@ export async function handleHemocioneAskForHelpPoints(after?: string): Promise<H
   const hemocioneAskForHelpPoints = await getHemocioneAskForHelpPoints(after)
 
   if (!hemocioneAskForHelpPoints) {
-    throw new Error('Failed to fetch Hemocione Ask For Help points')
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Failed to fetch Hemocione Ask For Help points',
+        cause: error
+     })
   }
 
   return await Promise.all(

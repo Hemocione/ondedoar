@@ -52,7 +52,7 @@ async function getGeocodingByAddress(parsedAddress: string): Promise<number[]> {
     },
   }) as NominatimResult[];
 
-  if (!response || !Array.isArray(response) || response.length === 0) {
+  if (!response?.length) {
     throw new Error(`Endereço ${parsedAddress} não encontrado.`);
   }
 
