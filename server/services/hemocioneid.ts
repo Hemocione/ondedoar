@@ -10,6 +10,7 @@ interface HemocioneIdPoint {
   displayName: string | null; // Pode ser string ou null
 }
 
+// TODO: MAKE THIS A PATTERNED INTERFACE FOR ALL RESPONSES
 // TODO: Improve typing for HemocioneIdPointResponse at key type
 export interface HemocioneIdPointResponse {
   name: string,

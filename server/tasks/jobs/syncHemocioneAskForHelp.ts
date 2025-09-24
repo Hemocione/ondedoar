@@ -1,4 +1,4 @@
-import { handleHemocioneIdsPoints, HemocioneIdPointResponse } from "~/server/services/hemocioneid";
+import { handleHemocioneAskForHelpPoints, HemocioneAskForHelpPointResponse } from "~/server/services/hemocioneAskForHelp";
 import { Point } from "~/server/db/models/points";
 import { SyncManager } from "~/server/db/models/syncManager";
 import { FailureEventArgs } from "inngest";
@@ -8,8 +8,7 @@ interface Step {
   run(name: string, callback: () => Promise<any>): Promise<any>;
 }
 
-// TODO: wrap job in try catch to handle errors
-export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: Step }) => {
+export const syncHemocioneAskForHelpJob = async ({ event, step }: { event: any, step: Step }) => {
   console.log(`✅ Job '${event.name}' iniciado com sucesso!`);
   // Since will enable to run this job manually, we can use the event data to get the 'after' parameter
   // If 'after' is not provided, it will be set by last cursor and the job will fetch
@@ -22,31 +21,29 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
     }
   )
 
-  console.log("Getting and Handling Hemocione ID points...");
+  console.log("Getting and Handling Hemocione Ask for Help points...");
 
-  const hemocioneIdPoints: HemocioneIdPointResponse[] = await handleHemocioneIdsPoints(after);
+  const hemocioneAskForHelpPointsAfter: HemocioneAskForHelpPointResponse[] = await handleHemocioneAskForHelpPoints(after);
 
-  if (!hemocioneIdPoints) {
-    throw new Error('Failed to fetch Hemocione ID points');
+  if (!hemocioneAskForHelpPointsAfter) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Failed to fetch Hemocione Ask For Help points',
+      cause: error
+    })
   }
 
-  console.log("✅ Hemocione ID points handled successfully;", "\nUploading Hemocione ID points...");
+  console.log("✅ Hemocione Ask for Help points handled successfully;", "\nUploading Hemocione Ask for Help points...");
 
-  // TODO: Think of a better key to filter and create a relation between points in hemocioneId and onde-doar
-  const upsertOperations = hemocioneIdPoints.map((hemocioneIdPoint) => {
+  const upsertOperations = hemocioneAskForHelpPointsAfter.map((hemocioneAskForHelpPoint) => {
     return {
       updateOne: {
-        filter: { name: hemocioneIdPoint.name },
-        update: {
-          $set: hemocioneIdPoint,
-          $setOnInsert: {
-            createdAt: new Date(),
-          }
-        },
-        upsert: true, // Create if it doesn't exist
+        filter: { name: hemocioneAskForHelpPoint.name },
+        update: hemocioneAskForHelpPoint,
+        upsert: true
       }
     }
-  }).filter(op => op !== null)
+  }).filter(op => op !== null);
 
   if (upsertOperations.length === 0) {
     console.log("No points to upload");
@@ -55,7 +52,7 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
 
   const inactivateOperations = {
     updateMany: {
-      filter: { name: { $nin: hemocioneIdPoints.map(p => p.name) } },
+      filter: { name: { $nin: hemocioneAskForHelpPointsAfter.map(p => p.name) } },
       update: {
         $set: {
           active: false
@@ -67,7 +64,7 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
   const updatePoints = await Point.bulkWrite([...upsertOperations, inactivateOperations])
 
   await SyncManager.updateOne(
-    { providerName: "HemocioneId" },
+    { providerName: "HemocioneAskForHelp" },
     {
       lastSuccessfulSyncDate: new Date(),
       lastSyncDate: new Date(),
@@ -77,14 +74,14 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
     }
   )
 
-  console.log("✅ Hemocione ID points uploaded and inactivated successfully")
+  console.log("✅ Hemocione Ask for Help points uploaded and inactivated successfully")
   const message = `✅ Job '${event.name}' concluído com sucesso!`
-};
+}
 
-export const syncHemocioneIdJobErrorHandler = async ({ error, event }: FailureEventArgs) => {
+export const syncHemocioneAskForHelpJobErrorHandler = async ({ error, event }: FailureEventArgs) => {
   console.error(`❌ Job '${event.name}' falhou definitivamente!`, error);
   await SyncManager.updateOne(
-    { providerName: "HemocioneId" },
+    { providerName: "HemocioneAskForHelp" },
     {
       syncStatus: 'failed',
       syncErrors: error.stack,

@@ -1,69 +1,72 @@
 const config = useRuntimeConfig();
 
-export interface LatLng {
-  lat: number;
-  lng: number;
+export interface NominatimAddress {
+  house_number?: string;
+  road?: string;
+  neighbourhood?: string;
+  suburb?: string;
+  city_district?: string;
+  city?: string;
+  town?: string;
+  village?: string;
+  county?: string;
+  state_district?: string;
+  state?: string;
+  region?: string;
+  postcode?: string;
+  country: string;
+  country_code: string;
+  [key: string]: string | undefined; // Para outros campos não mapeados
 }
 
-export interface Location {
-  latitude: number;
-  longitude: number;
-}
-
-export interface NavigationPoint {
-  location: Location;
-}
-
-export interface Geometry {
-  bounds?: {
-    northeast: LatLng;
-    southwest: LatLng;
-  };
-  location: LatLng;
-  location_type: string;
-  viewport: {
-    northeast: LatLng;
-    southwest: LatLng;
-  };
-}
-
-export interface AddressComponent {
-  long_name: string;
-  short_name: string;
-  types: string[];
-}
-
-export interface GeocodingResult {
-  address_components: AddressComponent[];
-  formatted_address: string;
-  geometry: Geometry;
-  navigation_points: NavigationPoint[];
-  place_id: string;
-  plus_code: {
-    compound_code: string;
-    global_code: string;
-  };
-  types: string[];
-}
-
-export interface GeocodingResponse {
-  results: GeocodingResult[];
-  status: string;
+export interface NominatimResult {
+  place_id: number;
+  licence: string;
+  osm_type: 'node' | 'way' | 'relation';
+  osm_id: number;
+  boundingbox: [string, string, string, string];
+  lat: string;
+  lon: string;
+  display_name: string;
+  class: string;
+  type: string;
+  importance: number;
+  icon?: string;
+  // O campo 'address' é opcional e só aparece com 'addressdetails=1'
+  address?: NominatimAddress;
+  // O campo 'extratags' é opcional e só aparece com 'extratags=1'
+  extratags?: Record<string, string>;
+  // O campo 'namedetails' é opcional e só aparece com 'namedetails=1'
+  namedetails?: Record<string, string>;
 }
 
 function parseAddress(address: string): string {
   return encodeURIComponent(address.trim());
 }
 
-async function getGeocodingByAddress(parsedAddress: string): Promise<Location> {
-  const addressFullInformation: GeocodingResponse = await $fetch(`${config.google.geocoding_url}address=${parsedAddress}&key=${config.google.apiKey}`, {
-    method: "GET"
-  });
+async function getGeocodingByAddress(parsedAddress: string): Promise<number[]> {
+  const nominatimUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${parsedAddress}&limit=1`;
+  const response = await $fetch(nominatimUrl, {
+    headers: {
+      "User-Agent": "GeofenceDrawer/1.0",
+    },
+  }) as NominatimResult[];
 
-  return addressFullInformation.results[0].navigation_points[0].location;
+  if (!response?.length) {
+    throw new Error(`Endereço ${parsedAddress} não encontrado.`);
+  }
+
+  const result = response[0];
+  const latitude = parseFloat(result.lat);
+  const longitude = parseFloat(result.lon);
+
+  return [
+    longitude,
+    latitude
+  ];
 }
 
-export async function handleGeocoding(address: string): Promise<Location> {
+export async function handleGeocoding(address: string): Promise<number[]> {
   const parsedAddress = parseAddress(address);
   return await getGeocodingByAddress(parsedAddress);
 }

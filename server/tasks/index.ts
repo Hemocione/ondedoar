@@ -1,6 +1,6 @@
 import { Inngest, InngestFunction } from "inngest";
-import { testJob } from "./jobs/test";
 import { syncHemocioneIdJob, syncHemocioneIdJobErrorHandler } from "./jobs/syncHemocioneId";
+import { syncHemocioneAskForHelpJob, syncHemocioneAskForHelpJobErrorHandler } from "./jobs/syncHemocioneAskForHelp";
 
 const config = useRuntimeConfig();
 
@@ -54,6 +54,22 @@ class TaskManager {
           event: 'syncHemocioneId',
         },
         callback: syncHemocioneIdJob,
+      }
+    )
+
+    this.addJob(
+      {
+        configuration: {
+          id: "syncHemocioneAskForHelp",
+          name: "syncHemocioneAskForHelp",
+          onFailure: syncHemocioneAskForHelpJobErrorHandler,
+          retries: 3, // Number of retries on failure
+        },
+        trigger: {
+          cron: "0 */8 * * *",
+          event: 'syncHemocioneAskForHelp',
+        },
+        callback: syncHemocioneAskForHelpJob,
       }
     )
 
