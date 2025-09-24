@@ -32,7 +32,7 @@ async function getHemocioneDigitalEvents(after?: string): Promise<HemocioneDigit
         const hemocioneDigitalEventsPoints = await $fetch(`${config.hemocioneDigitalEvents.apiUrl}/api/v1/points/ondedoar/sync`, {
             method: 'GET',
             headers: {
-                'x-secret': config.hemocioneDigitalEvents.backOfficeSecret,
+                'x-secret': config.hemocioneDigitalEvents.secret,
             }
         }) as HemocioneDigitalEvents[]
         return hemocioneDigitalEventsPoints
@@ -53,7 +53,7 @@ export async function handleHemocioneDigitalEventsPoints(after?: string): Promis
         hemocioneDigitalEvents.map(async (hemocioneDigitalEvent) => {
             const coordinates = (hemocioneDigitalEvent.local_longitude && hemocioneDigitalEvent.local_latitude) ?
             [hemocioneDigitalEvent.local_longitude, hemocioneDigitalEvent.local_latitude] : await handleGeocoding(hemocioneDigitalEvent.location.address)
-            return {  
+            return {
                 name: hemocioneDigitalEvent.name,
                 address: hemocioneDigitalEvent.location.address,
                 phone: '',
@@ -64,7 +64,7 @@ export async function handleHemocioneDigitalEventsPoints(after?: string): Promis
                     type: 'Point',
                     coordinates: coordinates
                 }
-            }    
+            }
         })
     )
 }

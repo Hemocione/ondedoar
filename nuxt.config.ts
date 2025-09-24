@@ -35,7 +35,7 @@ export default defineNuxtConfig({
     },
     hemocioneDigitalEvents: {
       apiUrl: process.env.HEMOCIONE_DIGITAL_EVENTS_API_URL ?? "http://localhost:3001",
-      backOfficeSecret: process.env.HEMOCIONEID_BACKOFFICE_SECRET ?? "secret"
+      secret: process.env.HEMOCIONEID_BACKOFFICE_SECRET ?? "secret"
     },
     hemocioneAskforHelp: {
       apiUrl: process.env.HEMOCIONE_ASK_FOR_HELP_API_URL ?? "http://localhost:3001",
