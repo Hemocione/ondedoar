@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   --hemo-color-primary: #bb0a08;
   --hemo-color-primary-dark: #8a0000;

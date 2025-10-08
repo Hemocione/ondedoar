@@ -1,8 +1,15 @@
+import tailwindcss from "@tailwindcss/vite";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/global.css"],
   modules: ["@nuxt/eslint", "nuxt-vercel-analytics"],
+  vite: {
+    plugins: [
+      tailwindcss(),
+    ],
+  },
   nitro: {
     preset: 'vercel',
     plugins: ["~/server/plugins/mongoose.ts"],
