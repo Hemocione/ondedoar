@@ -2,12 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/global.css"],
-  modules: ["nuxt-vercel-analytics", "@nuxtjs/google-fonts"],
-  googleFonts: {
-    families: {
-      Roboto: true,
-    },
-  },
+  modules: ["@nuxt/eslint", "nuxt-vercel-analytics"],
   nitro: {
     preset: 'vercel',
     plugins: ["~/server/plugins/mongoose.ts"],
