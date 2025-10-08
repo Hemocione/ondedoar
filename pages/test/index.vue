@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>Test</h1>
+  <div class="container">
+    <HemocioneHeader />
   </div>
 </template>
 <script setup lang="ts"></script>
