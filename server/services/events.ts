@@ -5,6 +5,8 @@ interface HemocioneDigitalEvents {
     startAt: string,
     endAt: string,
     slug: string,
+    local_latitude?: number;
+    local_longitude?: number;
     location: {
         address: string;
         city: string;
