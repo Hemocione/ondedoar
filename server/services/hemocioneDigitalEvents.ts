@@ -25,6 +25,12 @@ export interface HemocioneDigitalEventsPointResponse {
     }
 }
 
+//TODO: Move to utils
+function handleFullAdress(address: string, city?: string, state?: string){
+
+    return `${address}, ${city} - ${state}`
+}
+
 async function getHemocioneDigitalEvents(after?: string): Promise<HemocioneDigitalEvents[]> {
     try {
         const hemocioneDigitalEventsPoints = await $fetch(`${config.hemocioneDigitalEvents.apiUrl}/api/v1/points/ondedoar/sync`, {
@@ -49,7 +55,9 @@ export async function handleHemocioneDigitalEventsPoints(after?: string): Promis
 
     return await Promise.all(
         hemocioneDigitalEvents.map(async (hemocioneDigitalEvent) => {
-            const coordinates = await handleGeocoding(hemocioneDigitalEvent.location.address)
+            const {address, city, state} = hemocioneDigitalEvent.location
+            const fullAddress = handleFullAdress(address, city, state)
+            const coordinates = await handleGeocoding(fullAddress)
             return {  
                 name: hemocioneDigitalEvent.name,
                 address: hemocioneDigitalEvent.location.address,
