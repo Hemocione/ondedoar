@@ -1,6 +1,7 @@
+<!-- TODO: FIX MAP INTERECTIVENESS AND BUTTONS AND COMPONENTS ONE -->
 <template>
   <div class="relative h-screen overflow-hidden">
-    <div class="absolute inset-0 z-10 pointer-events-none">
+    <div class="absolute inset-0 z-10">
       <slot />
     </div>
 
