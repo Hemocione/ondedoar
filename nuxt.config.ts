@@ -1,12 +1,14 @@
+import tailwindcss from "@tailwindcss/vite";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/global.css"],
-  modules: ["nuxt-vercel-analytics", "@nuxtjs/google-fonts"],
-  googleFonts: {
-    families: {
-      Roboto: true,
-    },
+  modules: ["@nuxt/eslint", "nuxt-vercel-analytics"],
+  vite: {
+    plugins: [
+      tailwindcss(),
+    ],
   },
   nitro: {
     preset: 'vercel',
