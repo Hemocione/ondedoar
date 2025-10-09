@@ -1,11 +1,11 @@
 <!-- TODO: FIX MAP INTERECTIVENESS AND BUTTONS AND COMPONENTS ONE -->
 <template>
-  <div class="relative h-screen overflow-hidden">
-    <div class="absolute inset-0 z-10">
+  <div class="relative min-h-screen">
+    <div class="relative z-10">
       <slot />
     </div>
 
-    <MapLibreClient class="absolute inset-0" />
+    <MapLibreClient class=" absolute inset-0" />
   </div>
 </template>
 
