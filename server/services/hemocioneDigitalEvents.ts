@@ -49,9 +49,8 @@ export async function handleHemocioneDigitalEventsPoints(after?: string): Promis
 
     return await Promise.all(
         hemocioneDigitalEvents.map(async (hemocioneDigitalEvent) => {
-            const coordinates = (hemocioneDigitalEvent.local_longitude && hemocioneDigitalEvent.local_latitude) ?
-            [hemocioneDigitalEvent.local_longitude, hemocioneDigitalEvent.local_latitude] : await handleGeocoding(hemocioneDigitalEvent.location.address)
-            return {
+            const coordinates = await handleGeocoding(hemocioneDigitalEvent.location.address)
+            return {  
                 name: hemocioneDigitalEvent.name,
                 address: hemocioneDigitalEvent.location.address,
                 phone: '',
