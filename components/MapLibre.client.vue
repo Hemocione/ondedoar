@@ -1,6 +1,6 @@
 <template>
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom">
-    <mgl-navigation-control />
+    <mgl-navigation-control position="bottom-right" />
   </mgl-map>
 </template>
 
