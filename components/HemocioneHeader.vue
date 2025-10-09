@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center w-screen h-[55px] bg-black px-4 shadow-xl/20">
+  <div class="flex items-center w-100vw h-[55px] bg-black px-4 shadow-xl/20">
     <div class="flex-grow">
       <img class="w-[130px]" src="/assets/vectors/HemocioneWhite.svg"
         alt="Logo da Hemocione em branco e Hemocione escrito em branco">
