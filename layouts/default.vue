@@ -1,6 +1,6 @@
 <template>
   <div class="relative h-screen overflow-hidden">
-    <div class="relative z-10">
+    <div class="absolute inset-0 z-10">
       <slot />
     </div>
 
