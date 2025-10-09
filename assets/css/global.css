@@ -1,4 +1,26 @@
 @import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+  --color-hemo-color-primary: #bb0a08;
+  --color-hemo-color-primary-dark: #8a0000;
+  --color-hemo-color-primary-light: #FF6262;
+  --color-hemo-color-secondary: #f2f2f2;
+  --color-hemo-color-success: #2ac769;
+  --color-hemo-color-warn: #f6a609;
+  --color-hemo-color-text-secondary: #25282B;
+  --color-hemo-color-text-secondary-opaque: rgba(37, 40, 43, 0.2);
+  --color-hemo-color-text-primary: #f2f2f2;
+  --color-el-color-primary: var(--hemo-color-primary) !important;
+  --color-el-color-main: var(--hemo-color-secondary) !important;
+  --color-el-color-success: var(--hemo-color-success) !important;
+  --color-el-color-warning: var(--hemo-color-warn) !important;
+  --color-el-color-danger: var(--hemo-color-warn) !important;
+  --color-el-color-info: var(--hemo-color-primary) !important;
+  --color-el-color-text-primary: var(--hemo-color-text-primary) !important;
+  --color-el-color-text-secondary: var(--hemo-color-text-secondary) !important;
+  --color-el-border-color-light: var(--hemo-color-primary-dark) !important;
+}
 
 :root {
   --hemo-color-primary: #bb0a08;
