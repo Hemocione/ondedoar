@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar-anchor flex flex-col z-2">
+  <div>
     <HemocioneHeader />
     <PlaceSearchInput class="pt-8" />
   </div>
