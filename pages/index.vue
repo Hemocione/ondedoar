@@ -11,7 +11,7 @@
 import { ref } from 'vue'
 const isShow = ref(false)
 
-async function verifyLocalization() {
+async function verifyLocalion() {
   try {
     const result = await navigator.permissions.query({ name: 'geolocation' });
     if(result.state === 'granted'){
@@ -25,7 +25,7 @@ async function verifyLocalization() {
 }
 
 onMounted(async () => {
-  await verifyLocalization()
+  await verifyLocalion()
 })
 
 </script>
