@@ -1,4 +1,27 @@
 @import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+  --color-hemo-color-primary: #bb0a08;
+  --color-hemo-color-primary-action: #d70b09;
+  --color-hemo-color-primary-dark: #8a0000;
+  --color-hemo-color-primary-light: #FF6262;
+  --color-hemo-color-secondary: #f2f2f2;
+  --color-hemo-color-success: #2ac769;
+  --color-hemo-color-warn: #f6a609;
+  --color-hemo-color-text-secondary: #25282B;
+  --color-hemo-color-text-secondary-opaque: rgba(37, 40, 43, 0.2);
+  --color-hemo-color-text-primary: #f2f2f2;
+  --color-el-color-primary: var(--hemo-color-primary) !important;
+  --color-el-color-main: var(--hemo-color-secondary) !important;
+  --color-el-color-success: var(--hemo-color-success) !important;
+  --color-el-color-warning: var(--hemo-color-warn) !important;
+  --color-el-color-danger: var(--hemo-color-warn) !important;
+  --color-el-color-info: var(--hemo-color-primary) !important;
+  --color-el-color-text-primary: var(--hemo-color-text-primary) !important;
+  --color-el-color-text-secondary: var(--hemo-color-text-secondary) !important;
+  --color-el-border-color-light: var(--hemo-color-primary-dark) !important;
+}
 
 :root {
   --hemo-color-primary: #bb0a08;
@@ -38,18 +61,12 @@
   font-weight: 400;
 }
 
-.el-tabs__header {
-  margin: 0 !important;
-}
-
-
 html,
 body {
-  background-color: var(--hemo-color-secondary);
   color: var(--hemo-color-text-secondary);
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  overflow: hidden;
   font-family:
     "Roboto",
     monospace,
@@ -60,55 +77,4 @@ body {
     Arial,
     "Noto Sans",
     sans-serif;
-}
-
-#__nuxt {
-  width: 100%;
-  min-height: 100svh;
-}
-
-
-body {
-  min-height: 100svh;
-  width: 100vw;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-a {
-  all: unset;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-a:active,
-a:focus,
-a:hover,
-a:visited {
-  outline: 0;
-  -moz-outline-style: none;
-  outline-style: none;
-}
-
-*:focus {
-  outline: 0 !important;
-}
-
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-.page {
-  margin: 0;
-  width: 100%;
-  height: 100svh;
-  position: relative;
-}
-
-@media screen and (max-width: 768px) {
-  .page {
-    height: auto;
-  }
 }

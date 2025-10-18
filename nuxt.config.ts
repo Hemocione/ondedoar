@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/global.css"],
-  modules: ["@nuxt/eslint", "nuxt-vercel-analytics"],
+  modules: ["@nuxt/eslint", "nuxt-vercel-analytics", "@nuxt/ui"],
   vite: {
     plugins: [
       tailwindcss(),

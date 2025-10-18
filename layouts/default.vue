@@ -1,6 +1,7 @@
+<!-- TODO: FIX MAP INTERECTIVENESS AND BUTTONS AND COMPONENTS ONE -->
 <template>
   <div class="relative min-h-screen">
-    <div class="relative z-10">
+    <div class="absolute z-10">
       <slot />
     </div>
 
