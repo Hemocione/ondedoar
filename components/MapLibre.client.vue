@@ -1,8 +1,14 @@
 <template>
-  <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom" @map:load="onMapLoad">
+  <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom"
+    @map:load="onMapLoad">
     <mgl-navigation-control position="bottom-right" />
+    <!-- CURRENTLY WORKING -> NEEDS TO FIX SIZE -> NEEDS TO MOVE INTO COMPONENT -->
+    <img src="/assets/vectors/PinAskForHelp.svg" alt="pin-ask" ref="pin" style="display: none">
+    <mgl-image id="pin" :image="pin" />
 
-    <PinMarker :name="pins[0].name" :img-src="pins[0].imgSrc" :coordinates="pins[0].coordinates" :zoom="zoom" />
+    <mgl-geo-json-source source-id="point" :data="geojsonSource">
+      <mgl-symbol-layer layer-id="pin" :layout="layout" />
+    </mgl-geo-json-source>
   </mgl-map>
 </template>
 
@@ -11,10 +17,46 @@ import { ref } from 'vue';
 import {
   MglMap,
   MglNavigationControl,
+  MglImage,
+  MglGeoJsonSource,
+  MglSymbolLayer
+
 } from '@indoorequal/vue-maplibre-gl';
 import pinAskForHelpSrc from '~/assets/pngs/PinAskForHelp.png';
 import pinBloodBankSrc from '~/assets/pngs/PinBloodBank.png';
 import pinHospitalSrc from '~/assets/pngs/PinHospital.png';
+
+// TEST
+const geojsonSource = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [0, 0]
+      },
+      properties: {
+        symbol: 'pin'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [42, 42]
+      },
+      properties: {
+        symbol: 'dog'
+      }
+    }
+  ]
+};
+
+const layout = {
+  'icon-image': ['get', 'symbol'],
+  'icon-size': 0.25
+};
 
 // Basic info
 const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
@@ -37,7 +79,7 @@ const pinImgs = [
 const pins = [
   {
     id: 1,
-    name: 'PinAskForHelp',
+    name: 'pinAskForHelp',
     imgSrc: pinAskForHelpSrc,
     coordinates: [-47.8825, -15.7942], // Brasília
   },
