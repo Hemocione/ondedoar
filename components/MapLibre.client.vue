@@ -93,7 +93,3 @@ const onMapZoom = (map) => {
 };
 
 </script>
-
-<style lang="scss">
-@import "maplibre-gl/dist/maplibre-gl.css";
-</style>
