@@ -1,7 +1,6 @@
 <template>
-  <mgl-geo-json-source source-id="point" :data="geojsonSources">
-    <mgl-symbol-layer v-for="pinMarker in props.features" :key="pinMarker.symbol" :layer-id="pinMarker.symbol"
-      :layout="layout" />
+  <mgl-geo-json-source source-id="points" :data="geojsonSources">
+    <mgl-symbol-layer layer-id="points" :layout="layout" />
   </mgl-geo-json-source>
 </template>
 
