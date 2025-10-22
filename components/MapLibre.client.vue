@@ -1,10 +1,10 @@
 <template>
-  <img ref="askForHelpImg" id="AskForHelp" class="hidden" src="/assets/vectors/PinAskForHelp.svg" alt="pin-ask">
-  <img ref="bloodBankImg" id="BloodBank" class="hidden" src="/assets/vectors/PinBloodBank.svg" alt="pin-blood-bank">
+  <img ref="askForHelpImg" id="askforhelp" class="hidden" src="/assets/vectors/PinAskForHelp.svg" alt="pin-ask">
+  <img ref="bloodBankImg" id="bloodbank" class="hidden" src="/assets/vectors/PinBloodBank.svg" alt="pin-blood-bank">
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom">
     <mgl-navigation-control position="bottom-right" />
-    <mgl-image id="AskForHelp" :image="askForHelpImg" />
-    <mgl-image id="BloodBank" :image="bloodBankImg" />
+    <mgl-image id="askforhelp" :image="askForHelpImg" />
+    <mgl-image id="bloodbank" :image="bloodBankImg" />
     <PinMarker :features="pinMarkersFeatures" />
   </mgl-map>
 </template>
@@ -26,50 +26,9 @@ const bloodBankImg = ref(null);
 const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
 const center = [-55, -14.8];
 const zoom = 3.92;
-const pinMarkersFeatures = [
-  {
-    coordinates: [-55, -24.8],
-    symbol: 'AskForHelp'
-  },
-  {
-    coordinates: [-55, -14.8],
-    symbol: 'BloodBank'
-  }
-]
-// const pinImgs = [
-//   {
-//     name: 'PinAskForHelp',
-//     imgSrc: pinAskForHelpSrc
-//   },
-//   {
-//     name: 'PinBloodBank',
-//     imgSrc: pinBloodBankSrc
-//   },
-//   {
-//     name: 'PinHospital',
-//     imgSrc: pinHospitalSrc
-//   },
-// ];
-// const pins = [
-//   {
-//     id: 1,
-//     name: 'pinAskForHelp',
-//     imgSrc: pinAskForHelpSrc,
-//     coordinates: [-47.8825, -15.7942], // Brasília
-//   },
-//   {
-//     id: 2,
-//     name: 'PinBloodBank',
-//     imgSrc: pinBloodBankSrc,
-//     coordinates: [-43.2096, -22.9035], // Rio de Janeiro
-//   },
-//   {
-//     id: 3,
-//     name: 'PinHospital',
-//     imgSrc: pinHospitalSrc,
-//     coordinates: [-46.6333, -23.5505], // São Paulo
-//   },
-// ];
+const pinMarkersFeatures = await getPointsParsed();
+
+// TODO: Implement summary when zoom out (ask Joyce to draw a mockup)
 // TODO: Use this to check how many pins to show
 const currentZoom = ref();
 
