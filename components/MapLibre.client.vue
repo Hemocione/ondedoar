@@ -1,6 +1,7 @@
 <template>
-  <img ref="askForHelpImg" id="AskForHelp" class="hidden h-10 w-10" src="/assets/pngs/PinAskForHelp.png" alt="pin-ask">
-  <img ref="bloodBankImg" id="BloodBank" class="hidden h-10 w-10" src="/assets/pngs/PinBloodBank.png"
+  <img ref="askForHelpImg" id="AskForHelp" class="hidden h-10 w-10" src="/assets/vectors/PinAskForHelp.svg"
+    alt="pin-ask">
+  <img ref="bloodBankImg" id="BloodBank" class="hidden h-10 w-10" src="/assets/vectors/PinBloodBank.svg"
     alt="pin-blood-bank">
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom">
     <mgl-navigation-control position="bottom-right" />
