@@ -3,10 +3,7 @@
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom">
     <mgl-navigation-control position="bottom-right" />
     <mgl-image id="AskForHelp" :image="askForHelpImg" />
-
-    <mgl-geo-json-source source-id="point" :data="geojsonSource">
-      <mgl-symbol-layer layer-id="AskForHelp" :layout="layout" />
-    </mgl-geo-json-source>
+    <PinMarker />
   </mgl-map>
 </template>
 
@@ -15,35 +12,10 @@ import { ref } from 'vue';
 import {
   MglMap,
   MglNavigationControl,
-  MglImage,
-  MglGeoJsonSource,
-  MglSymbolLayer
-
+  MglImage
 } from '@indoorequal/vue-maplibre-gl';
 
-// TEST
 const askForHelpImg = ref(null);
-
-const geojsonSource = {
-  type: 'FeatureCollection',
-  features: [
-    {
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: [-55, -14.8]
-      },
-      properties: {
-        symbol: 'AskForHelp'
-      }
-    }
-  ]
-};
-
-const layout = {
-  'icon-image': ['get', 'symbol'],
-  'icon-size': 1
-};
 
 // Basic info
 const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';

@@ -1,41 +1,34 @@
 <template>
-  <mgl-geo-json-souce>
-    <mgl-symbol-layer :id="name + '-layer'" :source="imgData" :layout="imgLayout" />
-  </mgl-geo-json-souce>
-
+  <mgl-geo-json-source source-id="point" :data="geojsonSource">
+    <mgl-symbol-layer layer-id="AskForHelp" :layout="layout" />
+  </mgl-geo-json-source>
 </template>
 
 <script setup lang="ts">
+import {
+  MglGeoJsonSource,
+  MglSymbolLayer
+} from '@indoorequal/vue-maplibre-gl';
 
-
-const props = defineProps<{
-  imgSrc: string;
-  name: string;
-  coordinates: [number, number];
-  zoom: number;
-}>();
-
-const imgData = computed(() => {
-  return {
-    type: 'FeatureCollection' as const,
-    features: [
-      {
-        type: 'Feature' as const,
-        properties: {
-          symbol: props.name,
-        },
-        geometry: {
-          type: 'Point' as const,
-          coordinates: props.coordinates,
-        }
+const geojsonSource = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [-55, -24.8]
+      },
+      properties: {
+        symbol: 'AskForHelp'
       }
-    ]
-  }
-})
+    }
+  ]
+};
 
-const imgLayout = {
+const layout = {
   'icon-image': ['get', 'symbol'],
-  'icon-size': 500,
-}
+  'icon-size': 1
+};
 
 </script>
