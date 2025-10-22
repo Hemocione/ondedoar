@@ -1,6 +1,7 @@
 <template>
-  <mgl-geo-json-source source-id="point" :data="geojsonSource">
-    <mgl-symbol-layer layer-id="AskForHelp" :layout="layout" />
+  <mgl-geo-json-source source-id="point" :data="geojsonSources">
+    <mgl-symbol-layer v-for="pinMarker in props.features" :key="pinMarker.symbol" :layer-id="pinMarker.symbol"
+      :layout="layout" />
   </mgl-geo-json-source>
 </template>
 
@@ -10,20 +11,28 @@ import {
   MglSymbolLayer
 } from '@indoorequal/vue-maplibre-gl';
 
-const geojsonSource = {
+const props = defineProps<{
+  features: {
+    coordinates: number[],
+    symbol: string
+  }[],
+  zoom?: number
+}>()
+
+const geojsonSources = {
   type: 'FeatureCollection',
-  features: [
-    {
+  features: props.features.map((feature) => {
+    return {
       type: 'Feature',
       geometry: {
         type: 'Point',
-        coordinates: [-55, -24.8]
+        coordinates: feature.coordinates
       },
       properties: {
-        symbol: 'AskForHelp'
+        symbol: feature.symbol
       }
     }
-  ]
+  })
 };
 
 const layout = {

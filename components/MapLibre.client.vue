@@ -3,7 +3,7 @@
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom">
     <mgl-navigation-control position="bottom-right" />
     <mgl-image id="AskForHelp" :image="askForHelpImg" />
-    <PinMarker />
+    <PinMarker :features="pinMarkersFeatures" />
   </mgl-map>
 </template>
 
@@ -21,6 +21,16 @@ const askForHelpImg = ref(null);
 const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
 const center = [-55, -14.8];
 const zoom = 3.92;
+const pinMarkersFeatures = [
+  {
+    coordinates: [-55, -24.8],
+    symbol: 'AskForHelp'
+  },
+  {
+    coordinates: [-55, -14.8],
+    symbol: 'AskForHelp'
+  }
+]
 // const pinImgs = [
 //   {
 //     name: 'PinAskForHelp',
