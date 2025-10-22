@@ -1,10 +1,19 @@
 <template>
-  <img ref="askForHelpImg" id="askforhelp" class="hidden" src="/assets/vectors/PinAskForHelp.svg" alt="pin-ask">
-  <img ref="bloodBankImg" id="bloodbank" class="hidden" src="/assets/vectors/PinBloodBank.svg" alt="pin-blood-bank">
+  <img ref="pinAskForHelpImg" id="askforhelp" class="hidden" src="/assets/vectors/PinAskForHelp.svg"
+    alt="pin-ask-for-help">
+  <img ref="pinBloodBankImg" id="bloodbank" class="hidden" src="/assets/vectors/PinBloodBank.svg" alt="pin-blood-bank">
+  <img ref="pinEventImg" id="event" class="hidden" src="/assets/vectors/PinEvent.svg" alt="pin-event">
+  <img ref="pinHemoCenterImg" id="hemocenter" class="hidden" src="/assets/vectors/PinHemoCenter.svg"
+    alt="pin-hemocenter">
+  <img ref="pinHospitalImg" id="hospital" class="hidden" src="/assets/vectors/PinHospital.svg" alt="pin-hospital">
+
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom">
     <mgl-navigation-control position="bottom-right" />
-    <mgl-image id="askforhelp" :image="askForHelpImg" />
-    <mgl-image id="bloodbank" :image="bloodBankImg" />
+    <mgl-image id="askforhelp" :image="pinAskForHelpImg" />
+    <mgl-image id="bloodbank" :image="pinBloodBankImg" />
+    <mgl-image id="event" :image="pinEventImg" />
+    <mgl-image id="hemocenter" :image="pinHemoCenterImg" />
+    <mgl-image id="hospital" :image="pinHospitalImg" />
     <PinMarker :features="pinMarkersFeatures" />
   </mgl-map>
 </template>
@@ -18,8 +27,11 @@ import {
 } from '@indoorequal/vue-maplibre-gl';
 
 // TODO: THINK OF A BETTER WAY TO DECLARE THIS REFS
-const askForHelpImg = ref(null);
-const bloodBankImg = ref(null);
+const pinAskForHelpImg = ref(null);
+const pinBloodBankImg = ref(null);
+const pinEventImg = ref(null);
+const pinHemoCenterImg = ref(null);
+const pinHospitalImg = ref(null);
 
 
 // Basic info
