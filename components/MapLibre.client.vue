@@ -1,8 +1,11 @@
 <template>
   <img ref="askForHelpImg" id="AskForHelp" class="hidden h-10 w-10" src="/assets/pngs/PinAskForHelp.png" alt="pin-ask">
+  <img ref="bloodBankImg" id="BloodBank" class="hidden h-10 w-10" src="/assets/pngs/PinBloodBank.png"
+    alt="pin-blood-bank">
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom">
     <mgl-navigation-control position="bottom-right" />
     <mgl-image id="AskForHelp" :image="askForHelpImg" />
+    <mgl-image id="BloodBank" :image="bloodBankImg" />
     <PinMarker :features="pinMarkersFeatures" />
   </mgl-map>
 </template>
@@ -15,7 +18,10 @@ import {
   MglImage
 } from '@indoorequal/vue-maplibre-gl';
 
+// TODO: THINK OF A BETTER WAY TO DECLARE THIS REFS
 const askForHelpImg = ref(null);
+const bloodBankImg = ref(null);
+
 
 // Basic info
 const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
@@ -28,7 +34,7 @@ const pinMarkersFeatures = [
   },
   {
     coordinates: [-55, -14.8],
-    symbol: 'AskForHelp'
+    symbol: 'BloodBank'
   }
 ]
 // const pinImgs = [
