@@ -1,42 +1,24 @@
 <template>
-  <mgl-geo-json-source source-id="points" :data="geojsonSources">
-    <mgl-symbol-layer layer-id="points" :layout="layout" />
-  </mgl-geo-json-source>
+  <mgl-marker :coordinates="coordinates">
+    <template v-slot:marker>
+      <img v-show="type === 'askforhelp'" class="w-9 h-9" src="/assets/vectors/PinAskForHelp.svg" :alt="alt">
+      <img v-show="type === 'bloodbank'" class="w-9 h-9" src="/assets/vectors/PinBloodBank.svg" :alt="alt">
+      <img v-show="type === 'event'" class="w-9 h-9" src="/assets/vectors/PinEvent.svg" :alt="alt">
+      <img v-show="type === 'hemocenter'" class="w-9 h-9" src="/assets/vectors/PinHemoCenter.svg" :alt="alt">
+      <img v-show="type === 'hospital'" class="w-9 h-9" src="/assets/vectors/PinHospital.svg" :alt="alt">
+    </template>
+  </mgl-marker>
 </template>
 
 <script setup lang="ts">
 import {
-  MglGeoJsonSource,
-  MglSymbolLayer
+  MglMarker
 } from '@indoorequal/vue-maplibre-gl';
 
 const props = defineProps<{
-  features: {
-    coordinates: number[],
-    symbol: string
-  }[],
-  zoom?: number
+  type: string,
+  coordinates: number[],
+  alt: string
 }>()
-
-const geojsonSources = {
-  type: 'FeatureCollection',
-  features: props.features.map((feature) => {
-    return {
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: feature.coordinates
-      },
-      properties: {
-        symbol: feature.symbol
-      }
-    }
-  })
-};
-
-const layout = {
-  'icon-image': ['get', 'symbol'],
-  'icon-size': 1
-};
 
 </script>
