@@ -1,24 +1,48 @@
 <template>
-  <mgl-marker :coordinates="coordinates">
-    <template v-slot:marker>
-      <img v-show="type === 'askforhelp'" class="w-9 h-9" src="/assets/vectors/PinAskForHelp.svg" :alt="alt">
-      <img v-show="type === 'bloodbank'" class="w-9 h-9" src="/assets/vectors/PinBloodBank.svg" :alt="alt">
-      <img v-show="type === 'event'" class="w-9 h-9" src="/assets/vectors/PinEvent.svg" :alt="alt">
-      <img v-show="type === 'hemocenter'" class="w-9 h-9" src="/assets/vectors/PinHemoCenter.svg" :alt="alt">
-      <img v-show="type === 'hospital'" class="w-9 h-9" src="/assets/vectors/PinHospital.svg" :alt="alt">
-    </template>
-  </mgl-marker>
+  <mgl-geo-json-source source-id="points" :data="geojsonSources">
+    <mgl-symbol-layer layer-id="points" :layout="layout" @click="handleSymbolClick" />
+  </mgl-geo-json-source>
 </template>
 
 <script setup lang="ts">
 import {
-  MglMarker
+  MglGeoJsonSource,
+  MglSymbolLayer
 } from '@indoorequal/vue-maplibre-gl';
+import type { MapMouseEvent } from 'maplibre-gl';
 
 const props = defineProps<{
-  type: string,
-  coordinates: number[],
-  alt: string
+  features: {
+    coordinates: number[],
+    [key: string]: any
+  }[],
+  zoom?: number
 }>()
 
+const geojsonSources = {
+  type: 'FeatureCollection',
+  features: props.features.map((feature) => {
+    const { coordinates, ...properties } = feature;
+    return {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates
+      },
+      properties
+    }
+  })
+};
+
+const layout = {
+  'icon-image': ['get', 'symbol'],
+  'icon-size': 0.33
+};
+
+function handleSymbolClick(event: MapMouseEvent) {
+  if (event.features && event.features.length > 0) {
+    const feature = event.features[0];
+    console.log('Dados do ponto:', feature.properties);
+  }
+}
 </script>
