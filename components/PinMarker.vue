@@ -36,7 +36,7 @@ const geojsonSources = {
 
 const layout = {
   'icon-image': ['get', 'symbol'],
-  'icon-size': 1
+  'icon-size': 0.33
 };
 
 function handleSymbolClick(event: MapMouseEvent) {
