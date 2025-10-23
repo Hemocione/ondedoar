@@ -8,6 +8,8 @@
   <img ref="pinHospitalImg" id="hospital" class="hidden" src="/assets/vectors/PinHospital.svg" alt="pin-hospital">
 
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom">
+    <mgl-geolocate-control position="bottom-left" :position-options="{ enableHighAccuracy: true }"
+      :track-user-location="true" :show-user-location="true" />
     <mgl-navigation-control position="bottom-right" />
     <mgl-image id="askforhelp" :image="pinAskForHelpImg" />
     <mgl-image id="bloodbank" :image="pinBloodBankImg" />
@@ -23,6 +25,7 @@ import { ref } from 'vue';
 import {
   MglMap,
   MglNavigationControl,
+  MglGeolocateControl,
   MglImage
 } from '@indoorequal/vue-maplibre-gl';
 
