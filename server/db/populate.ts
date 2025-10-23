@@ -3,7 +3,8 @@ import { Point } from "./models/points";
 import { SyncManager } from "./models/syncManager";
 
 async function populate() {
-	await mongoose.connect("mongodb://localhost:27018/local");
+	const config = useRuntimeConfig();
+	await mongoose.connect(config.db.mongo.uri);
 
 	const pointOne = await Point.create(
 		{
