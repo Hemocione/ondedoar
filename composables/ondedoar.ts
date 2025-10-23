@@ -8,7 +8,7 @@ export const getPointsParsed = async () => {
   return points.map((point: any) => {
     return {
       coordinates: point.loc.coordinates,
-      symbol: point.type
+      type: point.type
     }
   })
 }
