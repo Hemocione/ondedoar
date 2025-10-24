@@ -1,5 +1,5 @@
 <template>
-  <div class="inline-flex justify-center items-center px-2 py-0.5 rounded-full text-[0.65rem] font-bold"
+  <div class="inline-flex justify-center items-center px-2 py-0.5 rounded-full text-[0.65rem] font-medium"
     :style="{ backgroundColor: backgroundColor, color: color }">
     {{ name }}
   </div>
