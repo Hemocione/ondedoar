@@ -7,7 +7,8 @@
     alt="pin-hemocenter">
   <img ref="pinHospitalImg" id="hospital" class="hidden" src="/assets/vectors/PinHospital.svg" alt="pin-hospital">
 
-  <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom">
+  <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom"
+    @map:load="onMapLoad">
     <mgl-navigation-control position="bottom-right" />
     <mgl-image id="askforhelp" :image="pinAskForHelpImg" />
     <mgl-image id="bloodbank" :image="pinBloodBankImg" />
@@ -39,6 +40,35 @@ const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaG
 const center = [-55, -14.8];
 const zoom = 3.92;
 const pinMarkersFeatures = await getPointsParsed();
+
+// --- Contagem de marcadores visíveis ---
+const mapInstance = ref(null);
+
+const updateVisibleMarkersCount = () => {
+  if (!mapInstance.value) return;
+
+  const features = mapInstance.value.queryRenderedFeatures({ layers: ['points'] });
+
+  // Usamos um Set para garantir que cada marcador seja contado apenas uma vez,
+  // mesmo que a biblioteca do mapa o divida em múltiplos "features" renderizados.
+  // O ID do ponto (ex: `feature.properties._id`) é usado para a identificação única.
+  const uniqueIds = new Set();
+  features.forEach(feature => uniqueIds.add(feature.properties._id));
+
+  console.log('Marcadores visíveis:', uniqueIds.size);
+};
+
+const onMapLoad = (event) => {
+  mapInstance.value = event.map;
+  // Atualiza a contagem sempre que o mapa terminar de se mover ou dar zoom.
+  mapInstance.value.on('moveend', updateVisibleMarkersCount);
+  mapInstance.value.on('zoomend', updateVisibleMarkersCount);
+
+  // Chama uma vez no início para a contagem inicial.
+  updateVisibleMarkersCount();
+}
+// --- Fim da contagem ---
+
 
 // TODO: Implement summary when zoom out (ask Joyce to draw a mockup)
 // TODO: Use this to check how many pins to show
