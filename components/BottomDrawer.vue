@@ -11,20 +11,9 @@
       'invisible': drawerState === 'collapsed',
       'visible': drawerState !== 'collapsed'
     }">
-      <div class="p-4">
-        <h2 class="text-lg font-bold">Conteúdo da Drawer</h2>
-        <p>Aqui vai o conteúdo, como a lista de acomodações ou filtros.</p>
-        <p class="mt-4">Estado atual: {{ drawerState }}</p>
-
-        <div class="mt-4 flex space-x-2">
-          <UButton @click.stop="snapTo('collapsed')" label="Recolher" />
-          <UButton @click.stop="snapTo('partial')" label="Parcial" />
-          <UButton @click.stop="snapTo('full')" label="Expandir" />
-        </div>
-
-        <div class="mt-4 h-96 space-y-2">
-          <div v-for="i in 20" :key="i" class="h-10 rounded bg-gray-100 p-2">Item {{ i }}</div>
-        </div>
+      <div class="px-7 py-2">
+        <ItemShortInfo v-for="i in 20" :key="i" class="pb-3" distance="10" address="Rua Itua 222, apt 204"
+          :type="'bloodbank'" />
       </div>
     </div>
   </div>
