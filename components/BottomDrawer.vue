@@ -1,9 +1,17 @@
 <template>
-  <UDrawer v-model:open="open" :overlay="false" :activeSnapPoint="snapPoint" :snap-points="[0.1, 0.4, 0.8]">
+  <UDrawer v-model:open="open" :overlay="false" :activeSnapPoint="snapPoint"
+    :snap-points="[snapPoints.collapsed, snapPoints.partial, snapPoints.full]">
     <template #content>
-      <UButton label="Para partial" v-if="snapPoint === 0.1" class="h-10 m-4" @click="snapPoint = 0.4" />
-      <UButton label="Para full" v-if="snapPoint === 0.4" class="h-48 m-4" @click="snapPoint = 0.8" />
-      <UButton label="Para collapsed" v-if="snapPoint === 0.8" class="h-96 m-4" @click="snapPoint = 0.1" />
+      <div v-show="snapPoint === snapPoints.collapsed">
+        <UButton label="Para partial" class="h-10 m-4" @click="snapPoint = snapPoints.partial" />
+
+      </div>
+
+      <div v-show="snapPoint !== snapPoints.collapsed">
+        <UButton label="Para full" class="h-48 m-4" @click="snapPoint = snapPoints.full" />
+        <UButton label="Para collapsed" v-if="snapPoint === snapPoints.full" class="h-96 m-4"
+          @click="snapPoint = snapPoints.collapsed" />
+      </div>
     </template>
 
   </UDrawer>
@@ -12,7 +20,7 @@
 <script setup lang="ts">
 const open = ref(true)
 const snapPoints = {
-  collapsed: 0.1,
+  collapsed: 0.15,
   partial: 0.4,
   full: 0.8,
 }
