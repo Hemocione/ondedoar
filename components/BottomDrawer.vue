@@ -49,8 +49,8 @@ const heights = ref({
 })
 
 onMounted(() => {
-  heights.value.partial = window.innerHeight * 0.5
-  heights.value.collapsed = window.innerHeight - 80
+  heights.value.partial = window.innerHeight * 0.58
+  heights.value.collapsed = window.innerHeight * 0.58
   // Inicializa currentY com o valor correto
   snapTo(drawerState.value)
 })
