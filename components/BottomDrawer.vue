@@ -37,8 +37,11 @@ const heights = ref({
   collapsed: 0, // Será definido no onMounted
 })
 
+// TODO: FIX HIGH FOR PARTIAL STATE
+// TODO: ADD SKELETON LOADING FOR ITEMS
+// TODO: ADD SKELETON FOR COLLAPSED TO SHOW ALL RESULTS COUNT IN MAP VIEW
 onMounted(() => {
-  heights.value.partial = window.innerHeight * 0.58
+  heights.value.partial = window.innerHeight * 0.80
   heights.value.collapsed = window.innerHeight * 0.58
   // Inicializa currentY com o valor correto
   snapTo(drawerState.value)
