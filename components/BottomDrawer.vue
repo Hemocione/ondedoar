@@ -1,12 +1,13 @@
 <template>
   <!-- TODO: REMOVE RING FROM DRAWER UI -->
   <UDrawer v-model:open="open" :overlay="false" :activeSnapPoint="snapPoint" :dismissible="false" :modal="false"
-    :snap-points="[snapPoints.collapsed, snapPoints.partial]" :ui="{ body: 'bg-white', content: 'bg-white' }">
+    :snap-points="[snapPoints.collapsed, snapPoints.partial]" :ui="{ body: 'bg-white', content: 'bg-white' }"
+    @update:activeSnapPoint="snapPoint = Number($event)">
     <template #content>
       <div v-show="snapPoint === snapPoints.collapsed" class="flex flex-col items-center p-4">
         <USkeleton v-if="loadingVisibleFeatures" class="h-6 w-[120px]" :ui="{ base: 'bg-red-500' }" />
         <div v-else class="text-hemo-color-text-secondary font-medium">
-          {{ visibleFeaturesCount }} locais visíveis
+          {{ visibleFeaturesCount }} locais visíveis {{ snapPoint }}
         </div>
       </div>
 
