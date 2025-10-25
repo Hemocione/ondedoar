@@ -4,7 +4,7 @@
     :snap-points="[snapPoints.collapsed, snapPoints.partial]" :ui="{ body: 'bg-white', content: 'bg-white' }">
     <template #content>
       <div v-show="snapPoint === snapPoints.collapsed">
-        <UButton label="Para partial" class="h-10 m-4" @click="snapPoint = snapPoints.partial" />
+        <UButton :label="String(visibleFeaturesCount)" class="h-10 m-4" @click="snapPoint = snapPoints.partial" />
 
       </div>
 
@@ -25,4 +25,7 @@ const snapPoints = {
   partial: 0.4,
 }
 const snapPoint = ref(snapPoints.collapsed)
+
+const visibleFeatures = useVisibleFeatures();
+const visibleFeaturesCount = computed(() => visibleFeatures.value.length);
 </script>

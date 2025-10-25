@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: CHANGE IT SO WE SEARCH FOR ADDRESSES AND NOT HEMOTHINKS -->
   <div class="flex justify-center w-full">
     <UInput v-model="place" variant="soft" size="md" type="text" placeholder="Buscar endereço... "
       icon="i-heroicons-magnifying-glass"

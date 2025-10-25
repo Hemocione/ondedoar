@@ -44,28 +44,33 @@ const pinMarkersFeatures = await getPointsParsed();
 // --- Contagem de marcadores visíveis ---
 const mapInstance = ref(null);
 
-const updateVisibleMarkersCount = () => {
+const visibleFeatures = useVisibleFeatures();
+
+const updateVisibleFeatures = () => {
   if (!mapInstance.value) return;
 
   const features = mapInstance.value.queryRenderedFeatures({ layers: ['points'] });
 
-  // Usamos um Set para garantir que cada marcador seja contado apenas uma vez,
-  // mesmo que a biblioteca do mapa o divida em múltiplos "features" renderizados.
-  // O ID do ponto (ex: `feature.properties._id`) é usado para a identificação única.
-  const uniqueIds = new Set();
-  features.forEach(feature => uniqueIds.add(feature.properties._id));
+  // Usamos um Map para garantir que cada feature seja única, usando seu ID.
+  const uniqueFeatures = new Map();
+  features.forEach(feature => {
+    if (!uniqueFeatures.has(feature.properties._id)) {
+      uniqueFeatures.set(feature.properties._id, feature.properties);
+    }
+  });
 
-  console.log('Marcadores visíveis:', uniqueIds.size);
+  // Atualiza o estado global com a lista de propriedades das features visíveis.
+  visibleFeatures.value = Array.from(uniqueFeatures.values());
 };
 
 const onMapLoad = (event) => {
   mapInstance.value = event.map;
-  // Atualiza a contagem sempre que o mapa terminar de se mover ou dar zoom.
-  mapInstance.value.on('moveend', updateVisibleMarkersCount);
-  mapInstance.value.on('zoomend', updateVisibleMarkersCount);
+  // Atualiza a lista sempre que o mapa terminar de se mover ou dar zoom.
+  mapInstance.value.on('moveend', updateVisibleFeatures);
+  mapInstance.value.on('zoomend', updateVisibleFeatures);
 
-  // Chama uma vez no início para a contagem inicial.
-  updateVisibleMarkersCount();
+  // Chama uma vez no início para a lista inicial.
+  updateVisibleFeatures();
 }
 // --- Fim da contagem ---
 
