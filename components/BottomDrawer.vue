@@ -1,6 +1,6 @@
 <template>
   <!-- TODO: REMOVE RING FROM DRAWER UI -->
-  <UDrawer v-model:open="open" :overlay="false" :activeSnapPoint="snapPoint" :dismissible="false"
+  <UDrawer v-model:open="open" :overlay="false" :activeSnapPoint="snapPoint" :dismissible="false" :modal="false"
     :snap-points="[snapPoints.collapsed, snapPoints.partial]" :ui="{ body: 'bg-white', content: 'bg-white' }">
     <template #content>
       <div v-show="snapPoint === snapPoints.collapsed">
