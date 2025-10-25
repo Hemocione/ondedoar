@@ -45,6 +45,7 @@ const pinMarkersFeatures = await getPointsParsed();
 const mapInstance = ref(null);
 
 const visibleFeatures = useVisibleFeatures();
+const loadingVisibleFeatures = useLoadingVisibleFeatures();
 
 const updateVisibleFeatures = () => {
   if (!mapInstance.value) return;
@@ -61,16 +62,18 @@ const updateVisibleFeatures = () => {
 
   // Atualiza o estado global com a lista de propriedades das features visíveis.
   visibleFeatures.value = Array.from(uniqueFeatures.values());
+
+  if (loadingVisibleFeatures.value) {
+    loadingVisibleFeatures.value = false;
+  }
 };
 
 const onMapLoad = (event) => {
   mapInstance.value = event.map;
-  // Atualiza a lista sempre que o mapa terminar de se mover ou dar zoom.
-  mapInstance.value.on('moveend', updateVisibleFeatures);
-  mapInstance.value.on('zoomend', updateVisibleFeatures);
-
-  // Chama uma vez no início para a lista inicial.
-  updateVisibleFeatures();
+  
+  // Atualiza a lista de features visíveis sempre que o mapa ficar ocioso 
+  // (após zoom, pan, etc., e também no carregamento inicial).
+  mapInstance.value.on('idle', updateVisibleFeatures);
 }
 // --- Fim da contagem ---
 
