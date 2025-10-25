@@ -2,6 +2,7 @@
   <div ref="drawer" :style="drawerStyle" class="fixed inset-x-0 bottom-0 z-20 flex flex-col"
     :class="{ 'transition-transform duration-300 ease-out': !isDragging }">
     <div @mousedown="startDrag" @touchstart="startDrag"
+      @click="drawerState = drawerState === 'full' ? 'partial' : 'full'"
       class="flex-shrink-0 cursor-pointer bg-white p-4 shadow-lg  rounded-t-[32px]">
       <div class="mx-auto h-1.5 w-12 rounded-full bg-gray-300"></div>
     </div>
