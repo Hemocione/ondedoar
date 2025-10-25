@@ -3,9 +3,10 @@
   <UDrawer v-model:open="open" :overlay="false" :activeSnapPoint="snapPoint" :dismissible="false" :modal="false"
     :snap-points="[snapPoints.collapsed, snapPoints.partial]" :ui="{ body: 'bg-white', content: 'bg-white' }">
     <template #content>
-      <div v-show="snapPoint === snapPoints.collapsed">
-        <UButton :label="String(visibleFeaturesCount)" class="h-10 m-4" @click="snapPoint = snapPoints.partial" />
-
+      <div v-show="snapPoint === snapPoints.collapsed" class="flex flex-col items-center p-4">
+        <div class="text-hemo-color-text-secondary font-medium">
+          {{ visibleFeaturesCount }} locais visíveis
+        </div>
       </div>
 
       <div v-show="snapPoint !== snapPoints.collapsed">
