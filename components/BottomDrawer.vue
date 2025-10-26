@@ -14,9 +14,13 @@
         </div>
 
         <div v-else>
-          <div v-for="visibleFeature in visibleFeatures" :key="visibleFeature.name">
-            <USkeleton v-if="loadingVisibleFeatures" class="h-6 w-[120px]" :ui="{ base: 'bg-red-500' }" />
-            <ItemShortInfo :distance="'10km'" :address="visibleFeature.address" :type="visibleFeature.type" />
+          <div v-if="isTransitioning || loadingVisibleFeatures" class="p-2 space-y-2">
+            <USkeleton v-for="i in (visibleFeaturesCount || 3)" :key="i" class="h-20 w-full" />
+          </div>
+          <div v-else>
+            <div v-for="visibleFeature in visibleFeatures" :key="visibleFeature.name">
+              <ItemShortInfo :distance="'10km'" :address="visibleFeature.address" :type="visibleFeature.type" />
+            </div>
           </div>
         </div>
       </Transition>
@@ -26,6 +30,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch, computed } from 'vue';
+
 // TODO: Think of full state, if it's needed. In case it is: move header to upfront in template, changing z-index.
 
 const open = ref(true)
@@ -34,6 +40,16 @@ const snapPoints = {
   partial: 0.4,
 }
 const snapPoint = ref(snapPoints.collapsed)
+const isTransitioning = ref(false);
+
+watch(snapPoint, (newSnapPoint) => {
+  if (newSnapPoint === snapPoints.partial) {
+    isTransitioning.value = true;
+    setTimeout(() => {
+      isTransitioning.value = false;
+    }, 1000); // 1 second
+  }
+});
 
 const visibleFeatures = useVisibleFeatures();
 const visibleFeaturesCount = computed(() => visibleFeatures ? visibleFeatures.value.length : undefined);
