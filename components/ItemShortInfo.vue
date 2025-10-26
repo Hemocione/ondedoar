@@ -1,21 +1,31 @@
-<!-- TODO: MOVE SKELETON TO HERE -->
-<!-- TODO: ADD PROP CALLED LOADING TO CONTROL SKELETON-->
 <template>
-  <div class="flex flex-col">
-    <span class="title font-bold text-small">Teste</span>
-    <span class="subtitle font-normal text-xs text-gray-500">{{ formatSubtitle(distance, address) }}</span>
-    <TypeTag :type="type" class="self-start mt-1" />
+  <div class="p-4 border-b border-gray-200">
+    <div v-if="loading" class="space-y-2 animate-pulse">
+      <USkeleton class="h-5 w-3/4" />
+      <USkeleton class="h-4 w-full" />
+      <USkeleton class="h-6 w-28 mt-1" />
+    </div>
+    <div v-else class="flex flex-col">
+      <span class="title font-bold text-small">{{ title }}</span>
+      <span class="subtitle font-normal text-xs text-gray-500">{{ formatSubtitle(distance, address) }}</span>
+      <TypeTag :type="type" class="self-start mt-1" />
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 defineProps<{
-  distance: string,
-  address: string,
-  type: string
-}>()
+  title?: string,
+  distance?: string,
+  address?: string,
+  type?: string,
+  loading?: boolean
+}>();
 
-function formatSubtitle(distance: string, address: string): string {
+function formatSubtitle(distance?: string, address?: string): string {
+  if (!distance || !address) {
+    return '';
+  }
   return `${distance} • ${address}`;
 }
 </script>

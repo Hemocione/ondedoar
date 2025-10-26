@@ -13,15 +13,9 @@
           </div>
         </div>
 
-        <div v-else>
-          <div v-if="isTransitioning || loadingVisibleFeatures" class="p-2 space-y-2">
-            <USkeleton v-for="i in (visibleFeaturesCount || 3)" :key="i" class="h-20 w-full" />
-          </div>
-          <div v-else>
-            <div v-for="visibleFeature in visibleFeatures" :key="visibleFeature.name">
-              <ItemShortInfo :distance="'10km'" :address="visibleFeature.address" :type="visibleFeature.type" />
-            </div>
-          </div>
+        <div v-else class="p-2 space-y-2">
+          <ItemShortInfo v-for="item in displayItems" :key="item.key" :loading="item.loading" :title="item.name"
+            :distance="'10km'" :address="item.address" :type="item.type" />
         </div>
       </Transition>
     </template>
@@ -47,13 +41,31 @@ watch(snapPoint, (newSnapPoint) => {
     isTransitioning.value = true;
     setTimeout(() => {
       isTransitioning.value = false;
-    }, 1000); // 1 second
+    }, 1500); // 0.5 second
   }
 });
 
 const visibleFeatures = useVisibleFeatures();
 const visibleFeaturesCount = computed(() => visibleFeatures ? visibleFeatures.value.length : undefined);
 const loadingVisibleFeatures = useLoadingVisibleFeatures();
+
+const displayItems = computed(() => {
+  // If transitioning or loading data, show skeletons
+  if (isTransitioning.value || loadingVisibleFeatures.value) {
+    const count = visibleFeaturesCount.value || 3; // Use real count or 3 as a fallback
+    return Array.from({ length: count }, (_, i) => ({
+      key: `skeleton-${i}`,
+      loading: true
+    }));
+  }
+
+  // Otherwise, show real data
+  return visibleFeatures.value.map(feature => ({
+    ...feature,
+    key: feature.name,
+    loading: false,
+  }));
+});
 
 </script>
 
