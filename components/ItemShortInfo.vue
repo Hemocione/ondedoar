@@ -1,3 +1,5 @@
+<!-- TODO: MOVE SKELETON TO HERE -->
+<!-- TODO: ADD PROP CALLED LOADING TO CONTROL SKELETON-->
 <template>
   <div class="flex flex-col">
     <span class="title font-bold text-small">Teste</span>
