@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 border-b border-gray-200">
+  <div class="px-7 py-4">
     <div v-if="loading" class="space-y-2 animate-pulse">
       <USkeleton class="h-5 w-3/4" />
       <USkeleton class="h-4 w-full" />
