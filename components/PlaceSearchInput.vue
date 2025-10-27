@@ -58,7 +58,15 @@ watch(place, (newPlace) => {
   clearTimeout(debounceTimer);
   if (newPlace.length > 2) {
     debounceTimer = setTimeout(async () => {
-      suggestions.value = await getGeocodingSuggestions(newPlace);
+      const fetchedSuggestions = await getGeocodingSuggestions(newPlace);
+      const uniqueSuggestions = new Map();
+      fetchedSuggestions.forEach(suggestion => {
+        const formattedAddress = formatNominatimAddress(suggestion.address) || suggestion.display_name;
+        if (!uniqueSuggestions.has(formattedAddress)) {
+          uniqueSuggestions.set(formattedAddress, suggestion);
+        }
+      });
+      suggestions.value = Array.from(uniqueSuggestions.values());
       isSuggestionsVisible.value = true;
     }, 500); // 500ms delay
   } else {

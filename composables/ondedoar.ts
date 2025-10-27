@@ -5,11 +5,15 @@ async function getPoints() {
 // TODO: ADD TYPING
 export const getPointsParsed = async () => {
   const points = await getPoints()
-  return points.map((point: any) => {
-    return {
-      coordinates: point.loc.coordinates,
-      symbol: point.type,
-      ...point
+  const uniquePoints = new Map()
+  points.forEach((point: any) => {
+    if (!uniquePoints.has(point.address)) {
+      uniquePoints.set(point.address, {
+        coordinates: point.loc.coordinates,
+        symbol: point.type,
+        ...point,
+      })
     }
   })
+  return Array.from(uniquePoints.values())
 }
