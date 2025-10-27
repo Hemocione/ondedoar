@@ -12,6 +12,7 @@
           </div>
         </div>
 
+        <!-- TODO: MUST FIX SCROLL. THE LAST 5 ITEMS ARE NEVER SCROLLABLE -->
         <div v-else class="my-4 overflow-auto">
           <ItemShortInfo v-for="item in displayItems" :key="item.key" :loading="item.loading" :title="item.name"
             :address="item.address" :type="item.type" />
