@@ -14,7 +14,7 @@
 
         <div v-else class="my-4 overflow-auto">
           <ItemShortInfo v-for="item in displayItems" :key="item.key" :loading="item.loading" :title="item.name"
-            :distance="'10km'" :address="item.address" :type="item.type" />
+            :address="item.address" :type="item.type" />
         </div>
       </Transition>
     </template>

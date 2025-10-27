@@ -23,11 +23,11 @@ defineProps<{
 }>();
 
 function formatSubtitle(distance?: string, address?: string): string {
-  if (!distance || !address) {
+  if (!distance && !address) {
     return '';
   }
 
-  if (!distance) {
+  if (!distance && address) {
     return address;
   }
 
