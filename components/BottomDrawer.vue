@@ -3,7 +3,8 @@
   <!-- TODO: THINK OF MOVING THE ELEMENTS INSIDE TEMPLATE CONTENT TO A SLOT -->
   <UDrawer v-model:open="open" :overlay="false" :activeSnapPoint="snapPoint" :dismissible="false" :modal="false"
     :snap-points="[snapPoints.collapsed, snapPoints.partial]"
-    :ui="{ body: 'bg-white', content: 'bg-white rounded-t-4xl' }" @update:activeSnapPoint="snapPoint = Number($event)">
+    :ui="{ body: 'bg-white', content: 'bg-white rounded-t-4xl border-0' }"
+    @update:activeSnapPoint="snapPoint = Number($event)">
     <template #content>
       <Transition name="fade" mode="out-in">
         <div v-if="snapPoint === snapPoints.collapsed" class="flex flex-col items-center p-4">
@@ -13,7 +14,7 @@
           </div>
         </div>
 
-        <div v-else class="py-2">
+        <div v-else class="my-4 overflow-auto">
           <ItemShortInfo v-for="item in displayItems" :key="item.key" :loading="item.loading" :title="item.name"
             :distance="'10km'" :address="item.address" :type="item.type" />
         </div>
