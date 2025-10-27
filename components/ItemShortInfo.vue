@@ -26,6 +26,11 @@ function formatSubtitle(distance?: string, address?: string): string {
   if (!distance || !address) {
     return '';
   }
+
+  if (!distance) {
+    return address;
+  }
+
   return `${distance} • ${address}`;
 }
 </script>
