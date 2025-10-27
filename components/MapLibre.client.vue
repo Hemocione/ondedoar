@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import {
   MglMap,
   MglNavigationControl,
@@ -37,7 +37,7 @@ const pinHospitalImg = ref(null);
 
 // Basic info
 const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
-const center = [-55, -14.8];
+const center = useMapCenter();
 const zoom = 3.92;
 const pinMarkersFeatures = await getPointsParsed();
 
@@ -70,8 +70,8 @@ const updateVisibleFeatures = () => {
 
 const onMapLoad = (event) => {
   mapInstance.value = event.map;
-  
-  // Atualiza a lista de features visíveis sempre que o mapa ficar ocioso 
+
+  // Atualiza a lista de features visíveis sempre que o mapa ficar ocioso
   // (após zoom, pan, etc., e também no carregamento inicial).
   mapInstance.value.on('idle', updateVisibleFeatures);
 }
@@ -87,5 +87,11 @@ const onMapZoom = (map) => {
   // Você pode ajustar a fórmula `* 10` para controlar o quão rápido o marcador cresce.
   currentZoom.value = map.map.scrollZoom._targetZoom;
 };
+
+watch(center, (newCenter) => {
+  if (mapInstance.value) {
+    mapInstance.value.flyTo({ center: newCenter, zoom: 15 });
+  }
+});
 
 </script>
