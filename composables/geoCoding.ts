@@ -68,3 +68,48 @@ export const handleGeocoding = async (address: string): Promise<number[]> => {
   const parsedAddress = parseAddress(address);
   return await getGeocodingByAddress(parsedAddress);
 }
+
+export const getGeocodingSuggestions = async (address: string): Promise<NominatimResult[]> => {
+  const parsedAddress = parseAddress(address);
+  const nominatimUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${parsedAddress}&limit=5&addressdetails=1`;
+  const response = await $fetch(nominatimUrl, {
+    headers: {
+      "User-Agent": "GeofenceDrawer/1.0",
+    },
+  }) as NominatimResult[];
+
+  return response || [];
+}
+
+export function formatNominatimAddress(address?: NominatimAddress): string {
+  if (!address) {
+    return '';
+  }
+
+  const street = [address.road, address.house_number].filter(Boolean).join(', ');
+  const city = address.city || address.town || address.village;
+  const neighborhood = address.neighbourhood || address.suburb;
+
+  const parts: string[] = [];
+
+  if (street) {
+    parts.push(street);
+  }
+
+  const locationParts: string[] = [];
+  if (neighborhood) {
+    locationParts.push(neighborhood);
+  }
+  if (city) {
+    locationParts.push(city);
+  }
+  if (address.state) {
+    locationParts.push(address.state);
+  }
+
+  if (locationParts.length > 0) {
+    parts.push(locationParts.join(' - '));
+  }
+
+  return parts.join(' - ');
+}
