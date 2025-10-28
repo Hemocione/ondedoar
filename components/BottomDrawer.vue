@@ -1,7 +1,7 @@
 <template>
   <UDrawer v-model:open="open" :overlay="false" :activeSnapPoint="snapPoint" :dismissible="false" :modal="false"
-    :snap-points="[snapPoints.collapsed, snapPoints.partial]"
-    :ui="{ body: 'bg-white', content: 'bg-white rounded-t-4xl ring-0' }"
+    :snap-points="visibleFeaturesCount != 0 ? [snapPoints.collapsed, snapPoints.partial] : [snapPoints.collapsed]"
+    :ui="{ body: 'bg-white', content: 'bg-white rounded-t-4xl ring-0 flex flex-col', container: 'h-full' }"
     @update:activeSnapPoint="snapPoint = Number($event)">
     <template #content>
       <Transition name="fade" mode="out-in">
@@ -16,6 +16,11 @@
         <div v-else class="my-4 overflow-auto">
           <ItemShortInfo v-for="item in displayItems" :key="item.key" :loading="item.loading" :title="item.name"
             :address="item.address" :type="item.type" />
+          <!-- BE MY GUEST TRYING TO FIX SCROLL WITHOUT THIS WORKAROUND -->
+          <div class="p-2.5">
+            <ItemShortInfo v-for="i in 6" :key="'fake-' + i" :loading="false" title="&nbsp;" address="&nbsp;"
+              type="bloodbank" style="visibility: hidden" />
+          </div>
         </div>
       </Transition>
     </template>
