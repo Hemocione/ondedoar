@@ -31,7 +31,6 @@
         </UButton>
 
         <UButton
-          trailing-icon="i-heroicons-arrow-right"
           class="not-now-buttom w-full flex justify-center items-center"
           color="neutral"
           @click="closeModal()"
