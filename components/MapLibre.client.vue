@@ -7,7 +7,8 @@
     alt="pin-hemocenter">
   <img ref="pinHospitalImg" id="hospital" class="hidden" src="/assets/vectors/PinHospital.svg" alt="pin-hospital">
 
-  <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom">
+  <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom"
+    @map:load="onMapLoaded">
     <mgl-geolocate-control position="bottom-left" :position-options="{ enableHighAccuracy: true }"
       :track-user-location="true" :show-user-location="true" />
     <mgl-navigation-control position="bottom-right" />
@@ -53,4 +54,15 @@ const onMapZoom = (map) => {
   currentZoom.value = map.map.scrollZoom._targetZoom;
 };
 
+const onMapLoaded = () => {
+  const geolocateButton = document.querySelector('.maplibregl-ctrl-geolocate');
+  console.log(geolocateButton);
+  if (geolocateButton) {
+    geolocateButton.click();
+  }
+}
 </script>
+
+<style lang="scss">
+@import "maplibre-gl/dist/maplibre-gl.css";
+</style>
