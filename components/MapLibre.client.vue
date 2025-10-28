@@ -7,7 +7,8 @@
     alt="pin-hemocenter">
   <img ref="pinHospitalImg" id="hospital" class="hidden" src="/assets/vectors/PinHospital.svg" alt="pin-hospital">
 
-  <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom">
+  <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom"
+    @map:load="onMapLoad">
     <mgl-navigation-control position="bottom-right" />
     <mgl-image id="askforhelp" :image="pinAskForHelpImg" />
     <mgl-image id="bloodbank" :image="pinBloodBankImg" />
@@ -19,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import {
   MglMap,
   MglNavigationControl,
@@ -36,9 +37,46 @@ const pinHospitalImg = ref(null);
 
 // Basic info
 const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
-const center = [-55, -14.8];
+const center = useMapCenter();
 const zoom = 3.92;
 const pinMarkersFeatures = await getPointsParsed();
+
+// --- Contagem de marcadores visíveis ---
+const mapInstance = ref(null);
+
+const visibleFeatures = useVisibleFeatures();
+const loadingVisibleFeatures = useLoadingVisibleFeatures();
+
+const updateVisibleFeatures = () => {
+  if (!mapInstance.value) return;
+
+  const features = mapInstance.value.queryRenderedFeatures({ layers: ['points'] });
+
+  // Usamos um Map para garantir que cada feature seja única, usando seu ID.
+  const uniqueFeatures = new Map();
+  features.forEach(feature => {
+    if (!uniqueFeatures.has(feature.properties._id)) {
+      uniqueFeatures.set(feature.properties._id, feature.properties);
+    }
+  });
+
+  // Atualiza o estado global com a lista de propriedades das features visíveis.
+  visibleFeatures.value = Array.from(uniqueFeatures.values());
+
+  if (loadingVisibleFeatures.value) {
+    loadingVisibleFeatures.value = false;
+  }
+};
+
+const onMapLoad = (event) => {
+  mapInstance.value = event.map;
+
+  // Atualiza a lista de features visíveis sempre que o mapa ficar ocioso
+  // (após zoom, pan, etc., e também no carregamento inicial).
+  mapInstance.value.on('idle', updateVisibleFeatures);
+}
+// --- Fim da contagem ---
+
 
 // TODO: Implement summary when zoom out (ask Joyce to draw a mockup)
 // TODO: Use this to check how many pins to show
@@ -49,5 +87,11 @@ const onMapZoom = (map) => {
   // Você pode ajustar a fórmula `* 10` para controlar o quão rápido o marcador cresce.
   currentZoom.value = map.map.scrollZoom._targetZoom;
 };
+
+watch(center, (newCenter) => {
+  if (mapInstance.value) {
+    mapInstance.value.flyTo({ center: newCenter, zoom: 15 });
+  }
+});
 
 </script>

@@ -1,5 +1,3 @@
-const config = useRuntimeConfig();
-
 export interface NominatimAddress {
   house_number?: string;
   road?: string;
