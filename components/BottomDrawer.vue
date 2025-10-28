@@ -14,6 +14,7 @@
 
         <!-- TODO: MUST FIX SCROLL. THE LAST 5 ITEMS ARE NEVER SCROLLABLE -->
         <div v-else class="my-4 overflow-auto">
+          <!-- TODO: MAKE ITEMSHORTINFO CLICKABLE. IT MUST OPEN A MODAL OR A DRAWER WITH THE INFO MISSING -->
           <ItemShortInfo v-for="item in displayItems" :key="item.key" :loading="item.loading" :title="item.name"
             :address="item.address" :type="item.type" />
           <!-- BE MY GUEST TRYING TO FIX SCROLL WITHOUT THIS WORKAROUND -->
