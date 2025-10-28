@@ -7,6 +7,7 @@
       <Transition name="fade" mode="out-in">
         <div v-if="snapPoint === snapPoints.collapsed" class="flex flex-col items-center p-4">
           <USkeleton v-if="loadingVisibleFeatures" class="h-6 w-[120px]" :ui="{ base: 'bg-red-500' }" />
+          <!-- TODO: FIX TOTAL VISIBLE PLACES WHEN ZOOM OUT MAX -->
           <div v-else class="text-hemo-color-text-secondary font-medium">
             {{ visibleFeaturesCount }} locais visíveis
           </div>
