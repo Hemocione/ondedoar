@@ -12,10 +12,10 @@ export const syncHemocioneAskForHelpJob = async ({ event, step }: { event: any, 
   console.log(`✅ Job '${event.name}' iniciado com sucesso!`);
   // Since will enable to run this job manually, we can use the event data to get the 'after' parameter
   // If 'after' is not provided, it will be set by last cursor and the job will fetch
-  const after = event.data?.after || await SyncManager.getLastCursor("HemocioneId");
+  const after = event.data?.after || await SyncManager.getLastCursor("HemocioneAskForHelp");
 
   await SyncManager.updateOne(
-    { providerName: "HemocioneId" },
+    { providerName: "HemocioneAskForHelp" },
     {
       syncStatus: 'in_progress',
     }
