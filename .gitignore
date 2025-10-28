@@ -93,6 +93,3 @@ sw.*
 
 # Vercel
 .vercel
-
-# DB
-data/
