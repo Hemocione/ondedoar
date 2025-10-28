@@ -5,6 +5,7 @@
       <HemocioneEnableLocation v-if="isShow" @close="isShow = false"/> 
     </transition>
     <PlaceSearchInput class="pt-8" />
+    <BottomDrawer />
   </div>
 </template>
 <script setup lang="ts">
