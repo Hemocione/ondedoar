@@ -1,14 +1,16 @@
 <template>
   <div class="flex flex-col justify-center items-start gap-6">
     <div class="header flex flex-col">
-      <span class="title text-2xl font-semibold">{{ placeDetails.name }}</span>
+      <UButton @click="moreInfo = null" class="pb-6 flex justify-start items-center" icon="i-heroicons-arrow-left"
+        size="md" color="primary" variant="link" :ui="{ base: 'w-8 h-5 text-gray-800' }" />
+      <span class="title text-2xl font-semibold px-1">{{ placeDetails.name }}</span>
       <!-- TODO: FIX FORMAT FOR THIS PAGE -->
-      <span class="subtitle font-normal text-xs text-gray-500">{{ formatSubtitle(placeDetails.distance,
+      <span class="subtitle font-normal text-xs text-gray-500 px-1">{{ formatSubtitle(placeDetails.distance,
         placeDetails.address) }}</span>
-      <TypeTag :type="placeDetails.type" class="self-start mt-1" />
+      <TypeTag :type="placeDetails.type" class="self-start mt-1 px-1" />
     </div>
 
-    <div class="content flex flex-col gap-6">
+    <div class="content flex flex-col gap-6 px-1">
       <div class="address flex flex-row gap-3">
         <img class="w-4 h-4" src="/assets/vectors/RedMapPin.svg" alt="Marcador de mapa vermelho">
         <span class="text-sm font-normal">{{ placeDetails.address }}</span>
@@ -38,5 +40,7 @@ defineProps<{
     address?: string
   }
 }>();
+
+const moreInfo = useMoreInfo();
 
 </script>
