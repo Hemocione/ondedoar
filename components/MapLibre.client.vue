@@ -8,10 +8,9 @@
   <img ref="pinHospitalImg" id="hospital" class="hidden" src="/assets/vectors/PinHospital.svg" alt="pin-hospital">
 
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom"
-    @map:load="onMapLoaded">
+    @map:load="onMapLoad">
     <mgl-geolocate-control position="bottom-left" :position-options="{ enableHighAccuracy: true }"
       :track-user-location="true" :show-user-location="true" />
-    <mgl-navigation-control position="bottom-right" />
     <mgl-image id="askforhelp" :image="pinAskForHelpImg" />
     <mgl-image id="bloodbank" :image="pinBloodBankImg" />
     <mgl-image id="event" :image="pinEventImg" />
@@ -25,7 +24,6 @@
 import { ref, watch } from 'vue';
 import {
   MglMap,
-  MglNavigationControl,
   MglGeolocateControl,
   MglImage
 } from '@indoorequal/vue-maplibre-gl';
@@ -77,6 +75,12 @@ const onMapLoad = (event) => {
   // Atualiza a lista de features visíveis sempre que o mapa ficar ocioso
   // (após zoom, pan, etc., e também no carregamento inicial).
   mapInstance.value.on('idle', updateVisibleFeatures);
+
+  const geolocateButton = document.querySelector('.maplibregl-ctrl-geolocate');
+  console.log(geolocateButton);
+  if (geolocateButton) {
+    geolocateButton.click();
+  }
 }
 // --- Fim da contagem ---
 
@@ -90,14 +94,6 @@ const onMapZoom = (map) => {
   // Você pode ajustar a fórmula `* 10` para controlar o quão rápido o marcador cresce.
   currentZoom.value = map.map.scrollZoom._targetZoom;
 };
-
-const onMapLoaded = () => {
-  const geolocateButton = document.querySelector('.maplibregl-ctrl-geolocate');
-  console.log(geolocateButton);
-  if (geolocateButton) {
-    geolocateButton.click();
-  }
-}
 
 watch(center, (newCenter) => {
   if (mapInstance.value) {
