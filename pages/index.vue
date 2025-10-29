@@ -13,7 +13,7 @@
 const locationPermission = useLocationPermission();
 const isShow = computed(() => locationPermission.value === 'prompt');
 
-async function verifyLocalion() {
+async function verifyLocation() {
   try {
     const result = await navigator.permissions.query({ name: 'geolocation' });
     locationPermission.value = result.state;
@@ -26,7 +26,7 @@ async function verifyLocalion() {
 }
 
 onMounted(async () => {
-  await verifyLocalion()
+  await verifyLocation()
 })
 
 </script>
