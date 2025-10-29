@@ -22,6 +22,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+import { useLocationPermission } from '~/composables/states';
 import {
   MglMap,
   MglGeolocateControl,
@@ -77,12 +78,18 @@ const onMapLoad = (event) => {
   mapInstance.value.on('idle', updateVisibleFeatures);
 
   const geolocateButton = document.querySelector('.maplibregl-ctrl-geolocate');
-  console.log(geolocateButton);
-  if (geolocateButton) {
+  const locationPermission = useLocationPermission();
+
+  if (locationPermission.value === 'granted') {
     geolocateButton.click();
   }
+
+  watch(locationPermission, (newPermission) => {
+    if (newPermission === 'granted') {
+      geolocateButton.click();
+    }
+  });
 }
-// --- Fim da contagem ---
 
 
 // TODO: Implement summary when zoom out (ask Joyce to draw a mockup)
