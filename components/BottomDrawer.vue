@@ -1,5 +1,5 @@
 <template>
-  <UDrawer v-model:open="open" :overlay="false" :activeSnapPoint="snapPoint" :dismissible="false" :modal="false"
+  <UDrawer v-model:open="shouldOpen" :overlay="false" :activeSnapPoint="snapPoint" :dismissible="false" :modal="false"
     :snap-points="visibleFeaturesCount != 0 ? [snapPoints.collapsed, snapPoints.partial] : [snapPoints.collapsed]"
     :ui="{ body: 'bg-white', content: 'bg-white rounded-t-4xl ring-0 flex flex-col', container: 'h-full' }"
     @update:activeSnapPoint="snapPoint = Number($event)">
@@ -31,11 +31,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-
 // TODO: Think of full state, if it's needed. In case it is: move header to upfront in template, changing z-index.
 
-const open = ref(true)
+const locationPermission = useLocationPermission();
+
+const shouldOpen = computed(() => locationPermission.value !== 'prompt');
+
 const snapPoints = {
   collapsed: 0.15,
   partial: 0.4,
