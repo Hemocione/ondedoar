@@ -9,7 +9,8 @@
 
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom"
     @map:load="onMapLoad">
-    <mgl-navigation-control position="bottom-right" />
+    <mgl-geolocate-control position="bottom-left" :position-options="{ enableHighAccuracy: true }"
+      :track-user-location="true" :show-user-location="true" />
     <mgl-image id="askforhelp" :image="pinAskForHelpImg" />
     <mgl-image id="bloodbank" :image="pinBloodBankImg" />
     <mgl-image id="event" :image="pinEventImg" />
@@ -20,10 +21,9 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
 import {
   MglMap,
-  MglNavigationControl,
+  MglGeolocateControl,
   MglImage
 } from '@indoorequal/vue-maplibre-gl';
 
@@ -41,18 +41,18 @@ const center = useMapCenter();
 const zoom = 3.92;
 const pinMarkersFeatures = await getPointsParsed();
 
-// --- Contagem de marcadores visíveis ---
 const mapInstance = ref(null);
 
+// Load composables
 const visibleFeatures = useVisibleFeatures();
 const loadingVisibleFeatures = useLoadingVisibleFeatures();
+const locationPermission = useLocationPermission();
 
 const updateVisibleFeatures = () => {
   if (!mapInstance.value) return;
 
   const features = mapInstance.value.queryRenderedFeatures({ layers: ['points'] });
 
-  // Usamos um Map para garantir que cada feature seja única, usando seu ID.
   const uniqueFeatures = new Map();
   features.forEach(feature => {
     if (!uniqueFeatures.has(feature.properties._id)) {
@@ -60,7 +60,6 @@ const updateVisibleFeatures = () => {
     }
   });
 
-  // Atualiza o estado global com a lista de propriedades das features visíveis.
   visibleFeatures.value = Array.from(uniqueFeatures.values());
 
   if (loadingVisibleFeatures.value) {
@@ -74,12 +73,25 @@ const onMapLoad = (event) => {
   // Atualiza a lista de features visíveis sempre que o mapa ficar ocioso
   // (após zoom, pan, etc., e também no carregamento inicial).
   mapInstance.value.on('idle', updateVisibleFeatures);
+
+  const geolocateButton = document.querySelector('.maplibregl-ctrl-geolocate');
+
+  if (!geolocateButton) {
+    console.warn('Geolocate button not found');
+    return;
+  }
+
+  if (locationPermission.value === 'granted') {
+    geolocateButton.click();
+  }
+
+  watch(locationPermission, (newPermission) => {
+    if (newPermission === 'granted') {
+      geolocateButton.click();
+    }
+  });
 }
-// --- Fim da contagem ---
 
-
-// TODO: Implement summary when zoom out (ask Joyce to draw a mockup)
-// TODO: Use this to check how many pins to show
 const currentZoom = ref();
 
 const onMapZoom = (map) => {
@@ -95,3 +107,16 @@ watch(center, (newCenter) => {
 });
 
 </script>
+
+<style lang="scss">
+@import "maplibre-gl/dist/maplibre-gl.css";
+
+.maplibregl-user-location-dot,
+.maplibregl-user-location-dot:before {
+  background-color: var(--color-red-700);
+}
+
+.maplibregl-user-location-accuracy-circle {
+  background-color: #B91C1C80;
+}
+</style>

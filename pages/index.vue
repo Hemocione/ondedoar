@@ -2,31 +2,31 @@
   <div>
     <HemocioneHeader />
     <transition name="fade-zoom">
-      <HemocioneEnableLocation v-if="isShow" @close="isShow = false"/> 
+      <HemocioneEnableLocation v-if="isShow" />
     </transition>
     <PlaceSearchInput class="pt-8" />
     <BottomDrawer />
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
-const isShow = ref(false)
 
-async function verifyLocalion() {
+const locationPermission = useLocationPermission();
+const isShow = computed(() => locationPermission.value === 'prompt');
+
+async function verifyLocation() {
   try {
     const result = await navigator.permissions.query({ name: 'geolocation' });
-    if(result.state === 'granted'){
-      isShow.value = false
-    } else {
-      isShow.value = true;
+    locationPermission.value = result.state;
+    result.onchange = () => {
+      locationPermission.value = result.state;
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 }
 
 onMounted(async () => {
-  await verifyLocalion()
+  await verifyLocation()
 })
 
 </script>
@@ -41,4 +41,5 @@ onMounted(async () => {
 .fade-zoom-leave-to {
   opacity: 0;
   transform: scale(0.95);
-}</style>
+}
+</style>
