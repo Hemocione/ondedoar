@@ -41,18 +41,18 @@ const center = useMapCenter();
 const zoom = 3.92;
 const pinMarkersFeatures = await getPointsParsed();
 
-// --- Contagem de marcadores visíveis ---
 const mapInstance = ref(null);
 
+// Load composables
 const visibleFeatures = useVisibleFeatures();
 const loadingVisibleFeatures = useLoadingVisibleFeatures();
+const locationPermission = useLocationPermission();
 
 const updateVisibleFeatures = () => {
   if (!mapInstance.value) return;
 
   const features = mapInstance.value.queryRenderedFeatures({ layers: ['points'] });
 
-  // Usamos um Map para garantir que cada feature seja única, usando seu ID.
   const uniqueFeatures = new Map();
   features.forEach(feature => {
     if (!uniqueFeatures.has(feature.properties._id)) {
@@ -60,7 +60,6 @@ const updateVisibleFeatures = () => {
     }
   });
 
-  // Atualiza o estado global com a lista de propriedades das features visíveis.
   visibleFeatures.value = Array.from(uniqueFeatures.values());
 
   if (loadingVisibleFeatures.value) {
@@ -76,7 +75,11 @@ const onMapLoad = (event) => {
   mapInstance.value.on('idle', updateVisibleFeatures);
 
   const geolocateButton = document.querySelector('.maplibregl-ctrl-geolocate');
-  const locationPermission = useLocationPermission();
+
+  if (!geolocateButton) {
+    console.warn('Geolocate button not found');
+    return;
+  }
 
   if (locationPermission.value === 'granted') {
     geolocateButton.click();
@@ -89,9 +92,6 @@ const onMapLoad = (event) => {
   });
 }
 
-
-// TODO: Implement summary when zoom out (ask Joyce to draw a mockup)
-// TODO: Use this to check how many pins to show
 const currentZoom = ref();
 
 const onMapZoom = (map) => {
