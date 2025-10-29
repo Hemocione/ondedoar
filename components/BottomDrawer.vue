@@ -26,7 +26,7 @@
         </div>
 
         <div v-else>
-          <ItemMoreDetails :active="true" name="Titulo Teste" address="Endereço Teste" type="bloodbank" />
+          <ItemMoreDetails class="p-5" :active="true" name="Titulo Teste" address="Endereço Teste" type="bloodbank" />
         </div>
       </Transition>
     </template>
