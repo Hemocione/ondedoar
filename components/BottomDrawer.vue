@@ -26,7 +26,14 @@
         </div>
 
         <div v-else>
-          <ItemMoreDetails class="p-5" :active="true" name="Titulo Teste" address="Endereço Teste" type="bloodbank" />
+          <ItemMoreDetails class="p-5" :place-details="{
+            active: true,
+            name: 'Titulo grande para variar',
+            phone: '(21) 99999-9999',
+            link: 'https://www.hemocione.com.br/',
+            type: 'askforhelp',
+            address: 'Rua Itua, 222 - Jardim Guanabra, Rio de Janeiro - RJ, 22793-140'
+          }" />
         </div>
       </Transition>
     </template>
@@ -46,7 +53,7 @@ const shouldShowMoreInfo = ref(false)
 const snapPoints = {
   collapsed: 0.15,
   partial: 0.4,
-  full: 0.9
+  full: 0.6
 }
 
 const activeSnapPoints = computed(() => {
