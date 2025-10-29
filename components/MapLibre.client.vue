@@ -110,4 +110,13 @@ watch(center, (newCenter) => {
 
 <style lang="scss">
 @import "maplibre-gl/dist/maplibre-gl.css";
+
+.maplibregl-user-location-dot,
+.maplibregl-user-location-dot:before {
+  background-color: var(--color-red-700);
+}
+
+.maplibregl-user-location-accuracy-circle {
+  background-color: #B91C1C80;
+}
 </style>
