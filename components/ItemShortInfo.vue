@@ -21,16 +21,4 @@ defineProps<{
   type?: string,
   loading?: boolean
 }>();
-
-function formatSubtitle(distance?: string, address?: string): string {
-  if (!distance && !address) {
-    return '';
-  }
-
-  if (!distance && address) {
-    return address;
-  }
-
-  return `${distance} • ${address}`;
-}
 </script>

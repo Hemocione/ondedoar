@@ -10,7 +10,7 @@
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom"
     @map:load="onMapLoad">
     <mgl-geolocate-control position="bottom-left" :position-options="{ enableHighAccuracy: true }"
-      :track-user-location="true" :show-user-location="true" />
+      :track-user-location="true" :show-user-location="true" :fit-bounds-options="{ maxZoom: 12 }" />
     <mgl-image id="askforhelp" :image="pinAskForHelpImg" />
     <mgl-image id="bloodbank" :image="pinBloodBankImg" />
     <mgl-image id="event" :image="pinEventImg" />

@@ -32,6 +32,7 @@
 </template>
 <script lang="ts" setup>
 const locationPermission = useLocationPermission();
+const emit = defineEmits(['close']);
 
 function ativarLocalizacao() {
   navigator.geolocation.getCurrentPosition(
@@ -53,5 +54,6 @@ function ativarLocalizacao() {
 
 function closeModal() {
   locationPermission.value = "denied";
+  emit('close', true);
 }
 </script>
