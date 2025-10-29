@@ -34,9 +34,21 @@
 const locationPermission = useLocationPermission();
 
 function ativarLocalizacao() {
-  navigator.geolocation.getCurrentPosition((pos) => {
-    locationPermission.value = "granted";
-  });
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      // Verify the actual permission state after getting position
+      navigator.permissions.query({ name: 'geolocation' }).then(result => {
+        locationPermission.value = result.state;
+      });
+    },
+    (error) => {
+      console.error('Geolocation error:', error);
+      // Check actual permission state on error
+      navigator.permissions.query({ name: 'geolocation' }).then(result => {
+        locationPermission.value = result.state;
+      });
+    }
+  );
 }
 
 function closeModal() {
