@@ -8,3 +8,6 @@ export const useLoadingVisibleFeatures = () => useState<boolean>('loadingVisible
 
 // Armazena as coordenadas do centro do mapa
 export const useMapCenter = () => useState<number[]>('mapCenter', () => [-43.9345, -19.9167]);
+
+// Armazena o estado da permissão de localização
+export const useLocationPermission = () => useState<PermissionState>('locationPermission', () => 'prompt');
