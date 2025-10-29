@@ -21,8 +21,6 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import { useLocationPermission } from '~/composables/states';
 import {
   MglMap,
   MglGeolocateControl,
