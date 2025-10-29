@@ -4,6 +4,7 @@
       <img class="w-[130px]" src="/assets/vectors/HemocioneWhite.svg"
         alt="Logo da Hemocione em branco e Hemocione escrito em branco">
     </div>
+    <!-- TODO: FIX LOGIN PROCESS -->
     <!-- <UButton :trailing-icon="buttonIcon" size="md"
       :ui="{ base: 'bg-hemo-color-primary text-hemo-color-text-primary hover:bg-hemo-color-primary-action active:bg-hemo-color-secondary active:text-hemo-color-primary-light' }"
       @click="buttonEvent">
