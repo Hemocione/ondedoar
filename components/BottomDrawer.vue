@@ -17,7 +17,7 @@
         <div v-else-if="snapPoint === snapPoints.partial" class="my-4 overflow-auto">
           <!-- TODO: MAKE ITEMSHORTINFO CLICKABLE. IT MUST OPEN A MODAL OR A DRAWER WITH THE INFO MISSING -->
           <ItemShortInfo v-for="item in displayItems" :key="item.key" :loading="item.loading" :title="item.name"
-            :address="item.address" :type="item.type" @click="showMoreInfo" />
+            :address="item.address" :type="item.type" @click="showMoreInfo(item)" />
           <!-- BE MY GUEST TRYING TO FIX SCROLL WITHOUT THIS WORKAROUND -->
           <div class="p-2.5">
             <ItemShortInfo v-for="i in 6" :key="'fake-' + i" :loading="false" title="&nbsp;" address="&nbsp;"
@@ -25,15 +25,8 @@
           </div>
         </div>
 
-        <div v-else>
-          <ItemMoreDetails class="p-5" :place-details="{
-            active: true,
-            name: 'Titulo grande para variar',
-            phone: '(21) 99999-9999',
-            link: 'https://www.hemocione.com.br/',
-            type: 'askforhelp',
-            address: 'Rua Itua, 222 - Jardim Guanabra, Rio de Janeiro - RJ, 22793-140'
-          }" />
+        <div v-else-if="snapPoint === snapPoints.full">
+          <ItemMoreDetails v-if="moreInfo" class="p-7" :place-details="moreInfo" />
         </div>
       </Transition>
     </template>
@@ -42,13 +35,17 @@
 </template>
 
 <script setup lang="ts">
+import type { PlaceDetails } from '~/composables/states';
+
 // TODO: Think of full state, if it's needed. In case it is: move header to upfront in template, changing z-index.
 
 const locationPermission = useLocationPermission();
-
+const moreInfo = useMoreInfo();
 const shouldOpen = computed(() => locationPermission.value !== 'prompt');
-
-const shouldShowMoreInfo = ref(false)
+const visibleFeatures = useVisibleFeatures();
+const visibleFeaturesCount = computed(() => visibleFeatures ? visibleFeatures.value.length : undefined);
+const loadingVisibleFeatures = useLoadingVisibleFeatures();
+const shouldShowMoreInfo = computed(() => moreInfo.value !== null)
 
 const snapPoints = {
   collapsed: 0.15,
@@ -73,9 +70,11 @@ watch(snapPoint, (newSnapPoint) => {
   }
 });
 
-const visibleFeatures = useVisibleFeatures();
-const visibleFeaturesCount = computed(() => visibleFeatures ? visibleFeatures.value.length : undefined);
-const loadingVisibleFeatures = useLoadingVisibleFeatures();
+watch(moreInfo, (newMoreInfo) => {
+  if (newMoreInfo === null && snapPoint.value === snapPoints.full) {
+    snapPoint.value = snapPoints.partial;
+  }
+});
 
 const displayItems = computed(() => {
   // If transitioning or loading data, show skeletons
@@ -95,15 +94,14 @@ const displayItems = computed(() => {
   }));
 });
 
-function showMoreInfo() {
-  console.log('clicked')
-  shouldShowMoreInfo.value = true;
+function showMoreInfo(item: PlaceDetails) {
+  moreInfo.value = item;
   snapPoint.value = snapPoints.full;
 }
 
 function onUpadteSnapPoint(newSnapPoint: number) {
   if (newSnapPoint !== snapPoints.full) {
-    shouldShowMoreInfo.value = false;
+    moreInfo.value = null;
   }
   snapPoint.value = Number(newSnapPoint);
 }
