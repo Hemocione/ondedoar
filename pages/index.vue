@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HemocioneHeader v-if="isIframe" />
+    <HemocioneHeader v-if="!isIframe" />
     <transition name="fade-zoom">
       <HemocioneEnableLocation v-if="isShow" @close="isShow = false" />
     </transition>
@@ -13,7 +13,7 @@
 const locationPermission = useLocationPermission();
 const isShow = ref(false);
 // TODO: MOVE THIS TO A PLUGIN LIKE CAN DONATE
-const isIframe = ref(true)
+const isIframe = ref(false)
 
 async function verifyLocation() {
   try {
