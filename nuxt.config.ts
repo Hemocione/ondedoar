@@ -19,6 +19,9 @@ export default defineNuxtConfig({
     '/': { prerender: true },
   },
   runtimeConfig: {
+    public: {
+      authCookieKey: process.env.HEMOCIONE_AUTH_COOKIE_KEY || "devHemocioneId",
+    },
     db: {
       mongo: {
         uri: process.env.MONGODB_URI ?? "mongodb://localhost:27018/local"
