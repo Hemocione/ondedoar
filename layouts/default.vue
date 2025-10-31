@@ -4,8 +4,9 @@
     <div class="absolute z-10 w-full">
       <slot />
     </div>
-
-    <MapLibreClient class="absolute inset-0" />
+    <ClientOnly>
+      <MapLibreClient class="absolute inset-0" />
+    </ClientOnly>
   </div>
 </template>
 
