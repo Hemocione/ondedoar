@@ -45,7 +45,7 @@ export default defineNuxtConfig({
     public: {
       authCookieKey: process.env.HEMOCIONE_AUTH_COOKIE_KEY || "devHemocioneId",
       siteUrl,
-      hemocioneIdUrl: process.env.HEMOCIONEID_API_URL ?? "http://localhost:8080",
+      hemocioneIdUrl: process.env.HEMOCIONEID_URL ?? "http://localhost:8080",
     },
     db: {
       mongo: {
