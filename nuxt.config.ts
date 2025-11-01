@@ -1,6 +1,29 @@
 import tailwindcss from "@tailwindcss/vite";
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
+const getSiteUrl = () => {
+  if (process.env.VERCEL_ENV === undefined) {
+    const nuxtDevConfig = process.env.__NUXT_DEV__;
+    let networkAddress;
+    if (nuxtDevConfig) {
+      const parsedConfig = JSON.parse(nuxtDevConfig);
+      networkAddress = parsedConfig?.proxy?.urls?.find(
+        (addr: any) => addr.type === "network"
+      )?.url;
+    }
+
+    return networkAddress || "http://localhost:3000";
+  }
+
+  if (process.env.VERCEL_ENV !== "production") {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+
+  return "https://possodoar.hemocione.com.br";
+};
+
+const siteUrl = getSiteUrl();
+console.log("Site URL:", siteUrl);
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/global.css"],
@@ -21,6 +44,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       authCookieKey: process.env.HEMOCIONE_AUTH_COOKIE_KEY || "devHemocioneId",
+      siteUrl,
+      hemocioneIdUrl: process.env.HEMOCIONEID_API_URL ?? "http://localhost:8080",
     },
     db: {
       mongo: {
