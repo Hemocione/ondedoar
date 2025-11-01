@@ -24,6 +24,7 @@ export default defineNuxtConfig({
     },
     db: {
       mongo: {
+        dbName: process.env.MONGODBDB_NAME ?? "local",
         uri: process.env.MONGODB_URI ?? "mongodb://localhost:27018/local"
       }
     },

@@ -6,7 +6,10 @@ export default defineNitroPlugin(async (_nitro) => {
 	if (mongoose.connection.readyState !== 1 && !isBuilding()) {
 		const config = useRuntimeConfig();
 		try {
-			await mongoose.connect(config.db.mongo.uri);
+			await mongoose.connect(config.db.mongo.uri, {
+				dbName: config.db.mongo.dbName,
+				authSource: "admin",
+			});
 		} catch (error: any) {
 			console.error("Failed to connect to MongoDB:", error);
 			throw error;
