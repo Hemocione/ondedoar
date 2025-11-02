@@ -54,7 +54,7 @@ export default defineNuxtConfig({
       }
     },
     inngest: {
-      id: process.env.INNGEST_ID ?? "onde-doar-local"
+      key: process.env.INNGEST_EVENT_KEY || "devInngestApiKey",
     },
     google: {
       apiKey: process.env.GOOGLE_API_KEY,

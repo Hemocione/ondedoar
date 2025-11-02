@@ -39,7 +39,7 @@ class TaskManager {
   private constructor() {
     // TODO: each job could be dynamically loaded from a directory here
     // and defined in the setupAgenda method
-    this.inngest = new Inngest({ id: config.inngest.id });
+    this.inngest = new Inngest({ id: 'onde-doar', name: 'Hemocione - Onde Doar', eventKey: config.inngest.key });
 
     this.addJob(
       {
