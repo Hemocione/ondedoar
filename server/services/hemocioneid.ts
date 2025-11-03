@@ -40,8 +40,8 @@ async function getHemocioneIdsPoints(after?: string): Promise<HemocioneIdPoint[]
     }) as HemocioneIdPoint[];
     return hemocioneIdPoints
   } catch (error) {
-    console.error(`Error fetching Hemocione ID points using after ${after}:`, error)
-    throw new Error('Failed to fetch Hemocione ID points')
+    console.error(`Error fetching Hemocione ID points using after ${after}:`, JSON.stringify(error, null, 2))
+    throw new Error('Failed to fetch Hemocione ID points at getHemocioneIdsPoints')
   }
 }
 
@@ -49,7 +49,7 @@ export async function handleHemocioneIdsPoints(after?: string): Promise<Hemocion
   const hemocioneIdPoints = await getHemocioneIdsPoints(after)
 
   if (!hemocioneIdPoints) {
-    throw new Error('Failed to fetch Hemocione ID points')
+    throw new Error('Failed to fetch Hemocione ID points at handleHemocioneIdsPoints');
   }
 
   return hemocioneIdPoints.map((hemocioneIdPoint) => ({

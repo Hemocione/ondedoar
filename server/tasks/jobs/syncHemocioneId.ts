@@ -27,7 +27,7 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
   const hemocioneIdPoints: HemocioneIdPointResponse[] = await handleHemocioneIdsPoints(after);
 
   if (!hemocioneIdPoints) {
-    throw new Error('Failed to fetch Hemocione ID points');
+    throw new Error('Failed to fetch Hemocione ID points at syncHemocioneIdJob');
   }
 
   console.log("✅ Hemocione ID points handled successfully;", "\nUploading Hemocione ID points...");
@@ -79,6 +79,7 @@ export const syncHemocioneIdJob = async ({ event, step }: { event: any, step: St
 
   console.log("✅ Hemocione ID points uploaded and inactivated successfully")
   const message = `✅ Job '${event.name}' concluído com sucesso!`
+
 };
 
 export const syncHemocioneIdJobErrorHandler = async ({ error, event }: FailureEventArgs) => {
