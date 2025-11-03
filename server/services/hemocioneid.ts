@@ -29,6 +29,7 @@ async function getHemocioneIdsPoints(after?: string): Promise<HemocioneIdPoint[]
   try {
     console.log(`${config.hemocioneId.apiUrl}/points/onde-doar/sync`)
     console.log('x-secret:', config.hemocioneId.backOfficeSecret)
+    console.log('after:', after)
     const hemocioneIdPoints = await $fetch(`${config.hemocioneId.apiUrl}/points/onde-doar/sync`, {
       method: 'POST',
       headers: {
@@ -38,6 +39,7 @@ async function getHemocioneIdsPoints(after?: string): Promise<HemocioneIdPoint[]
         after
       }
     }) as HemocioneIdPoint[];
+    console.log(`Fetched ${hemocioneIdPoints.length} Hemocione ID points`);
     return hemocioneIdPoints
   } catch (error) {
     console.error(`Error fetching Hemocione ID points using after ${after}:`, JSON.stringify(error, null, 2))
@@ -48,6 +50,7 @@ async function getHemocioneIdsPoints(after?: string): Promise<HemocioneIdPoint[]
 export async function handleHemocioneIdsPoints(after?: string): Promise<HemocioneIdPointResponse[]> {
   const hemocioneIdPoints = await getHemocioneIdsPoints(after)
 
+  console.log(hemocioneIdPoints)
   if (!hemocioneIdPoints) {
     throw new Error('Failed to fetch Hemocione ID points at handleHemocioneIdsPoints');
   }
