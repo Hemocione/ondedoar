@@ -23,9 +23,12 @@ const SyncManagerSchema = new Schema({
     default: []
   },
   syncErrors: {
-    stack: String,
-    cause: String,
-    message: String
+    type: {
+      stack: String,
+      cause: Schema.Types.Mixed, // 'cause' can be of mixed types
+      message: String
+    },
+    default: null
   }
 }, {
   timestamps: true,
