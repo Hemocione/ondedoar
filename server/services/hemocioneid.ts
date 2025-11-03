@@ -27,6 +27,8 @@ export interface HemocioneIdPointResponse {
 
 async function getHemocioneIdsPoints(after?: string): Promise<HemocioneIdPoint[] | undefined> {
   try {
+    console.log(`${config.hemocioneId.apiUrl}/points/onde-doar/sync`)
+    console.log('x-secret:', config.hemocioneId.backOfficeSecret)
     const hemocioneIdPoints = await $fetch(`${config.hemocioneId.apiUrl}/points/onde-doar/sync`, {
       method: 'POST',
       headers: {
