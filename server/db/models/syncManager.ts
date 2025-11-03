@@ -23,7 +23,9 @@ const SyncManagerSchema = new Schema({
     default: []
   },
   syncErrors: {
-    type: String
+    stack: String,
+    cause: String,
+    message: String
   }
 }, {
   timestamps: true,

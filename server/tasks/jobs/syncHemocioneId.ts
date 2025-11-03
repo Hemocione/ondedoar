@@ -88,7 +88,11 @@ export const syncHemocioneIdJobErrorHandler = async ({ error, event }: FailureEv
     { providerName: "HemocioneId" },
     {
       syncStatus: 'failed',
-      syncErrors: error.stack,
+      syncErrors: {
+        stack: error.stack,
+        cause: error.cause,
+        message: error.message
+      },
       lastSyncDate: new Date(),
       lastSyncResults: []
     }
