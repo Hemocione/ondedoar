@@ -1,10 +1,8 @@
 <template>
-  <img ref="pinAskForHelpImg" id="askforhelp" class="hidden" :src="pinAskForHelpUrl"
-    alt="pin-ask-for-help">
+  <img ref="pinAskForHelpImg" id="askforhelp" class="hidden" :src="pinAskForHelpUrl" alt="pin-ask-for-help">
   <img ref="pinBloodBankImg" id="bloodbank" class="hidden" :src="pinBloodBankUrl" alt="pin-blood-bank">
   <img ref="pinEventImg" id="event" class="hidden" :src="pinEventUrl" alt="pin-event">
-  <img ref="pinHemoCenterImg" id="hemocenter" class="hidden" :src="pinHemoCenterUrl"
-    alt="pin-hemocenter">
+  <img ref="pinHemoCenterImg" id="hemocenter" class="hidden" :src="pinHemoCenterUrl" alt="pin-hemocenter">
   <img ref="pinHospitalImg" id="hospital" class="hidden" :src="pinHospitalUrl" alt="pin-hospital">
 
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom"
@@ -44,7 +42,7 @@ const pinHospitalImg = ref(null);
 // Basic info
 const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
 const center = useMapCenter();
-const zoom = 3.92;
+const zoom = 3.91;
 const pinMarkersFeatures = await getPointsParsed();
 
 const mapInstance = ref(null);
