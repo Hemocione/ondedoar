@@ -50,6 +50,7 @@ function ativarLocalizacao() {
       });
     }
   );
+  emit('close', true);
 }
 
 function closeModal() {
