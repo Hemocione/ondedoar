@@ -1,11 +1,11 @@
 <template>
-  <img ref="pinAskForHelpImg" id="askforhelp" class="hidden" src="/assets/vectors/PinAskForHelp.svg"
+  <img ref="pinAskForHelpImg" id="askforhelp" class="hidden" :src="pinAskForHelpUrl"
     alt="pin-ask-for-help">
-  <img ref="pinBloodBankImg" id="bloodbank" class="hidden" src="/assets/vectors/PinBloodBank.svg" alt="pin-blood-bank">
-  <img ref="pinEventImg" id="event" class="hidden" src="/assets/vectors/PinEvent.svg" alt="pin-event">
-  <img ref="pinHemoCenterImg" id="hemocenter" class="hidden" src="/assets/vectors/PinHemoCenter.svg"
+  <img ref="pinBloodBankImg" id="bloodbank" class="hidden" :src="pinBloodBankUrl" alt="pin-blood-bank">
+  <img ref="pinEventImg" id="event" class="hidden" :src="pinEventUrl" alt="pin-event">
+  <img ref="pinHemoCenterImg" id="hemocenter" class="hidden" :src="pinHemoCenterUrl"
     alt="pin-hemocenter">
-  <img ref="pinHospitalImg" id="hospital" class="hidden" src="/assets/vectors/PinHospital.svg" alt="pin-hospital">
+  <img ref="pinHospitalImg" id="hospital" class="hidden" :src="pinHospitalUrl" alt="pin-hospital">
 
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom"
     @map:load="onMapLoad">
@@ -26,6 +26,12 @@ import {
   MglGeolocateControl,
   MglImage
 } from '@indoorequal/vue-maplibre-gl';
+
+import pinAskForHelpUrl from '~/assets/vectors/PinAskForHelp.svg';
+import pinBloodBankUrl from '~/assets/vectors/PinBloodBank.svg';
+import pinEventUrl from '~/assets/vectors/PinEvent.svg';
+import pinHemoCenterUrl from '~/assets/vectors/PinHemoCenter.svg';
+import pinHospitalUrl from '~/assets/vectors/PinHospital.svg';
 
 // TODO: THINK OF A BETTER WAY TO DECLARE THIS REFS
 const pinAskForHelpImg = ref(null);
