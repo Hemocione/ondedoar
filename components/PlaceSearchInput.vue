@@ -1,21 +1,12 @@
 <template>
   <div class="flex justify-center w-full">
     <div class="relative">
-      <UInput
-        v-model="place"
-        variant="soft"
-        size="md"
-        type="text"
-        placeholder="Buscar endereço..."
-        icon="i-heroicons-magnifying-glass"
-        :ui="{
+      <UInput v-model="place" variant="soft" size="md" type="text" placeholder="Buscar endereço..."
+        icon="i-heroicons-magnifying-glass" :ui="{
           base: 'bg-hemo-color-text-primary text-hemo-color-text-secondary rounded-full shadow-lg/5 w-[80vw] text-lg focus:bg-hemo-color-text-primary focus:text-hemo-color-text-secondary hover:bg-hemo-color-text-primary',
           leadingIcon: 'w-5 h-5',
-        }"
-        @keydown.enter.prevent="searchAddress"
-        @blur="isSuggestionsVisible = false"
-      >
-        <template #trailing>
+        }" @keydown.enter.prevent="searchAddress" @blur="isSuggestionsVisible = false">
+        <!-- <template #trailing>
           <UButton
             variant="link"
             icon="i-heroicons-adjustments-horizontal"
@@ -24,17 +15,14 @@
             }"
             @click="searchAddress"
           />
-        </template>
+        </template> -->
       </UInput>
 
-      <div v-if="isSuggestionsVisible && suggestions.length" class="absolute z-10 w-[80vw] mt-1 bg-white rounded-md shadow-lg">
+      <div v-if="isSuggestionsVisible && suggestions.length"
+        class="absolute z-10 w-[80vw] mt-1 bg-white rounded-md shadow-lg">
         <ul>
-          <li
-            v-for="suggestion in suggestions"
-            :key="suggestion.place_id"
-            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
-            @mousedown.prevent="selectSuggestion(suggestion)"
-          >
+          <li v-for="suggestion in suggestions" :key="suggestion.place_id"
+            class="px-4 py-2 cursor-pointer hover:bg-gray-100" @mousedown.prevent="selectSuggestion(suggestion)">
             {{ formatNominatimAddress(suggestion.address) || suggestion.display_name }}
           </li>
         </ul>
