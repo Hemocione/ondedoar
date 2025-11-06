@@ -25,7 +25,6 @@ import { useUserStore } from '~/store/users';
 const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
 const center = useMapCenter();
 const zoom = 3.91;
-const pinMarkersFeatures = await getPointsParsed();;
 
 const mapInstance = ref(null);
 
@@ -33,6 +32,8 @@ const mapInstance = ref(null);
 const userStore = useUserStore();
 const { permitUserLocation } = storeToRefs(userStore)
 const mapStore = useMapStore();
+
+const pinMarkersFeatures = await mapStore.fetchPoints();
 const { isLoadingVisibleFeatures: loadingVisibleFeatures } = storeToRefs(mapStore);
 
 const updateVisibleFeatures = () => {
