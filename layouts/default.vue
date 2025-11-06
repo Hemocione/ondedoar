@@ -11,7 +11,6 @@
 </template>
 
 <script setup lang="ts">
-import MapLibreClient from '~/components/MapLibre.client.vue';
 </script>
 
 <style></style>
