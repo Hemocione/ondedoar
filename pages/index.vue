@@ -15,24 +15,25 @@ const isShow = ref(false);
 // TODO: MOVE THIS TO A PLUGIN LIKE CAN DONATE
 const isIframe = ref(false)
 
-onMounted(async () => {
-  async function verifyLocation() {
-    try {
-      const result = await navigator.permissions.query({ name: 'geolocation' });
-      if (result.state === 'denied' || result.state === 'prompt') {
-        isShow.value = true;
-      }
-      if (result.state === 'granted') {
-        isShow.value = false;
-      }
-      locationPermission.value = result.state;
-      result.onchange = () => {
-        locationPermission.value = result.state;
-      }
-    } catch (err) {
-      console.log(err)
+async function verifyLocation() {
+  try {
+    const result = await navigator.permissions.query({ name: 'geolocation' });
+    if (result.state === 'denied' || result.state === 'prompt') {
+      isShow.value = true;
     }
+    if (result.state === 'granted') {
+      isShow.value = false;
+    }
+    locationPermission.value = result.state;
+    result.onchange = () => {
+      locationPermission.value = result.state;
+    }
+  } catch (err) {
+    console.log(err)
   }
+}
+
+onMounted(async () => {
   await verifyLocation()
   try {
     isIframe.value = window.self !== window.top;

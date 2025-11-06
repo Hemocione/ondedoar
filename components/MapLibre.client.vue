@@ -43,7 +43,7 @@ const pinHospitalImg = ref(null);
 const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
 const center = useMapCenter();
 const zoom = 3.91;
-const pinMarkersFeatures = await getPointsParsed();
+const pinMarkersFeatures = ref([]);
 
 const mapInstance = ref(null);
 
@@ -110,6 +110,9 @@ watch(center, (newCenter) => {
   }
 });
 
+onMounted(async () => {
+  pinMarkersFeatures.value = await getPointsParsed();
+})
 </script>
 
 <style lang="scss">
