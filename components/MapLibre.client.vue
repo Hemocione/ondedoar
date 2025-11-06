@@ -30,7 +30,7 @@ const mapInstance = ref(null);
 
 // Load composables
 const mapStore = useMapStore();
-const loadingVisibleFeatures = useLoadingVisibleFeatures();
+const { isLoadingVisibleFeatures: loadingVisibleFeatures } = storeToRefs(mapStore);
 const locationPermission = useLocationPermission();
 
 const updateVisibleFeatures = () => {
@@ -48,7 +48,7 @@ const updateVisibleFeatures = () => {
   mapStore.updateVisibleFeatures(Array.from(uniqueFeatures.values()));
 
   if (loadingVisibleFeatures.value) {
-    loadingVisibleFeatures.value = false;
+    mapStore.setLoadingVisibleFeatures(false);
   }
 };
 
