@@ -1,9 +1,8 @@
 <template>
   <div>
     <HemocioneHeader v-if="!isIframe" />
-    <transition name="fade-zoo
-
-      <HemocioneEnableLocation v-if=" isShow" @close="isShow = false" />
+    <transition name="fade-zoo">
+      <HemocioneEnableLocation v-if="isShow" @close="isShow = false" />
     </transition>
     <PlaceSearchInput class="pt-8" />
     <BottomDrawer />
