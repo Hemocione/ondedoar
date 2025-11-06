@@ -1,16 +1,19 @@
 <template>
   <div>
     <HemocioneHeader v-if="!isIframe" />
-    <transition name="fade-zoom">
-      <HemocioneEnableLocation v-if="isShow" @close="isShow = false" />
+    <transition name="fade-zoo
+
+      <HemocioneEnableLocation v-if=" isShow" @close="isShow = false" />
     </transition>
     <PlaceSearchInput class="pt-8" />
     <BottomDrawer />
   </div>
 </template>
 <script setup lang="ts">
+import { useUserStore } from '~/store/users';
 
-const locationPermission = useLocationPermission();
+const userStore = useUserStore();
+
 const isShow = ref(false);
 // TODO: MOVE THIS TO A PLUGIN LIKE CAN DONATE
 const isIframe = ref(false)
@@ -24,9 +27,9 @@ async function verifyLocation() {
     if (result.state === 'granted') {
       isShow.value = false;
     }
-    locationPermission.value = result.state;
+    userStore.setPermissionUserLocation(result.state);
     result.onchange = () => {
-      locationPermission.value = result.state;
+      userStore.setPermissionUserLocation(result.state);
     }
   } catch (err) {
     console.log(err)
@@ -55,5 +58,10 @@ onMounted(async () => {
 .fade-zoom-leave-to {
   opacity: 0;
   transform: scale(0.95);
+}
+</style>
+{
+opacity: 0;
+transform: scale(0.95);
 }
 </style>

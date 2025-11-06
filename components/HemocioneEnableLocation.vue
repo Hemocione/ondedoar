@@ -31,7 +31,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-const locationPermission = useLocationPermission();
+import { useUserStore } from '~/store/users';
+
+const userStore = useUserStore();
 const emit = defineEmits(['close']);
 
 function ativarLocalizacao() {
@@ -39,14 +41,14 @@ function ativarLocalizacao() {
     (pos) => {
       // Verify the actual permission state after getting position
       navigator.permissions.query({ name: 'geolocation' }).then(result => {
-        locationPermission.value = result.state;
+        userStore.setPermissionUserLocation(result.state);
       });
     },
     (error) => {
       console.error('Geolocation error:', error);
       // Check actual permission state on error
       navigator.permissions.query({ name: 'geolocation' }).then(result => {
-        locationPermission.value = result.state;
+        userStore.setPermissionUserLocation(result.state);
       });
     }
   );
@@ -54,7 +56,7 @@ function ativarLocalizacao() {
 }
 
 function closeModal() {
-  locationPermission.value = "denied";
+  userStore.setPermissionUserLocation("denied");;
   emit('close', true);
 }
 </script>
