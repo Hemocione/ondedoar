@@ -19,6 +19,7 @@ import pinEventUrl from '~/assets/vectors/PinEvent.svg';
 import pinHemoCenterUrl from '~/assets/vectors/PinHemoCenter.svg';
 import pinHospitalUrl from '~/assets/vectors/PinHospital.svg';
 import { useMapStore } from '~/store/map';
+import { useUserStore } from '~/store/users';
 
 // Basic info
 const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
@@ -28,10 +29,11 @@ const pinMarkersFeatures = await getPointsParsed();;
 
 const mapInstance = ref(null);
 
-// Load composables
+// Load stores
+const userStore = useUserStore();
+const { permitUserLocation } = storeToRefs(userStore)
 const mapStore = useMapStore();
 const { isLoadingVisibleFeatures: loadingVisibleFeatures } = storeToRefs(mapStore);
-const locationPermission = useLocationPermission();
 
 const updateVisibleFeatures = () => {
   if (!mapInstance.value) return;
@@ -82,11 +84,11 @@ const onMapLoad = (event) => {
     return;
   }
 
-  if (locationPermission.value === 'granted') {
+  if (permitUserLocation.value === 'granted') {
     geolocateButton.click();
   }
 
-  watch(locationPermission, (newPermission) => {
+  watch(permitUserLocation, (newPermission) => {
     if (newPermission === 'granted') {
       geolocateButton.click();
     }
