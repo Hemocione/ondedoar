@@ -1,19 +1,8 @@
 <template>
-  <img ref="pinAskForHelpImg" id="askforhelp" class="hidden" :src="pinAskForHelpUrl" alt="pin-ask-for-help">
-  <img ref="pinBloodBankImg" id="bloodbank" class="hidden" :src="pinBloodBankUrl" alt="pin-blood-bank">
-  <img ref="pinEventImg" id="event" class="hidden" :src="pinEventUrl" alt="pin-event">
-  <img ref="pinHemoCenterImg" id="hemocenter" class="hidden" :src="pinHemoCenterUrl" alt="pin-hemocenter">
-  <img ref="pinHospitalImg" id="hospital" class="hidden" :src="pinHospitalUrl" alt="pin-hospital">
-
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom"
     @map:load="onMapLoad">
     <mgl-geolocate-control position="bottom-left" :position-options="{ enableHighAccuracy: true }"
       :track-user-location="true" :show-user-location="true" :fit-bounds-options="{ maxZoom: 12 }" />
-    <mgl-image id="askforhelp" :image="pinAskForHelpImg" />
-    <mgl-image id="bloodbank" :image="pinBloodBankImg" />
-    <mgl-image id="event" :image="pinEventImg" />
-    <mgl-image id="hemocenter" :image="pinHemoCenterImg" />
-    <mgl-image id="hospital" :image="pinHospitalImg" />
     <PinMarker :features="pinMarkersFeatures" />
   </mgl-map>
 </template>
@@ -21,8 +10,7 @@
 <script setup>
 import {
   MglMap,
-  MglGeolocateControl,
-  MglImage
+  MglGeolocateControl
 } from '@indoorequal/vue-maplibre-gl';
 
 import pinAskForHelpUrl from '~/assets/vectors/PinAskForHelp.svg';
@@ -30,25 +18,18 @@ import pinBloodBankUrl from '~/assets/vectors/PinBloodBank.svg';
 import pinEventUrl from '~/assets/vectors/PinEvent.svg';
 import pinHemoCenterUrl from '~/assets/vectors/PinHemoCenter.svg';
 import pinHospitalUrl from '~/assets/vectors/PinHospital.svg';
-
-// TODO: THINK OF A BETTER WAY TO DECLARE THIS REFS
-const pinAskForHelpImg = ref(null);
-const pinBloodBankImg = ref(null);
-const pinEventImg = ref(null);
-const pinHemoCenterImg = ref(null);
-const pinHospitalImg = ref(null);
-
+import { useMapStore } from '~/store/map';
 
 // Basic info
 const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
 const center = useMapCenter();
 const zoom = 3.91;
-const pinMarkersFeatures = ref([]);
+const pinMarkersFeatures = await getPointsParsed();;
 
 const mapInstance = ref(null);
 
 // Load composables
-const visibleFeatures = useVisibleFeatures();
+const mapStore = useMapStore();
 const loadingVisibleFeatures = useLoadingVisibleFeatures();
 const locationPermission = useLocationPermission();
 
@@ -64,7 +45,7 @@ const updateVisibleFeatures = () => {
     }
   });
 
-  visibleFeatures.value = Array.from(uniqueFeatures.values());
+  mapStore.updateVisibleFeatures(Array.from(uniqueFeatures.values()));
 
   if (loadingVisibleFeatures.value) {
     loadingVisibleFeatures.value = false;
@@ -73,6 +54,22 @@ const updateVisibleFeatures = () => {
 
 const onMapLoad = (event) => {
   mapInstance.value = event.map;
+
+  const loadImage = (id, url) => {
+    const img = new Image();
+    img.onload = () => {
+      if (!mapInstance.value.hasImage(id)) {
+        mapInstance.value.addImage(id, img);
+      }
+    };
+    img.src = url;
+  }
+
+  loadImage('askforhelp', pinAskForHelpUrl);
+  loadImage('bloodbank', pinBloodBankUrl);
+  loadImage('event', pinEventUrl);
+  loadImage('hemocenter', pinHemoCenterUrl);
+  loadImage('hospital', pinHospitalUrl);
 
   // Atualiza a lista de features visíveis sempre que o mapa ficar ocioso
   // (após zoom, pan, etc., e também no carregamento inicial).
@@ -110,9 +107,11 @@ watch(center, (newCenter) => {
   }
 });
 
-onMounted(async () => {
-  pinMarkersFeatures.value = await getPointsParsed();
-})
+// onMounted(async () => {
+
+//   console.log('PinMarkers')
+//   console.log(pinMarkersFeatures.value)
+// })
 </script>
 
 <style lang="scss">
