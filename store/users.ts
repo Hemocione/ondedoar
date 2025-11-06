@@ -5,11 +5,13 @@ export const useUserStore = defineStore("user", {
   state: () => ({
     user: null,
     token: null as string | null,
-    loadingLogin: true as boolean
+    loadingLogin: true as boolean,
+    permitUserLocation: 'prompt' as PermissionState
   }),
 
   getters: {
     loggedIn: (state) => Boolean(state.user),
+    permitUserLocation: (state) => state.permitUserLocation,
   },
   actions: {
     setUser(user: CurrentUserData | null) {
@@ -20,6 +22,10 @@ export const useUserStore = defineStore("user", {
     },
     setLoadingLogin(val: boolean) {
       this.loadingLogin = val;
+    },
+
+    setPermissionUserLocation(permission: PermissionState) {
+      this.permitUserLocation = permission
     },
 
     async logOut() {
