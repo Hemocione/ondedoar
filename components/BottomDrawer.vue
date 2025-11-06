@@ -37,12 +37,13 @@
 <script setup lang="ts">
 import type { PlaceDetails } from '~/composables/states';
 import { useMapStore } from '~/store/map';
-
+import { useUserStore } from '~/store/users';
 // TODO: Think of full state, if it's needed. In case it is: move header to upfront in template, changing z-index.
 
-const locationPermission = useLocationPermission();
+const userStore = useUserStore();
+const { permitUserLocation } = storeToRefs(userStore)
 const moreInfo = useMoreInfo();
-const shouldOpen = computed(() => locationPermission.value !== 'prompt');
+const shouldOpen = computed(() => permitUserLocation.value !== 'prompt');
 const mapStore = useMapStore();
 const { getVisibleFeatures: visibleFeatures, isLoadingVisibleFeatures: loadingVisibleFeatures } = storeToRefs(mapStore);
 const visibleFeaturesCount = computed(() => visibleFeatures.value ? visibleFeatures.value.length : undefined);
