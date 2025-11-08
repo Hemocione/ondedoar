@@ -21,20 +21,19 @@ import pinHospitalUrl from '~/assets/vectors/PinHospital.svg';
 import { useMapStore } from '~/store/map';
 import { useUserStore } from '~/store/users';
 
-// Basic info
-const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
-const center = useMapCenter();
-const zoom = 3.91;
-
-const mapInstance = ref(null);
-
 // Load stores
 const userStore = useUserStore();
 const { permitUserLocation } = storeToRefs(userStore)
 const mapStore = useMapStore();
 
+// Basic info
+const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
+const zoom = 3.91;
+
+const mapInstance = ref(null);
+
 const pinMarkersFeatures = await mapStore.fetchPoints();
-const { isLoadingVisibleFeatures: loadingVisibleFeatures } = storeToRefs(mapStore);
+const { isLoadingVisibleFeatures: loadingVisibleFeatures, mapCenter: center } = storeToRefs(mapStore);
 
 const updateVisibleFeatures = () => {
   if (!mapInstance.value) return;

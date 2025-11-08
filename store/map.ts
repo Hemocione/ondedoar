@@ -1,11 +1,4 @@
-import { LRUCache } from "lru-cache";
 import { getPointsParsed } from "~/composables/ondedoar";
-
-const pointsCache = new LRUCache<string, any[]>({
-  max: 1,
-  // 5 minutes
-  ttl: 1000 * 60 * 10,
-});
 
 export const useMapStore = defineStore("map", {
   // TODO: IMPROVE TYPING
@@ -31,21 +24,14 @@ export const useMapStore = defineStore("map", {
       this.visibleFeatures = features;
     },
 
+
     setPinMarkersFeatures(points: any[]) {
       this.pinMarkersFeatures = points;
     },
 
     async fetchPoints() {
-      const cacheKey = "all-points";
-      if (pointsCache.has(cacheKey)) {
-        const cachedPoints = pointsCache.get(cacheKey)!;
-        this.setPinMarkersFeatures(cachedPoints);
-        return cachedPoints;
-      }
-
       const points = await getPointsParsed();
       this.setPinMarkersFeatures(points);
-      pointsCache.set(cacheKey, points);
       return points;
     },
   },

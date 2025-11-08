@@ -34,9 +34,11 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import type { NominatimResult } from '~/composables/geoCoding';
+import { useMapStore } from '~/store/map';
 
+const mapStore = useMapStore();
 const place = ref('');
-const mapCenter = useMapCenter();
+const { mapCenter } = storeToRefs(mapStore);
 const suggestions = ref<NominatimResult[]>([]);
 const isSuggestionsVisible = ref(false);
 
