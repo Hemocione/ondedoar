@@ -5,7 +5,7 @@
       <slot />
     </div>
     <ClientOnly>
-      <MapLibreClient class="absolute inset-0" />
+      <MapLibre class="absolute inset-0" />
     </ClientOnly>
   </div>
 </template>
