@@ -1,12 +1,13 @@
-import { getActivePoints } from "~/server/services/point"
+import { getActivePoints } from '~/server/services/point';
 
-export default defineEventHandler(async (event) => {
-  const points = await getActivePoints()
-  // if (!points) {
-  //   setResponseStatus(event, 404)
-  //   return {
-  //     error: 'No active points found'
-  //   }
-  // }
-  return points
-})
+const cacheKey = 'active-points';
+
+export default defineEventHandler(async () => {
+  if (cache.has(cacheKey)) {
+    return cache.get(cacheKey);
+  }
+
+  const points = await getActivePoints();
+  cache.set(cacheKey, points);
+  return points;
+});
