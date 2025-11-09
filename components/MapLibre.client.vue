@@ -22,12 +22,13 @@ import { useMapStore } from '~/store/map';
 import { useUserStore } from '~/store/users';
 
 // Load stores
+const config = useRuntimeConfig();
 const userStore = useUserStore();
 const { permitUserLocation } = storeToRefs(userStore)
 const mapStore = useMapStore();
 
 // Basic info
-const style = 'https://api.maptiler.com/maps/bright-v2/style.json?key=BDTz66DnaGp8XHXXMby2';
+const style = `https://api.maptiler.com/maps/streets-v4/style.json?key=${config.public.maptiler.apiKey}`;
 const zoom = 3.91;
 
 const mapInstance = ref(null);

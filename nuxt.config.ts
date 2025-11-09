@@ -46,6 +46,9 @@ export default defineNuxtConfig({
       authCookieKey: process.env.HEMOCIONE_AUTH_COOKIE_KEY || "devHemocioneId",
       siteUrl,
       hemocioneIdUrl: process.env.HEMOCIONEID_URL ?? "http://localhost:8080",
+      maptiler: {
+        apiKey: process.env.MAPTILER_API_KEY,
+      }
     },
     db: {
       mongo: {
