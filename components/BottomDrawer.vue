@@ -89,7 +89,7 @@ const displayItems = computed(() => {
   }
 
   // Otherwise, show real data
-  return visibleFeatures.map(feature => ({
+  return visibleFeatures.value.map(feature => ({
     ...feature,
     key: feature.name,
     loading: false,
