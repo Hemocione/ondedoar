@@ -1,7 +1,7 @@
 <template>
   <div class="enable-location-modal h-screen w-full flex flex-col justify-center z-50 absolute inset-0 bg-white">
     <div class="image-wrapper flex justify-center items-center m-5 mb-[100px]">
-      <div class="w-24 h-24 bg-gray-200 rounded-lg shadow-sm" />
+      <img src="/assets/vectors/HemocioneLogo.svg" alt="Logo Gota Hemocione" class="w-48 h-48">
     </div>
     <div class="content-wrapper">
       <div class="content-infos-wrapper w-full px-4 flex flex-col gap-3 mb-[100px]">
