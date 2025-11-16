@@ -1,6 +1,8 @@
-import { Inngest, InngestFunction } from "inngest";
+import type { InngestFunction } from "inngest";
+import { Inngest } from "inngest";
 import { syncHemocioneIdJob, syncHemocioneIdJobErrorHandler } from "./jobs/syncHemocioneId";
 import { syncHemocioneAskForHelpJob, syncHemocioneAskForHelpJobErrorHandler } from "./jobs/syncHemocioneAskForHelp";
+import { syncHemocioneDigitalEventsJob, syncHemocioneDigitalEventsJobErrorHandler } from "./jobs/syncHemocioneDigitalEvents";
 
 const config = useRuntimeConfig();
 
@@ -73,6 +75,21 @@ class TaskManager {
       }
     )
 
+    this.addJob(
+      {
+        configuration: {
+          id: "syncHemocioneDigitalEvents",
+          name: "syncHemocioneDigitalEvents",
+          onFailure: syncHemocioneDigitalEventsJobErrorHandler,
+          retries: 3, // Number of retries on failure
+        },
+        trigger: {
+          cron: "0 */8 * * *",
+          event: 'syncHemocioneDigitalEvents',
+        },
+        callback: syncHemocioneDigitalEventsJob,
+      }
+    )
     // this.addJob({
     //   name: "test",
     //   callback: testJob,
