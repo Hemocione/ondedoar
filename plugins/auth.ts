@@ -1,0 +1,16 @@
+import { evaluateCurrentLogin } from "~/middleware/auth";
+import { useUserStore } from "~/store/users";
+
+export default defineNuxtPlugin((nuxtApp) => {
+  nuxtApp.hook("app:beforeMount", async () => {
+    console.log("App before mount hook triggered");
+    const route = useRoute();
+    await evaluateCurrentLogin(route.query);
+    // remove token from url
+    const url = new URL(window.location.href);
+    url.searchParams.delete("token");
+    window.history.replaceState({}, document.title, url.toString());
+    const userStore = useUserStore();
+    userStore.setLoadingLogin(false);
+  });
+});

@@ -21,6 +21,8 @@ const userStore = useUserStore();
 const { user, loggedIn } = storeToRefs(userStore);
 
 const buttonText = computed(() => {
+  console.log('User value:')
+  console.log(user.value)
   return user.value ? `Sair (${user.value?.givenName?.trim()})` : "Entrar";
 });
 
@@ -31,17 +33,17 @@ const buttonIcon = computed(() => {
 async function goRegister() {
   if (loggedIn.value) {
     sessionStorage.setItem("anonymousMode", "false");
-    router.push("/intention");
+    router.push('/');
   } else {
     sessionStorage.setItem("anonymousMode", "false");
-    redirectToID(`/`);
+    redirectToID('/');
   }
 }
 
 async function logOut() {
   await userStore.logOut();
   sessionStorage.setItem("anonymousMode", "true");
-  router.push("/");
+  router.push('/');
 }
 
 const buttonEvent = computed(() => {

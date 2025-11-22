@@ -4,10 +4,14 @@ import { currentUserTokenDecoder } from "~/utils/currentUserTokenDecoder";
 import { getHemocioneIdUrl } from "~/utils/getHemocioneIdUrl";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  if (import.meta.server) return;
+  // if (import.meta.server) return;
 
+  console.log("Auth middleware triggered");
   const isLoggedIn = await evaluateCurrentLogin(from.query);
+  console.log("is Logged in?");
+  console.log(isLoggedIn);
   if (!isLoggedIn) {
+    console.log('fullPath', to.fullPath);
     redirectToID(to.fullPath);
     return;
   }
@@ -27,10 +31,13 @@ export async function evaluateCurrentLogin(query?: LocationQuery) {
 
   const token = getCurrentToken(query);
 
+  console.log('Token found:', token);
+
   if (!token) return false;
   let tokenIsValid = true;
 
   try {
+    console.log("Validating token with Hemocione ID API...");
     await useFetch(`${config.public.hemocioneIdApiUrl}/users/validate-token`, {
       method: "GET",
       headers: {
@@ -79,6 +86,7 @@ export function getCurrentToken(query?: LocationQuery): string | null {
 
   const config = useRuntimeConfig();
   const cookieToken = useCookie(config.public.authCookieKey).value as string;
+  console.log('Cookie token:', cookieToken);
   return cookieToken;
 }
 
