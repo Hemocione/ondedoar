@@ -28,7 +28,7 @@ const { permitUserLocation } = storeToRefs(userStore)
 const mapStore = useMapStore();
 
 // Basic info
-const style = `https://api.maptiler.com/maps/streets-v4/style.json?key=${config.public.maptiler.apiKey}`;
+const style = `https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json`;
 const zoom = 3.91;
 
 const mapInstance = ref(null);

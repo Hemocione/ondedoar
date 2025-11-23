@@ -47,9 +47,6 @@ export default defineNuxtConfig({
       siteUrl,
       hemocioneIdUrl: process.env.HEMOCIONEID_URL ?? "http://localhost:8080",
       hemocioneIdApiUrl: process.env.HEMOCIONEID_API_URL ?? "http://localhost:8080",
-      maptiler: {
-        apiKey: process.env.MAPTILER_API_KEY,
-      }
     },
     db: {
       mongo: {
