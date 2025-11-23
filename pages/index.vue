@@ -11,11 +11,12 @@
 <script setup lang="ts">
 import { useUserStore } from '~/store/users';
 
+const route = useRoute();
 const userStore = useUserStore();
 
 const isShow = ref(false);
 // TODO: MOVE THIS TO A PLUGIN LIKE CAN DONATE
-const isIframe = ref(false)
+const isIframe = ref(route.query.iframed === "true")
 
 async function verifyLocation() {
   try {

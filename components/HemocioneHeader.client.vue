@@ -31,17 +31,17 @@ const buttonIcon = computed(() => {
 async function goRegister() {
   if (loggedIn.value) {
     sessionStorage.setItem("anonymousMode", "false");
-    router.push("/intention");
+    router.push('/');
   } else {
     sessionStorage.setItem("anonymousMode", "false");
-    redirectToID(`/`);
+    redirectToID('/');
   }
 }
 
 async function logOut() {
   await userStore.logOut();
   sessionStorage.setItem("anonymousMode", "true");
-  router.push("/");
+  router.push('/');
 }
 
 const buttonEvent = computed(() => {
