@@ -4,7 +4,7 @@ import { currentUserTokenDecoder } from "~/utils/currentUserTokenDecoder";
 import { getHemocioneIdUrl } from "~/utils/getHemocioneIdUrl";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  // if (import.meta.server) return;
+  if (import.meta.server) return;
 
   console.log("Auth middleware triggered");
   const isLoggedIn = await evaluateCurrentLogin(from.query);
@@ -38,7 +38,7 @@ export async function evaluateCurrentLogin(query?: LocationQuery) {
 
   try {
     console.log("Validating token with Hemocione ID API...");
-    await useFetch(`${config.public.hemocioneIdApiUrl}/users/validate-token`, {
+    await $fetch(`${config.public.hemocioneIdApiUrl}/users/validate-token`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
