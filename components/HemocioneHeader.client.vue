@@ -21,8 +21,6 @@ const userStore = useUserStore();
 const { user, loggedIn } = storeToRefs(userStore);
 
 const buttonText = computed(() => {
-  console.log('User value:')
-  console.log(user.value)
   return user.value ? `Sair (${user.value?.givenName?.trim()})` : "Entrar";
 });
 
