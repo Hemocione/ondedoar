@@ -58,7 +58,6 @@ export default defineNuxtConfig({
       key: process.env.INNGEST_EVENT_KEY || "devInngestApiKey",
     },
     google: {
-      apiKey: process.env.GOOGLE_API_KEY,
       geocoding_url: "https://maps.googleapis.com/maps/api/geocode/json?"
     },
     hemocioneId: {
