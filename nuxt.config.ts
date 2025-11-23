@@ -18,24 +18,28 @@ const getSiteUrl = () => {
     return `https://${process.env.VERCEL_URL}`;
   }
 
-  return "https://possodoar.hemocione.com.br";
+  return "https://ondedoar.hemocione.com.br";
 };
 
 const siteUrl = getSiteUrl();
 console.log("Site URL:", siteUrl);
 
 export default defineNuxtConfig({
+  app: {
+    head: {
+      title: "Onde doar Sangue | Hemocione"
+    }
+  },
   devtools: { enabled: true },
   css: ["~/assets/css/global.css"],
-  modules: ["@nuxt/eslint", "nuxt-vercel-analytics", "@nuxt/ui", "@pinia/nuxt"],
-  vite: {
-    plugins: [
-      tailwindcss(),
-    ],
+  modules: ["nuxt-vercel-analytics", "@nuxtjs/google-fonts"],
+  googleFonts: {
+    families: {
+      Roboto: true,
+    },
   },
   nitro: {
-    preset: 'vercel',
-    plugins: ["~/server/plugins/mongoose.ts"],
+    preset: 'vercel-edge'
   },
   routeRules: {
     // prerender index route by default
