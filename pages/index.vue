@@ -2,7 +2,7 @@
   <div>
     <HemocioneHeader v-if="!isIframe" />
     <transition name="fade-zoo">
-      <HemocioneEnableLocation v-if="isShow" @close="isShow = false" />
+      <HemocioneEnableLocation v-if="isShow && !isIframe" @close="isShow = false" />
     </transition>
     <PlaceSearchInput class="pt-8" />
     <BottomDrawer />
