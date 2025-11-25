@@ -18,7 +18,7 @@ const getSiteUrl = () => {
     return `https://${process.env.VERCEL_URL}`;
   }
 
-  return "https://possodoar.hemocione.com.br";
+  return "https://ondedoar.hemocione.com.br";
 };
 
 const siteUrl = getSiteUrl();
