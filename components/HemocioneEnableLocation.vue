@@ -1,5 +1,7 @@
 <template>
-  <div class="enable-location-modal w-full flex flex-col justify-center z-[100] fixed inset-0 bg-white">
+  <div
+    class="enable-location-modal w-full flex flex-col justify-center z-[100] fixed inset-0 bg-white pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
+  >
     <div class="image-wrapper flex justify-center items-center m-5 mb-[100px]">
       <img src="/assets/vectors/HemocioneLogo.svg" alt="Logo Gota Hemocione" class="w-48 h-48">
     </div>
