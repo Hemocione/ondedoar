@@ -6,6 +6,11 @@ const PointsSchema = new Schema({
 		required: true,
 	},
 
+	displayName: {
+		type: String,
+		required: false,
+	},
+
 	address: {
 		type: String,
 		required: true,
