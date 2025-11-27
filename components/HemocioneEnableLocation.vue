@@ -1,7 +1,6 @@
 <template>
   <div
-    class="enable-location-modal w-full flex flex-col justify-center z-[100] fixed inset-0 bg-white pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
-  >
+    class="enable-location-modal w-full flex flex-col justify-center z-[100] fixed inset-0 bg-white pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
     <div class="image-wrapper flex justify-center items-center m-5 mb-[100px]">
       <img src="/assets/vectors/HemocioneLogo.svg" alt="Logo Gota Hemocione" class="w-48 h-48">
     </div>
@@ -41,19 +40,19 @@ const emit = defineEmits(['close']);
 function ativarLocalizacao() {
   navigator.geolocation.getCurrentPosition(
     (pos) => {
-      // Verify the actual permission state after getting position
-      navigator.permissions.query({ name: 'geolocation' }).then(result => {
-        userStore.setPermissionUserLocation(result.state);
-      });
+      console.log('Coordinates:', pos.coords.latitude, pos.coords.longitude);
+      userStore.setPermissionUserLocation('granted');
+      console.log('User permission:', userStore.permitUserLocation);
     },
     (error) => {
       console.error('Geolocation error:', error);
-      // Check actual permission state on error
-      navigator.permissions.query({ name: 'geolocation' }).then(result => {
-        userStore.setPermissionUserLocation(result.state);
-      });
+      if (error.message === "User denied Geolocation") {
+        userStore.setPermissionUserLocation('denied');
+        console.log('User permission:', userStore.permitUserLocation);
+      }
     }
   );
+  console.log('User permission:', userStore.permitUserLocation);
   emit('close', true);
 }
 
