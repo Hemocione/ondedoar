@@ -16,8 +16,9 @@
         <!-- TODO: MUST FIX SCROLL. THE LAST 5 ITEMS ARE NEVER SCROLLABLE -->
         <div v-else-if="snapPoint === snapPoints.partial" class="my-4 overflow-auto">
           <!-- TODO: MAKE ITEMSHORTINFO CLICKABLE. IT MUST OPEN A MODAL OR A DRAWER WITH THE INFO MISSING -->
-          <ItemShortInfo v-for="item in displayItems" :key="item.key" :loading="item.loading" :title="item.name"
-            :address="item.address" :type="item.type" @click="showMoreInfo(item)" />
+          <ItemShortInfo v-for="item in displayItems" :key="item.key" :loading="item.loading"
+            :title="item.displayName ?? item.name" :address="item.address" :type="item.type"
+            @click="showMoreInfo(item)" />
           <!-- BE MY GUEST TRYING TO FIX SCROLL WITHOUT THIS WORKAROUND -->
           <div class="p-2.5">
             <ItemShortInfo v-for="i in 6" :key="'fake-' + i" :loading="false" title="&nbsp;" address="&nbsp;"
