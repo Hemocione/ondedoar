@@ -3,7 +3,7 @@
     <div class="header flex flex-col">
       <UButton @click="moreInfo = null" class="pb-6 flex justify-start items-center" icon="i-heroicons-arrow-left"
         size="md" color="primary" variant="link" :ui="{ base: 'w-8 h-5 text-gray-800' }" />
-      <span class="title text-2xl font-semibold px-1">{{ placeDetails.name }}</span>
+      <span class="title text-2xl font-semibold px-1">{{ placeDetails.displayName ?? placeDetails.name }}</span>
       <!-- TODO: FIX FORMAT FOR THIS PAGE -->
       <span class="subtitle font-normal text-xs text-gray-500 px-1">{{ formatSubtitle(placeDetails.distance,
         placeDetails.address) }}</span>
@@ -33,6 +33,7 @@ defineProps<{
   placeDetails: {
     active: boolean,
     name: string,
+    displayName?: string | null,
     phone?: string,
     link?: string,
     type?: string,
