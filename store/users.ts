@@ -11,7 +11,7 @@ export const useUserStore = defineStore("user", {
 
   getters: {
     loggedIn: (state) => Boolean(state.user),
-    getPermitUserLocation: (state) => state.permitUserLocation,
+    permitUserLocation: (state) => state.permitUserLocation,
   },
   actions: {
     setUser(user: CurrentUserData | null) {
