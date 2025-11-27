@@ -3,6 +3,7 @@ import { useState } from '#app';
 export interface PlaceDetails {
   active: boolean;
   name: string;
+  displayName?: string | null;
   phone?: string;
   link?: string;
   type: string;
