@@ -32,7 +32,7 @@ class="not-now-buttom w-full flex justify-center items-center hover:bg-gray-100 
       </div>
     </div>
   </div>
-</div></template>
+</template>
 <script lang="ts" setup>
 import { useUserStore } from '~/store/users';
 
