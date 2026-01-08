@@ -10,6 +10,7 @@ import {
   MglSymbolLayer
 } from '@indoorequal/vue-maplibre-gl';
 import type { MapMouseEvent } from 'maplibre-gl';
+import { useDrawerStore } from '~/store/drawer';
 
 const props = defineProps<{
   features: {
@@ -34,6 +35,9 @@ const geojsonSources = {
   })
 };
 
+const moreInfo = useMoreInfo();
+const drawerStore = useDrawerStore();
+
 const layout = {
   'icon-image': ['get', 'symbol'],
   'icon-size': 0.33
@@ -44,5 +48,8 @@ function handleSymbolClick(event: MapMouseEvent) {
     const feature = event.features[0];
     console.log('Dados do ponto:', feature.properties);
   }
+  moreInfo.value = event.features[0].properties;
+  console.log('to aqui:', event.features[0])
+  drawerStore.setFull()
 }
 </script>

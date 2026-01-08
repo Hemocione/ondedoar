@@ -1,8 +1,9 @@
 <template>
-  <UDrawer v-model:open="shouldOpen" :overlay="false" :activeSnapPoint="snapPoint" :dismissible="false" :modal="false"
+  <UDrawer
+v-model:open="shouldOpen" :overlay="false" :active-snap-point="snapPoint" :dismissible="false" :modal="false"
     :snap-points="visibleFeaturesCount != 0 ? activeSnapPoints : [snapPoints.collapsed]"
     :ui="{ body: 'bg-white', content: 'bg-white rounded-t-4xl ring-0 flex flex-col', container: 'h-full' }"
-    @update:activeSnapPoint="onUpadteSnapPoint">
+    @update:active-snap-point="onUpadteSnapPoint">
     <template #content>
       <Transition name="fade" mode="out-in">
         <div v-if="snapPoint === snapPoints.collapsed" class="flex flex-col items-center p-4">
@@ -16,12 +17,14 @@
         <!-- TODO: MUST FIX SCROLL. THE LAST 5 ITEMS ARE NEVER SCROLLABLE -->
         <div v-else-if="snapPoint === snapPoints.partial" class="my-4 overflow-auto">
           <!-- TODO: MAKE ITEMSHORTINFO CLICKABLE. IT MUST OPEN A MODAL OR A DRAWER WITH THE INFO MISSING -->
-          <ItemShortInfo v-for="item in displayItems" :key="item.key" :loading="item.loading"
+          <ItemShortInfo
+v-for="item in displayItems" :key="item.key" :loading="item.loading"
             :title="item.displayName ?? item.name" :address="item.address" :type="item.type"
             @click="showMoreInfo(item)" />
           <!-- BE MY GUEST TRYING TO FIX SCROLL WITHOUT THIS WORKAROUND -->
           <div class="p-2.5">
-            <ItemShortInfo v-for="i in 6" :key="'fake-' + i" :loading="false" title="&nbsp;" address="&nbsp;"
+            <ItemShortInfo
+v-for="i in 6" :key="'fake-' + i" :loading="false" title="&nbsp;" address="&nbsp;"
               type="bloodbank" style="visibility: hidden" />
           </div>
         </div>
@@ -39,6 +42,7 @@
 import type { PlaceDetails } from '~/composables/states';
 import { useMapStore } from '~/store/map';
 import { useUserStore } from '~/store/users';
+import { useDrawerStore } from '~/store/drawer';
 // TODO: Think of full state, if it's needed. In case it is: move header to upfront in template, changing z-index.
 
 const userStore = useUserStore();
@@ -61,10 +65,13 @@ const activeSnapPoints = computed(() => {
     : [snapPoints.collapsed, snapPoints.partial];
 })
 
-const snapPoint = ref(snapPoints.collapsed)
+const drawerStore = useDrawerStore();
+const { activeSnapPoint: snapPoint } = storeToRefs(drawerStore);
+console.log('snap point:', snapPoint)
 const isTransitioning = ref(false);
 
 watch(snapPoint, (newSnapPoint) => {
+  console.log(snapPoint)
   if (newSnapPoint === snapPoints.partial) {
     isTransitioning.value = true;
     setTimeout(() => {
