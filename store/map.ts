@@ -7,6 +7,7 @@ export const useMapStore = defineStore("map", {
     visibleFeatures: [] as any[],
     loadingVisibleFeatures: true as boolean,
     mapCenter: [-43.9345, -19.9167] as number[],
+    userLocation: null as number[] | null,
   }),
 
   getters: {
@@ -14,8 +15,13 @@ export const useMapStore = defineStore("map", {
     getVisibleFeatures: (state) => state.visibleFeatures,
     isLoadingVisibleFeatures: (state) => state.loadingVisibleFeatures,
     getPinMarkersFeatures: (state) => state.pinMarkersFeatures,
+    getUserLocation: (state) => state.userLocation,
   },
   actions: {
+    setUserLocation(location: number[] | null) {
+      this.userLocation = location;
+    },
+
     setLoadingVisibleFeatures(val: boolean) {
       this.loadingVisibleFeatures = val;
     },
