@@ -95,6 +95,10 @@ export default defineNuxtConfig({
     hemocioneAskforHelp: {
       apiUrl: process.env.HEMOCIONE_ASK_FOR_HELP_API_URL ?? "http://localhost:3001",
       secret: process.env.HEMOCIONE_ASK_FOR_HELP_SECRET ?? 'secret'
+    },
+    locationIq: {
+      apiKey: process.env.LOCATIONIQ_API_KEY,
+      apiUrl: process.env.LOCATIONIQ_API_URL
     }
   }
 });
