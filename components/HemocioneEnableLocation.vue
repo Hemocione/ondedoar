@@ -35,26 +35,14 @@ class="not-now-buttom w-full flex justify-center items-center hover:bg-gray-100 
 </template>
 <script lang="ts" setup>
 import { useUserStore } from '~/store/users';
+import { useUserLocation } from '~/composables/useUserLocation';
 
 const userStore = useUserStore();
+const { startTracking } = useUserLocation();
 const emit = defineEmits(['close']);
 
 function ativarLocalizacao() {
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      console.log('Coordinates:', pos.coords.latitude, pos.coords.longitude);
-      userStore.setPermissionUserLocation('granted');
-      console.log('User permission:', userStore.permitUserLocation);
-    },
-    (error) => {
-      console.error('Geolocation error:', error);
-      if (error.message === "User denied Geolocation") {
-        userStore.setPermissionUserLocation('denied');
-        console.log('User permission:', userStore.permitUserLocation);
-      }
-    }
-  );
-  console.log('User permission:', userStore.permitUserLocation);
+  startTracking();
   emit('close', true);
 }
 

@@ -10,42 +10,36 @@
 </template>
 <script setup lang="ts">
 import { useUserStore } from '~/store/users';
+import { useUserLocation } from '~/composables/useUserLocation';
 
 const route = useRoute();
 const userStore = useUserStore();
+const { checkPermissionAndStart } = useUserLocation();
 
 const isShow = ref(false);
 // TODO: MOVE THIS TO A PLUGIN LIKE CAN DONATE
 const isIframe = ref(route.query.iframed === "true")
 
-async function verifyLocation() {
-  try {
-    const result = await navigator.permissions.query({ name: 'geolocation' });
-    if (result.state === 'denied' || result.state === 'prompt') {
-      isShow.value = true;
-    }
-    if (result.state === 'granted') {
-      isShow.value = false;
-    }
-    userStore.setPermissionUserLocation(result.state);
-    result.onchange = () => {
-      userStore.setPermissionUserLocation(result.state);
-    }
-  } catch (err) {
-    console.log(err)
-  }
-}
-
 onMounted(async () => {
-  await verifyLocation()
+  await checkPermissionAndStart();
+  
+  // Se a permissão for 'prompt' (padrão inicial), mostra o modal customizado.
+  // O modal customizado chama startTracking() que por sua vez chama getCurrentPosition() e pede a permissão nativa.
+  if (userStore.permitUserLocation === 'prompt') {
+    isShow.value = true;
+  } else if (userStore.permitUserLocation === 'denied') {
+    // Opcional: Mostrar uma mensagem diferente ou tentar novamente se o usuário clicar em algo
+    // isShow.value = true; 
+  } else {
+    isShow.value = false;
+  }
+
   try {
     isIframe.value = window.self !== window.top;
   } catch (e) {
     isIframe.value = true;
   }
 })
-
-
 </script>
 
 <style lang="scss">
