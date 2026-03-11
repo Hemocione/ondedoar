@@ -2,15 +2,23 @@
   <mgl-map :map-style="style" :center="center" :zoom="zoom" height="100vh" class="absolute" @map:zoom="onMapZoom"
     @map:load="onMapLoad">
     <mgl-geolocate-control position="bottom-left" :position-options="{ enableHighAccuracy: true }"
-      :track-user-location="true" :show-user-location="true" :fit-bounds-options="{ maxZoom: 12 }" />
+      :track-user-location="true" :show-user-location="true" :fit-bounds-options="{ maxZoom: 12 }"
+      @geolocate="onGeolocate" />
     <PinMarker :features="pinMarkersFeatures" />
+
+    <mgl-geo-json-source v-if="currentRoute" source-id="route-source" :data="currentRoute">
+      <mgl-line-layer layer-id="route-layer" :layout="{ 'line-join': 'round', 'line-cap': 'round' }" :paint="{ 'line-color': '#EF4444', 'line-width': 5, 'line-opacity': 0.8 }" />
+    </mgl-geo-json-source>
+
   </mgl-map>
 </template>
 
 <script setup>
 import {
   MglMap,
-  MglGeolocateControl
+  MglGeolocateControl,
+  MglGeoJsonSource,
+  MglLineLayer
 } from '@indoorequal/vue-maplibre-gl';
 
 import pinAskForHelpUrl from '~/assets/vectors/PinAskForHelp.svg';
@@ -34,7 +42,7 @@ const zoom = 3.91;
 const mapInstance = ref(null);
 
 const pinMarkersFeatures = await mapStore.fetchPoints();
-const { isLoadingVisibleFeatures: loadingVisibleFeatures, mapCenter: center } = storeToRefs(mapStore);
+const { isLoadingVisibleFeatures: loadingVisibleFeatures, mapCenter: center, currentRoute } = storeToRefs(mapStore);
 
 const updateVisibleFeatures = () => {
   if (!mapInstance.value) return;
@@ -52,6 +60,12 @@ const updateVisibleFeatures = () => {
 
   if (loadingVisibleFeatures.value) {
     mapStore.setLoadingVisibleFeatures(false);
+  }
+};
+
+const onGeolocate = (event) => {
+  if (event && event.coords) {
+    userStore.setUserLocation([event.coords.longitude, event.coords.latitude]);
   }
 };
 
@@ -107,6 +121,28 @@ const onMapZoom = (map) => {
 watch(center, (newCenter) => {
   if (mapInstance.value) {
     mapInstance.value.flyTo({ center: newCenter, zoom: 15 });
+  }
+});
+
+watch(currentRoute, (newRoute) => {
+  if (newRoute && mapInstance.value) {
+    // Optionally fit bounds to the route. Using a simple approach.
+    try {
+      const coords = newRoute.geometry.coordinates;
+      if (coords.length > 0) {
+        let minLng = coords[0][0], maxLng = coords[0][0];
+        let minLat = coords[0][1], maxLat = coords[0][1];
+        for (const [lng, lat] of coords) {
+          if (lng < minLng) minLng = lng;
+          if (lng > maxLng) maxLng = lng;
+          if (lat < minLat) minLat = lat;
+          if (lat > maxLat) maxLat = lat;
+        }
+        mapInstance.value.fitBounds([[minLng, minLat], [maxLng, maxLat]], { padding: 50 });
+      }
+    } catch (e) {
+      console.error("Error expanding bounding box:", e);
+    }
   }
 });
 

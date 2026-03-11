@@ -29,7 +29,10 @@ const geojsonSources = {
         type: 'Point',
         coordinates
       },
-      properties
+      properties: {
+        ...properties,
+        coordinates
+      }
     }
   })
 };
