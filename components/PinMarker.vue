@@ -13,6 +13,7 @@ import { MglGeoJsonSource, MglSymbolLayer } from "@indoorequal/vue-maplibre-gl";
 import type { MapMouseEvent } from "maplibre-gl";
 import { useDrawerStore } from "~/store/drawer";
 import { useInfoStore } from "~/store/info";
+import { useMapStore } from "~/store/map";
 
 const props = defineProps<{
   features: {
@@ -38,6 +39,7 @@ const geojsonSources = {
 };
 
 const moreInfo = useMoreInfo();
+const mapStore = useMapStore();
 const drawerStore = useDrawerStore();
 const infoStore = useInfoStore();
 
@@ -46,17 +48,33 @@ const layout = {
   "icon-size": 0.33,
 };
 
-function handleSymbolClick(event: MapMouseEvent) {
-  if (event.features && event.features.length > 0) {
-    const feature = event.features[0];
-    console.log("Dados do ponto:", feature.properties);
-  }
-  moreInfo.value = event.features[0].properties;
-  console.log("to aqui:", event.features[0]);
-  drawerStore.setFull();
+function settingloadingValue() {
   infoStore.setloadingVisibleFeatures(true);
   setTimeout(() => {
     infoStore.setloadingVisibleFeatures(false);
   }, 1500);
+}
+
+function zoomInPinMarker(pointId: string) {
+  const feature = geojsonSources.features.find((f) => f.properties._id === pointId);
+  
+  if (feature && feature.geometry.coordinates) {
+    const coord = feature.geometry.coordinates;
+    const lng = coord[0] ?? 0;
+    const lat = coord[1] ?? 0;
+
+    // Trigger watch in MapLibre.client.vue, which cleanly flyTo({ zoom: 15, offset: [0, 150] }).
+    mapStore.setMapCenter([lng, lat - 0.006]);
+  }
+}
+
+function handleSymbolClick(event: MapMouseEvent) {
+  if (event.features && event.features.length > 0) {
+    const feature = event.features[0];
+  }
+  moreInfo.value = event.features[0].properties;
+  drawerStore.setFull();
+  settingloadingValue();
+  zoomInPinMarker(event.features[0].properties._id);
 }
 </script>
