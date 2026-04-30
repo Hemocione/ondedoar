@@ -3,15 +3,17 @@ import { redirectToID } from "~/middleware/auth";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
-    user: null,
+    user: null as CurrentUserData | null,
     token: null as string | null,
     loadingLogin: true as boolean,
-    permitUserLocation: 'prompt' as PermissionState
+    permitUserLocation: 'prompt' as PermissionState,
+    userLocation: null as [number, number] | null
   }),
 
   getters: {
     loggedIn: (state) => Boolean(state.user),
     getPermitUserLocation: (state) => state.permitUserLocation,
+    getUserLocation: (state) => state.userLocation,
   },
   actions: {
     setUser(user: CurrentUserData | null) {
@@ -26,6 +28,10 @@ export const useUserStore = defineStore("user", {
 
     setPermissionUserLocation(permission: PermissionState) {
       this.permitUserLocation = permission
+    },
+
+    setUserLocation(coords: [number, number] | null) {
+      this.userLocation = coords;
     },
 
     async logOut() {
