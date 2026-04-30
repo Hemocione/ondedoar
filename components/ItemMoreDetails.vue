@@ -26,11 +26,9 @@
       </div>
 
       <div class="route flex flex-row mt-2 w-full">
-        <UButton :loading="loadingRoute" @click="handleComoChegar" block color="neutral" variant="solid"
-          :ui="{
-            base: 'bg-hemo-color-primary text-white hover:bg-hemo-color-primary-action active:bg-hemo-color-secondary active:text-hemo-color-primary-light disabled:bg-hemo-color-primary/80',
-          }"
-          class="w-full flex justify-center py-3 text-white">
+        <UButton :loading="loadingRoute" @click="handleComoChegar" block color="neutral" variant="solid" :ui="{
+          base: 'bg-hemo-color-primary text-white hover:bg-hemo-color-primary-action active:bg-hemo-color-secondary active:text-hemo-color-primary-light disabled:bg-hemo-color-primary/80',
+        }" class="w-full flex justify-center py-3 text-white">
           <span v-if="!loadingRoute">Como chegar</span>
         </UButton>
       </div>
@@ -88,7 +86,7 @@ const drawRouteToPlace = async () => {
 
   let destCoords = props.placeDetails.coordinates;
   if (typeof destCoords === 'string') {
-    try { destCoords = JSON.parse(destCoords); } catch (e) {}
+    try { destCoords = JSON.parse(destCoords); } catch (e) { }
   }
 
   if (!destCoords || !Array.isArray(destCoords)) {
@@ -98,7 +96,6 @@ const drawRouteToPlace = async () => {
 
   // Use MapLibre tracked high-accuracy location if available
   if (userStore.userLocation) {
-    console.log('Using highly accurate MapLibre location:', userStore.userLocation);
     await fetchRoute(userStore.userLocation, destCoords as [number, number]);
     return;
   }
@@ -107,9 +104,6 @@ const drawRouteToPlace = async () => {
   navigator.geolocation.getCurrentPosition(
     async (pos) => {
       const userCoords: [number, number] = [pos.coords.longitude, pos.coords.latitude];
-
-      console.log('User Coords (fallback):', userCoords);
-      console.log('Dest Coords:', destCoords);
 
       await fetchRoute(userCoords, destCoords as [number, number]);
     },
