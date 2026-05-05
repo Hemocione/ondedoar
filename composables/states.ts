@@ -8,6 +8,7 @@ export interface PlaceDetails {
   link?: string;
   type: string;
   address: string;
+  coordinates?: [number, number];
 }
 
 export const useMoreInfo = () => useState<PlaceDetails | null>('moreInfo', () => null);

@@ -8,6 +8,7 @@ export const useMapStore = defineStore("map", {
     loadingVisibleFeatures: true as boolean,
     mapCenter: [-43.9345, -19.9167] as number[],
     zoom: 3.91 as number,
+    currentRoute: null as any | null,
   }),
 
   getters: {
@@ -15,6 +16,7 @@ export const useMapStore = defineStore("map", {
     getVisibleFeatures: (state) => state.visibleFeatures,
     isLoadingVisibleFeatures: (state) => state.loadingVisibleFeatures,
     getPinMarkersFeatures: (state) => state.pinMarkersFeatures,
+    getCurrentRoute: (state) => state.currentRoute,
   },
   actions: {
     setLoadingVisibleFeatures(val: boolean) {
@@ -24,6 +26,11 @@ export const useMapStore = defineStore("map", {
     updateVisibleFeatures(features: any[]) {
       this.visibleFeatures = features;
     },
+
+    setCurrentRoute(routeGeoJsonFeature: any | null) {
+      this.currentRoute = routeGeoJsonFeature;
+    },
+
 
     setPinMarkersFeatures(points: any[]) {
       this.pinMarkersFeatures = points;

@@ -58,6 +58,15 @@
           >
         </div>
       </div>
+
+      <div class="route flex flex-row mt-2 w-full">
+        <UButton :loading="loadingRoute" @click="handleComoChegar" block color="neutral" variant="solid" :ui="{
+          base: 'bg-hemo-color-primary text-white hover:bg-hemo-color-primary-action active:bg-hemo-color-secondary active:text-hemo-color-primary-light disabled:bg-hemo-color-primary/80',
+        }" class="w-full flex justify-center py-3 text-white">
+          <span v-if="!loadingRoute">Como chegar</span>
+        </UButton>
+      </div>
+      <p v-if="routeError" class="text-red-500 text-xs text-center mt-1">{{ routeError }}</p>
     </div>
   </div>
 </template>
@@ -89,6 +98,72 @@ function settingloadingValue() {
     infoStore.setloadingVisibleFeatures(false);
   }, 1500);
 }
+const userStore = useUserStore();
+const mapStore = useMapStore();
+const { fetchRoute, loadingRoute, routeError } = useRouting();
+
+const handleComoChegar = async () => {
+  // If user has not granted location permission, prompt them
+  if (userStore.permitUserLocation === 'denied') {
+    userStore.setPermissionUserLocation('prompt');
+    return;
+  }
+
+  if (userStore.permitUserLocation === 'granted') {
+    drawRouteToPlace();
+  } else {
+    // If it's prompt or unsupported, let's ask for permission and draw
+    userStore.setPermissionUserLocation('prompt');
+    // In HemocioneEnableLocation, when they grant permission, it'll set status to granted.
+    // We would need to either watch it or assume they'll click again. Since HemocioneEnableLocation closes itself,
+    // they can click again.
+  }
+};
+
+const drawRouteToPlace = async () => {
+  if (!navigator.geolocation && !userStore.userLocation) {
+    routeError.value = "Geolocalização não é suportada pelo seu navegador.";
+    return;
+  }
+
+  let destCoords = props.placeDetails.coordinates;
+  if (typeof destCoords === 'string') {
+    try { destCoords = JSON.parse(destCoords); } catch (e) { }
+  }
+
+  if (!destCoords || !Array.isArray(destCoords)) {
+    routeError.value = "Coordenadas do destino não encontradas. Tente novamente.";
+    return;
+  }
+
+  // Use MapLibre tracked high-accuracy location if available
+  if (userStore.userLocation) {
+    await fetchRoute(userStore.userLocation, destCoords as [number, number]);
+    return;
+  }
+
+  // Fallback to one-shot geolocation with high accuracy, bypassing cache
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const userCoords: [number, number] = [pos.coords.longitude, pos.coords.latitude];
+
+      await fetchRoute(userCoords, destCoords as [number, number]);
+    },
+    (err) => {
+      console.error(err);
+      routeError.value = "Não foi possível obter a sua localização exata.";
+      userStore.setPermissionUserLocation('prompt');
+    },
+    { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+  );
+};
+
+// Also optionally clean the route when more info is closed
+watch(moreInfo, (newVal) => {
+  if (!newVal) {
+    mapStore.setCurrentRoute(null);
+  }
+});
 
 onMounted(() => {
   settingloadingValue();

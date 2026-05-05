@@ -16,6 +16,11 @@
       :fit-bounds-options="{ maxZoom: 12 }"
     />
     <PinMarker :features="pinMarkersFeatures" />
+
+    <mgl-geo-json-source v-if="currentRoute" source-id="route-source" :data="currentRoute">
+      <mgl-line-layer layer-id="route-layer" :layout="{ 'line-join': 'round', 'line-cap': 'round' }" :paint="{ 'line-color': '#EF4444', 'line-width': 5, 'line-opacity': 0.8 }" />
+    </mgl-geo-json-source>
+
   </mgl-map>
 </template>
 
@@ -69,6 +74,12 @@ const updateVisibleFeatures = () => {
 
   if (loadingVisibleFeatures.value) {
     mapStore.setLoadingVisibleFeatures(false);
+  }
+};
+
+const onGeolocate = (event) => {
+  if (event && event.coords) {
+    userStore.setUserLocation([event.coords.longitude, event.coords.latitude]);
   }
 };
 
@@ -128,6 +139,28 @@ watch(center, (newCenter) => {
       zoom: 15,
       offset: [0, 150] // Push the map center down 150px so the objective moves up
     });
+  }
+});
+
+watch(currentRoute, (newRoute) => {
+  if (newRoute && mapInstance.value) {
+    // Optionally fit bounds to the route. Using a simple approach.
+    try {
+      const coords = newRoute.geometry.coordinates;
+      if (coords.length > 0) {
+        let minLng = coords[0][0], maxLng = coords[0][0];
+        let minLat = coords[0][1], maxLat = coords[0][1];
+        for (const [lng, lat] of coords) {
+          if (lng < minLng) minLng = lng;
+          if (lng > maxLng) maxLng = lng;
+          if (lat < minLat) minLat = lat;
+          if (lat > maxLat) maxLat = lat;
+        }
+        mapInstance.value.fitBounds([[minLng, minLat], [maxLng, maxLat]], { padding: 50 });
+      }
+    } catch (e) {
+      console.error("Error expanding bounding box:", e);
+    }
   }
 });
 
