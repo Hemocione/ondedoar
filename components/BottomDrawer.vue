@@ -1,12 +1,31 @@
 <template>
-  <UDrawer v-model:open="shouldOpen" :overlay="false" :activeSnapPoint="snapPoint" :dismissible="false" :modal="false"
-    :snap-points="visibleFeaturesCount != 0 ? activeSnapPoints : [snapPoints.collapsed]"
-    :ui="{ body: 'bg-white', content: 'bg-white rounded-t-4xl ring-0 flex flex-col', container: 'h-full' }"
-    @update:activeSnapPoint="onUpadteSnapPoint">
+  <UDrawer
+    v-model:open="shouldOpen"
+    :overlay="false"
+    :active-snap-point="snapPoint"
+    :dismissible="false"
+    :modal="false"
+    :snap-points="
+      visibleFeaturesCount != 0 ? activeSnapPoints : [snapPoints.collapsed]
+    "
+    :ui="{
+      body: 'bg-white',
+      content: 'bg-white rounded-t-4xl ring-0 flex flex-col',
+      container: 'h-full',
+    }"
+    @update:active-snap-point="onUpadteSnapPoint"
+  >
     <template #content>
       <Transition name="fade" mode="out-in">
-        <div v-if="snapPoint === snapPoints.collapsed" class="flex flex-col items-center p-4">
-          <USkeleton v-if="loadingVisibleFeatures" class="h-6 w-[120px]" :ui="{ base: 'bg-red-500' }" />
+        <div
+          v-if="snapPoint === snapPoints.collapsed"
+          class="flex flex-col items-center p-4"
+        >
+          <USkeleton
+            v-if="loadingVisibleFeatures"
+            class="h-6 w-[120px]"
+            :ui="{ base: 'bg-red-500' }"
+          />
           <!-- TODO: FIX TOTAL VISIBLE PLACES WHEN ZOOM OUT MAX -->
           <div v-else class="text-hemo-color-text-secondary font-medium">
             {{ visibleFeaturesCount }} locais visíveis
@@ -14,54 +33,81 @@
         </div>
 
         <!-- TODO: MUST FIX SCROLL. THE LAST 5 ITEMS ARE NEVER SCROLLABLE -->
-        <div v-else-if="snapPoint === snapPoints.partial" class="my-4 overflow-auto">
+        <div
+          v-else-if="snapPoint === snapPoints.partial"
+          class="my-4 overflow-auto"
+        >
           <!-- TODO: MAKE ITEMSHORTINFO CLICKABLE. IT MUST OPEN A MODAL OR A DRAWER WITH THE INFO MISSING -->
-          <ItemShortInfo v-for="item in displayItems" :key="item.key" :loading="item.loading"
-            :title="item.displayName ?? item.name" :address="item.address" :type="item.type"
-            @click="showMoreInfo(item)" />
+          <ItemShortInfo
+            v-for="item in displayItems"
+            :key="item.key"
+            :loading="item.loading"
+            :title="item.displayName ?? item.name"
+            :address="item.address"
+            :type="item.type"
+            @click="showMoreInfo(item)"
+          />
           <!-- BE MY GUEST TRYING TO FIX SCROLL WITHOUT THIS WORKAROUND -->
           <div class="p-2.5">
-            <ItemShortInfo v-for="i in 6" :key="'fake-' + i" :loading="false" title="&nbsp;" address="&nbsp;"
-              type="bloodbank" style="visibility: hidden" />
+            <ItemShortInfo
+              v-for="i in 6"
+              :key="'fake-' + i"
+              :loading="false"
+              title="&nbsp;"
+              address="&nbsp;"
+              type="bloodbank"
+              style="visibility: hidden"
+            />
           </div>
         </div>
 
         <div v-else-if="snapPoint === snapPoints.full">
-          <ItemMoreDetails v-if="moreInfo" class="p-7" :place-details="moreInfo" />
+          <ItemMoreDetails
+            v-if="moreInfo"
+            class="p-7"
+            :place-details="moreInfo"
+          />
         </div>
       </Transition>
     </template>
-
   </UDrawer>
 </template>
 
 <script setup lang="ts">
-import type { PlaceDetails } from '~/composables/states';
-import { useMapStore } from '~/store/map';
-import { useUserStore } from '~/store/users';
+import type { PlaceDetails } from "~/composables/states";
+import { useMapStore } from "~/store/map";
+import { useUserStore } from "~/store/users";
+import { useDrawerStore } from "~/store/drawer";
 // TODO: Think of full state, if it's needed. In case it is: move header to upfront in template, changing z-index.
 
 const userStore = useUserStore();
-const { permitUserLocation } = storeToRefs(userStore)
+const { permitUserLocation } = storeToRefs(userStore);
 const moreInfo = useMoreInfo();
-const shouldOpen = computed(() => permitUserLocation.value !== 'prompt');
+const shouldOpen = computed(() => permitUserLocation.value !== "prompt");
 const mapStore = useMapStore();
-const { getVisibleFeatures: visibleFeatures, isLoadingVisibleFeatures: loadingVisibleFeatures } = storeToRefs(mapStore);
-const visibleFeaturesCount = computed(() => visibleFeatures.value ? visibleFeatures.value.length : undefined);
-const shouldShowMoreInfo = computed(() => moreInfo.value !== null)
+const {
+  getVisibleFeatures: visibleFeatures,
+  isLoadingVisibleFeatures: loadingVisibleFeatures,
+} = storeToRefs(mapStore);
+const visibleFeaturesCount = computed(() =>
+  visibleFeatures.value ? visibleFeatures.value.length : undefined,
+);
+const shouldShowMoreInfo = computed(() => moreInfo.value !== null);
 
 const snapPoints = {
   collapsed: 0.15,
   partial: 0.4,
-  full: 0.6
-}
+  full: 0.6,
+};
 
 const activeSnapPoints = computed(() => {
-  return shouldShowMoreInfo.value ? [snapPoints.collapsed, snapPoints.partial, snapPoints.full]
+  return shouldShowMoreInfo.value
+    ? [snapPoints.collapsed, snapPoints.partial, snapPoints.full]
     : [snapPoints.collapsed, snapPoints.partial];
-})
+});
 
-const snapPoint = ref(snapPoints.collapsed)
+const drawerStore = useDrawerStore();
+const { activeSnapPoint: snapPoint } = storeToRefs(drawerStore);
 const isTransitioning = ref(false);
 
 watch(snapPoint, (newSnapPoint) => {
@@ -85,12 +131,12 @@ const displayItems = computed(() => {
     const count = visibleFeaturesCount.value || 3; // Use real count or 3 as a fallback
     return Array.from({ length: count }, (_, i) => ({
       key: `skeleton-${i}`,
-      loading: true
+      loading: true,
     }));
   }
 
   // Otherwise, show real data
-  return visibleFeatures.value.map(feature => ({
+  return visibleFeatures.value.map((feature) => ({
     ...feature,
     key: feature.name,
     loading: false,
@@ -108,7 +154,6 @@ function onUpadteSnapPoint(newSnapPoint: number) {
   }
   snapPoint.value = Number(newSnapPoint);
 }
-
 </script>
 
 <style scoped>
