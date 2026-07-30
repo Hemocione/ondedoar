@@ -33,8 +33,16 @@ export default defineEventHandler(async (event) => {
   if (!Number.isFinite(requested) || requested <= 0) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid maxDistance' });
   }
-  // Cap para o endpoint não virar dump geográfico do banco inteiro.
-  const maxDistanceMeters = Math.min(requested, MAX_ALLOWED_DISTANCE_METERS);
+  // Recusa acima do teto em vez de clampar: clampar em silêncio faria a resposta
+  // representar um raio de busca diferente do que o cliente pediu, sem ele saber.
+  // O teto existe para o endpoint não virar dump geográfico do banco inteiro.
+  if (requested > MAX_ALLOWED_DISTANCE_METERS) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: `maxDistance exceeds the ${MAX_ALLOWED_DISTANCE_METERS}m limit`,
+    });
+  }
+  const maxDistanceMeters = requested;
 
   return await getNearestActivePoint(longitude, latitude, maxDistanceMeters);
 });
