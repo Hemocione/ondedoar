@@ -14,6 +14,7 @@ interface HemocioneIdPoint {
 // TODO: Improve typing for HemocioneIdPointResponse at key type
 export interface HemocioneIdPointResponse {
   name: string,
+  displayName?: string | null,
   address: string,
   phone: string,
   link: string,
@@ -56,6 +57,7 @@ export async function handleHemocioneIdsPoints(after?: string): Promise<Hemocion
 
   return hemocioneIdPoints.map((hemocioneIdPoint) => ({
     name: hemocioneIdPoint.name,
+    displayName: hemocioneIdPoint.displayName,
     address: hemocioneIdPoint.address,
     phone: '', // TODO: Add phone if available in HemocioneId provider
     link: '', // TODO: Add link if available in HemocioneId provider

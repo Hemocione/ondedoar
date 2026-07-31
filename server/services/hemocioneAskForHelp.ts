@@ -15,6 +15,7 @@ interface HemocioneAskForHelp {
 // TODO: MAKE THIS A PATTERNED INTERFACE FOR ALL RESPONSES
 export interface HemocioneAskForHelpPointResponse {
   name: string,
+  displayName?: string | null,
   address: string,
   phone: string,
   link: string,
@@ -73,6 +74,7 @@ export async function handleHemocioneAskForHelpPoints(after?: string): Promise<H
 
       return {
         name: hemocioneAskForHelpPoint.local_name,
+        displayName: null, // TODO: Populate correctly - Try to use a combination of requester and local
         address: hemocioneAskForHelpPoint.address,
         phone: '', // TODO: Add phone if available in Hemocione Ask For Help provider
         link: parseLink(hemocioneAskForHelpPoint.id),

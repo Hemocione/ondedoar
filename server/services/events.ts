@@ -16,6 +16,7 @@ interface HemocioneDigitalEvents {
 
 export interface HemocioneDigitalEventsPointResponse {
     name: string,
+    displayName?: string | null,
     address: string,
     phone: string,
     link: string,
@@ -28,7 +29,7 @@ export interface HemocioneDigitalEventsPointResponse {
 }
 
 //TODO: Move to utils
-function handleFullAdress(address: string, city?: string, state?: string){
+function handleFullAdress(address: string, city?: string, state?: string) {
 
     return `${address}, ${city} - ${state}`
 }
@@ -57,11 +58,12 @@ export async function handleHemocioneDigitalEventsPoints(after?: string): Promis
 
     return await Promise.all(
         hemocioneDigitalEvents.map(async (hemocioneDigitalEvent) => {
-            const {address, city, state} = hemocioneDigitalEvent.location
+            const { address, city, state } = hemocioneDigitalEvent.location
             const fullAddress = handleFullAdress(address, city, state)
             const coordinates = await handleGeocoding(fullAddress)
-            return {  
+            return {
                 name: hemocioneDigitalEvent.name,
+                displayName: null, // TODO: Populate correctly
                 address: hemocioneDigitalEvent.location.address,
                 phone: '',
                 link: `${config.hemocioneDigitalEvents.apiUrl}/event/${hemocioneDigitalEvent.slug}`,
