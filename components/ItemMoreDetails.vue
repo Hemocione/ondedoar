@@ -73,8 +73,10 @@
 
 <script lang="ts" setup>
 import { useInfoStore } from "~/store/info";
+import { useMapStore } from "~/store/map";
+import { useUserStore } from "~/store/users";
 
-defineProps<{
+const props = defineProps<{
   placeDetails: {
     active: boolean;
     name: string;
@@ -84,6 +86,9 @@ defineProps<{
     type?: string;
     distance?: string;
     address?: string;
+    // O MapLibre serializa as properties da feature, então as coordenadas
+    // chegam como string quando o item vem da lista de pontos visíveis.
+    coordinates?: [number, number] | string;
   };
 }>();
 
@@ -128,7 +133,11 @@ const drawRouteToPlace = async () => {
 
   let destCoords = props.placeDetails.coordinates;
   if (typeof destCoords === 'string') {
-    try { destCoords = JSON.parse(destCoords); } catch (e) { }
+    try {
+      destCoords = JSON.parse(destCoords);
+    } catch {
+      // Segue com o valor cru: a validação abaixo vira mensagem de erro na tela.
+    }
   }
 
   if (!destCoords || !Array.isArray(destCoords)) {
