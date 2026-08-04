@@ -14,6 +14,7 @@
       :track-user-location="true"
       :show-user-location="true"
       :fit-bounds-options="{ maxZoom: 12 }"
+      @geolocate="onGeolocate"
     />
     <PinMarker :features="pinMarkersFeatures" />
 
@@ -25,7 +26,12 @@
 </template>
 
 <script setup>
-import { MglMap, MglGeolocateControl } from "@indoorequal/vue-maplibre-gl";
+import {
+  MglMap,
+  MglGeolocateControl,
+  MglGeoJsonSource,
+  MglLineLayer,
+} from "@indoorequal/vue-maplibre-gl";
 
 import pinAskForHelpUrl from "~/assets/vectors/PinAskForHelp.svg";
 import pinBloodBankUrl from "~/assets/vectors/PinBloodBank.svg";
@@ -51,6 +57,7 @@ const {
   isLoadingVisibleFeatures: loadingVisibleFeatures,
   mapCenter: center,
   zoom: zoomValue,
+  currentRoute,
 } = storeToRefs(mapStore);
 
 const initialCenter = [...center.value];
@@ -106,6 +113,21 @@ const onMapLoad = (event) => {
   // (após zoom, pan, etc., e também no carregamento inicial).
   mapInstance.value.on("idle", updateVisibleFeatures);
 
+  // Uma busca de endereço concluída antes do mapa carregar só escreve no store: o
+  // watch de `center` cai no guard `if (mapInstance.value)` e o destino é perdido
+  // para sempre. Aqui a instância já existe, então aplicamos o destino pendente —
+  // e ele ganha da geolocalização automática, porque o usuário pediu explicitamente.
+  const hasPendingSearch =
+    center.value[0] !== initialCenter[0] || center.value[1] !== initialCenter[1];
+
+  if (hasPendingSearch) {
+    mapInstance.value.flyTo({
+      center: center.value,
+      zoom: 15,
+      offset: [0, 150],
+    });
+  }
+
   const geolocateButton = document.querySelector(".maplibregl-ctrl-geolocate");
 
   if (!geolocateButton) {
@@ -113,7 +135,7 @@ const onMapLoad = (event) => {
     return;
   }
 
-  if (permitUserLocation.value === "granted") {
+  if (!hasPendingSearch && permitUserLocation.value === "granted") {
     geolocateButton.click();
   }
 

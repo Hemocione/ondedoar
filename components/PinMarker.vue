@@ -26,14 +26,17 @@ const props = defineProps<{
 const geojsonSources = {
   type: "FeatureCollection",
   features: props.features.map((feature) => {
-    const { coordinates, ...properties } = feature;
     return {
       type: "Feature",
       geometry: {
         type: "Point",
-        coordinates,
+        coordinates: feature.coordinates,
       },
-      properties,
+      // `coordinates` fica também nas properties: é daqui que a lista e o painel de
+      // detalhes leem o destino do "Como chegar". Sem isso o botão só sabe dizer
+      // "Coordenadas do destino não encontradas" (o MapLibre serializa o array,
+      // por isso ItemMoreDetails aceita string e faz JSON.parse).
+      properties: feature,
     };
   }),
 };

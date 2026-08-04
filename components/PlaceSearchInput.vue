@@ -2,7 +2,7 @@
   <div class="flex justify-center w-full">
     <div class="relative">
       <UInput v-model="place" variant="soft" size="md" type="text" placeholder="Buscar endereço..."
-        icon="i-heroicons-magnifying-glass" :ui="{
+        icon="i-heroicons-magnifying-glass" :loading="isSearching" :ui="{
           base: 'bg-hemo-color-text-primary text-hemo-color-text-secondary rounded-full shadow-lg/5 w-[80vw] text-lg focus:bg-hemo-color-text-primary focus:text-hemo-color-text-secondary hover:bg-hemo-color-text-primary',
           leadingIcon: 'w-5 h-5',
         }" @keydown.enter.prevent="searchAddress" @blur="isSuggestionsVisible = false">
@@ -17,6 +17,10 @@
           />
         </template> -->
       </UInput>
+
+      <p v-if="searchError" class="absolute z-10 w-[80vw] mt-1 px-4 py-2 bg-white rounded-md shadow-lg text-sm text-red-600">
+        {{ searchError }}
+      </p>
 
       <div v-if="isSuggestionsVisible && suggestions.length"
         class="absolute z-10 w-[80vw] mt-1 bg-white rounded-md shadow-lg">
@@ -41,23 +45,32 @@ const place = ref('');
 const { mapCenter } = storeToRefs(mapStore);
 const suggestions = ref<NominatimResult[]>([]);
 const isSuggestionsVisible = ref(false);
+const isSearching = ref(false);
+const searchError = ref<string | null>(null);
 
-let debounceTimer: NodeJS.Timeout;
+let debounceTimer: ReturnType<typeof setTimeout>;
 
 watch(place, (newPlace) => {
   clearTimeout(debounceTimer);
+  searchError.value = null;
   if (newPlace.length > 2) {
     debounceTimer = setTimeout(async () => {
-      const fetchedSuggestions = await getGeocodingSuggestions(newPlace);
-      const uniqueSuggestions = new Map();
-      fetchedSuggestions.forEach(suggestion => {
-        const formattedAddress = formatNominatimAddress(suggestion.address) || suggestion.display_name;
-        if (!uniqueSuggestions.has(formattedAddress)) {
-          uniqueSuggestions.set(formattedAddress, suggestion);
-        }
-      });
-      suggestions.value = Array.from(uniqueSuggestions.values());
-      isSuggestionsVisible.value = true;
+      try {
+        const fetchedSuggestions = await getGeocodingSuggestions(newPlace);
+        const uniqueSuggestions = new Map();
+        fetchedSuggestions.forEach(suggestion => {
+          const formattedAddress = formatNominatimAddress(suggestion.address) || suggestion.display_name;
+          if (!uniqueSuggestions.has(formattedAddress)) {
+            uniqueSuggestions.set(formattedAddress, suggestion);
+          }
+        });
+        suggestions.value = Array.from(uniqueSuggestions.values());
+        isSuggestionsVisible.value = true;
+      } catch (error) {
+        console.error(error);
+        suggestions.value = [];
+        isSuggestionsVisible.value = false;
+      }
     }, 500); // 500ms delay
   } else {
     suggestions.value = [];
@@ -67,12 +80,16 @@ watch(place, (newPlace) => {
 
 async function searchAddress() {
   isSuggestionsVisible.value = false;
+  searchError.value = null;
+  isSearching.value = true;
   try {
     const searchedCoordinates = await handleGeocoding(place.value);
     mapCenter.value = searchedCoordinates;
   } catch (error) {
     console.error(error);
-    // TODO: Add user-facing error handling
+    searchError.value = 'Não encontramos esse endereço. Tente incluir a cidade e o estado.';
+  } finally {
+    isSearching.value = false;
   }
 }
 
