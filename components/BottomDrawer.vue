@@ -44,6 +44,7 @@
             :loading="item.loading"
             :title="item.displayName ?? item.name"
             :address="item.address"
+            :distance="item.distance"
             :type="item.type"
             @click="showMoreInfo(item)"
           />
