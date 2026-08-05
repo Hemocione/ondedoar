@@ -1,5 +1,6 @@
 <template>
   <mgl-map
+    v-if="webglSupported"
     :map-style="style"
     :center="initialCenter"
     :zoom="initialZoom"
@@ -23,6 +24,19 @@
     </mgl-geo-json-source>
 
   </mgl-map>
+
+  <div
+    v-else
+    class="absolute inset-0 flex flex-col items-center justify-center gap-3 p-8 text-center bg-hemo-color-text-primary"
+  >
+    <p class="text-hemo-color-text-secondary font-medium">
+      Seu navegador não conseguiu carregar o mapa interativo.
+    </p>
+    <p class="text-hemo-color-text-secondary text-sm">
+      Tente atualizar a página, usar outro navegador ou verificar se a
+      aceleração de hardware está ativada nas configurações.
+    </p>
+  </div>
 </template>
 
 <script setup>
@@ -49,6 +63,22 @@ const mapStore = useMapStore();
 
 // Basic info
 const style = `https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json`;
+
+// MapLibre GL precisa de WebGL. Sem essa checagem, um driver bloqueado ou
+// aceleracao de hardware desligada nao gera erro nenhum na tela -- o mapa
+// simplesmente nunca aparece, e do ponto de vista do usuario "trava".
+function checkWebglSupported() {
+  try {
+    const canvas = document.createElement("canvas");
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext("webgl2") || canvas.getContext("webgl"))
+    );
+  } catch {
+    return false;
+  }
+}
+const webglSupported = checkWebglSupported();
 
 const mapInstance = ref(null);
 
