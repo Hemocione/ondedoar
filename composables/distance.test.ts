@@ -42,12 +42,12 @@ describe('sortPointsByDistance', () => {
   });
 
   it('ignora pontos sem coordenadas válidas', () => {
-    const points = [
+    const points: { name: string; coordinates?: unknown }[] = [
       { name: 'sem-coord' },
       { name: 'coord-invalida', coordinates: 'not-an-array' },
       { name: 'valido', coordinates: [1, 1] },
     ];
-    const sorted = sortPointsByDistance(points as any, origin);
+    const sorted = sortPointsByDistance(points, origin);
     expect(sorted.map((p) => p.name)).toEqual(['valido']);
   });
 
