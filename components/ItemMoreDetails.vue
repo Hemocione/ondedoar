@@ -126,11 +126,6 @@ const handleComoChegar = async () => {
 };
 
 const drawRouteToPlace = async () => {
-  if (!navigator.geolocation && !userStore.userLocation) {
-    routeError.value = "Geolocalização não é suportada pelo seu navegador.";
-    return;
-  }
-
   let destCoords = props.placeDetails.coordinates;
   if (typeof destCoords === 'string') {
     try {
@@ -142,6 +137,22 @@ const drawRouteToPlace = async () => {
 
   if (!destCoords || !Array.isArray(destCoords)) {
     routeError.value = "Coordenadas do destino não encontradas. Tente novamente.";
+    return;
+  }
+
+  // Sem mapa nao ha onde desenhar a rota: manda pro Google Maps abrir a
+  // navegacao de verdade em vez de tentar buscar/exibir a linha da rota.
+  if (mapStore.webglSupported === false) {
+    const [lng, lat] = destCoords;
+    window.open(
+      `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+      "_blank",
+    );
+    return;
+  }
+
+  if (!navigator.geolocation && !userStore.userLocation) {
+    routeError.value = "Geolocalização não é suportada pelo seu navegador.";
     return;
   }
 

@@ -23,11 +23,19 @@
           Para encontrar os locais de doação mais próximos, precisamos da sua
           localização. Podemos acessar?
         </p>
+
+        <p
+          v-if="errorMessage"
+          class="text-center text-hemo-color-primary text-sm"
+        >
+          {{ errorMessage }}
+        </p>
       </div>
       <div
         class="buttons-wrapper w-full px-4 flex flex-col gap-3 flex flex-col items-center mt-5 mb-5"
       >
         <UButton
+          :loading="requesting"
           :ui="{
             base: 'bg-hemo-color-primary text-hemo-color-text-primary hover:bg-hemo-color-primary-action active:bg-hemo-color-secondary active:text-hemo-color-primary-light',
           }"
@@ -38,6 +46,7 @@
         </UButton>
 
         <UButton
+          v-if="!required"
           class="not-now-buttom w-full flex justify-center items-center hover:bg-gray-100 rounded-md"
           color="neutral"
           @click="closeModal()"
@@ -51,26 +60,35 @@
 <script lang="ts" setup>
 import { useUserStore } from "~/store/users";
 
+const props = defineProps<{
+  required?: boolean;
+}>();
 const userStore = useUserStore();
 const emit = defineEmits(["close"]);
 
-function ativarLocalizacao() {
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      console.log("Coordinates:", pos.coords.latitude, pos.coords.longitude);
-      userStore.setPermissionUserLocation("granted");
-      console.log("User permission:", userStore.permitUserLocation);
-    },
-    (error) => {
-      console.error("Geolocation error:", error);
-      if (error.message === "User denied Geolocation") {
-        userStore.setPermissionUserLocation("denied");
-        console.log("User permission:", userStore.permitUserLocation);
-      }
-    },
-  );
-  console.log("User permission:", userStore.permitUserLocation);
-  emit("close", true);
+const requesting = ref(false);
+const errorMessage = ref<string | null>(null);
+
+async function ativarLocalizacao() {
+  requesting.value = true;
+  errorMessage.value = null;
+  try {
+    const coords = await fetchUserLocation();
+    userStore.setUserLocation(coords);
+    userStore.setPermissionUserLocation("granted");
+    emit("close", true);
+  } catch (error) {
+    console.error("Geolocation error:", error);
+    userStore.setPermissionUserLocation("denied");
+    if (props.required) {
+      errorMessage.value =
+        "Não conseguimos acessar sua localização. Verifique as permissões do navegador e tente novamente.";
+    } else {
+      emit("close", true);
+    }
+  } finally {
+    requesting.value = false;
+  }
 }
 
 function closeModal() {
