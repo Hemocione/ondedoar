@@ -9,6 +9,7 @@ export const useMapStore = defineStore("map", {
     mapCenter: [-43.9345, -19.9167] as number[],
     zoom: 3.91 as number,
     currentRoute: null as any | null,
+    webglSupported: null as boolean | null,
   }),
 
   getters: {
@@ -17,6 +18,7 @@ export const useMapStore = defineStore("map", {
     isLoadingVisibleFeatures: (state) => state.loadingVisibleFeatures,
     getPinMarkersFeatures: (state) => state.pinMarkersFeatures,
     getCurrentRoute: (state) => state.currentRoute,
+    getWebglSupported: (state) => state.webglSupported,
   },
   actions: {
     setLoadingVisibleFeatures(val: boolean) {
@@ -42,6 +44,10 @@ export const useMapStore = defineStore("map", {
 
     setZoom(zoom: number) {
       this.zoom = zoom;
+    },
+
+    setWebglSupported(val: boolean) {
+      this.webglSupported = val;
     },
 
     async fetchPoints() {

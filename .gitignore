@@ -97,3 +97,6 @@ sw.*
 
 # DB
 data/
+
+# Superpowers specs/plans (local only)
+docs/superpowers/
