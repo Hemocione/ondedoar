@@ -79,6 +79,7 @@ function checkWebglSupported() {
   }
 }
 const webglSupported = checkWebglSupported();
+mapStore.setWebglSupported(webglSupported);
 
 const mapInstance = ref(null);
 
