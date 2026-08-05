@@ -2,7 +2,11 @@
   <div>
     <HemocioneHeader v-if="!isIframe" />
     <transition name="fade-zoo">
-      <HemocioneEnableLocation v-if="isShow && !isIframe" @close="isShow = false" />
+      <HemocioneEnableLocation
+        v-if="isShow && !isIframe"
+        :required="mapStore.webglSupported === false"
+        @close="isShow = false"
+      />
     </transition>
     <PlaceSearchInput class="pt-8" />
     <BottomDrawer />
@@ -10,9 +14,11 @@
 </template>
 <script setup lang="ts">
 import { useUserStore } from '~/store/users';
+import { useMapStore } from '~/store/map';
 
 const route = useRoute();
 const userStore = useUserStore();
+const mapStore = useMapStore();
 
 const isShow = ref(false);
 // TODO: MOVE THIS TO A PLUGIN LIKE CAN DONATE
