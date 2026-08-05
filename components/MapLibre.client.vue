@@ -25,18 +25,7 @@
 
   </mgl-map>
 
-  <div
-    v-else
-    class="absolute inset-0 flex flex-col items-center justify-center gap-3 p-8 text-center bg-hemo-color-text-primary"
-  >
-    <p class="text-hemo-color-text-secondary font-medium">
-      Seu navegador não conseguiu carregar o mapa interativo.
-    </p>
-    <p class="text-hemo-color-text-secondary text-sm">
-      Tente atualizar a página, usar outro navegador ou verificar se a
-      aceleração de hardware está ativada nas configurações.
-    </p>
-  </div>
+  <NearestBloodBanksList v-else />
 </template>
 
 <script setup>
