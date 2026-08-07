@@ -9,6 +9,7 @@
       />
     </transition>
     <PlaceSearchInput class="pt-8" />
+    <LocationRadiusFilter class="pt-2" />
     <BottomDrawer />
   </div>
 </template>

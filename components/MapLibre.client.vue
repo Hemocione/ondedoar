@@ -17,7 +17,7 @@
       :fit-bounds-options="{ maxZoom: 12 }"
       @geolocate="onGeolocate"
     />
-    <PinMarker :features="pinMarkersFeatures" />
+    <PinMarker :features="filteredPinMarkersFeatures" />
 
     <mgl-geo-json-source v-if="currentRoute" source-id="route-source" :data="currentRoute">
       <mgl-line-layer layer-id="route-layer" :layout="{ 'line-join': 'round', 'line-cap': 'round' }" :paint="{ 'line-color': '#EF4444', 'line-width': 5, 'line-opacity': 0.8 }" />
@@ -72,12 +72,13 @@ mapStore.setWebglSupported(webglSupported);
 
 const mapInstance = ref(null);
 
-const pinMarkersFeatures = await mapStore.fetchPoints();
+await mapStore.fetchPoints();
 const {
   isLoadingVisibleFeatures: loadingVisibleFeatures,
   mapCenter: center,
   zoom: zoomValue,
   currentRoute,
+  getFilteredPinMarkersFeatures: filteredPinMarkersFeatures,
 } = storeToRefs(mapStore);
 
 const initialCenter = [...center.value];
