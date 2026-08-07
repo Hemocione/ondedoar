@@ -3,7 +3,7 @@
     <HemocioneHeader v-if="!isIframe" />
     <transition name="fade-zoo">
       <HemocioneEnableLocation
-        v-if="isShow && !isIframe"
+        v-if="isShow"
         :required="mapStore.webglSupported === false"
         @close="isShow = false"
       />
