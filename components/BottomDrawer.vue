@@ -84,7 +84,13 @@ import { useDrawerStore } from "~/store/drawer";
 const userStore = useUserStore();
 const { permitUserLocation } = storeToRefs(userStore);
 const moreInfo = useMoreInfo();
-const shouldOpen = computed(() => permitUserLocation.value !== "prompt");
+// O drawer também deve abrir quando um pin é clicado (moreInfo setado em
+// PinMarker.vue), independente do fluxo de permissão de localização já ter
+// sido resolvido — ver detalhes de um ponto não deveria depender de decisão
+// de geolocalização pendente.
+const shouldOpen = computed(
+  () => permitUserLocation.value !== "prompt" || moreInfo.value !== null,
+);
 const mapStore = useMapStore();
 const {
   getVisibleFeatures: visibleFeatures,
