@@ -1,4 +1,7 @@
 import { getPointsParsed } from "~/composables/ondedoar";
+import { filterPointsByRadius } from "~/composables/distance";
+
+export type LocationFilter = { origin: [number, number]; radiusKm: number };
 
 export const useMapStore = defineStore("map", {
   // TODO: IMPROVE TYPING
@@ -10,6 +13,7 @@ export const useMapStore = defineStore("map", {
     zoom: 3.91 as number,
     currentRoute: null as any | null,
     webglSupported: null as boolean | null,
+    locationFilter: null as LocationFilter | null,
   }),
 
   getters: {
@@ -19,6 +23,12 @@ export const useMapStore = defineStore("map", {
     getPinMarkersFeatures: (state) => state.pinMarkersFeatures,
     getCurrentRoute: (state) => state.currentRoute,
     getWebglSupported: (state) => state.webglSupported,
+    getLocationFilter: (state) => state.locationFilter,
+    getFilteredPinMarkersFeatures: (state) => {
+      if (!state.locationFilter) return state.pinMarkersFeatures;
+      const { origin, radiusKm } = state.locationFilter;
+      return filterPointsByRadius(state.pinMarkersFeatures, origin, radiusKm);
+    },
   },
   actions: {
     setLoadingVisibleFeatures(val: boolean) {
@@ -48,6 +58,14 @@ export const useMapStore = defineStore("map", {
 
     setWebglSupported(val: boolean) {
       this.webglSupported = val;
+    },
+
+    setLocationFilter(origin: [number, number], radiusKm: number) {
+      this.locationFilter = { origin, radiusKm };
+    },
+
+    clearLocationFilter() {
+      this.locationFilter = null;
     },
 
     async fetchPoints() {

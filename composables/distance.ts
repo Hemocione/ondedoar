@@ -48,3 +48,19 @@ export function sortPointsByDistance<T extends { coordinates?: unknown }>(
     .sort((a, b) => a.distanceMeters - b.distanceMeters)
     .slice(0, limit);
 }
+
+export function filterPointsByRadius<T extends { coordinates?: unknown }>(
+  points: T[],
+  origin: [number, number],
+  radiusKm: number,
+): (T & { distanceMeters: number })[] {
+  const radiusMeters = radiusKm * 1000;
+  return points
+    .filter(hasValidCoordinates)
+    .map((point) => ({
+      ...point,
+      distanceMeters: haversineDistanceMeters(origin, point.coordinates),
+    }))
+    .filter((point) => point.distanceMeters <= radiusMeters)
+    .sort((a, b) => a.distanceMeters - b.distanceMeters);
+}

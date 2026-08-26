@@ -3,12 +3,13 @@
     <HemocioneHeader v-if="!isIframe" />
     <transition name="fade-zoo">
       <HemocioneEnableLocation
-        v-if="isShow && !isIframe"
+        v-if="isShow"
         :required="mapStore.webglSupported === false"
         @close="isShow = false"
       />
     </transition>
     <PlaceSearchInput class="pt-8" />
+    <LocationRadiusFilter class="pt-2" />
     <BottomDrawer />
   </div>
 </template>

@@ -23,7 +23,11 @@ const props = defineProps<{
   zoom?: number;
 }>();
 
-const geojsonSources = {
+// Precisa ser computed, não um objeto plano fixado no setup: senão a camada
+// de pins nunca atualiza quando `features` muda (ex.: filtro de raio ligado/
+// desligado) — o source do MapLibre continua servindo os dados do primeiro
+// render pra sempre.
+const geojsonSources = computed(() => ({
   type: "FeatureCollection",
   features: props.features.map((feature) => {
     return {
@@ -39,7 +43,7 @@ const geojsonSources = {
       properties: feature,
     };
   }),
-};
+}));
 
 const moreInfo = useMoreInfo();
 const mapStore = useMapStore();
@@ -59,7 +63,7 @@ function settingloadingValue() {
 }
 
 function zoomInPinMarker(pointId: string) {
-  const feature = geojsonSources.features.find((f) => f.properties._id === pointId);
+  const feature = geojsonSources.value.features.find((f) => f.properties._id === pointId);
   
   if (feature && feature.geometry.coordinates) {
     const coord = feature.geometry.coordinates;
