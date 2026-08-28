@@ -1,5 +1,3 @@
-const config = useRuntimeConfig()
-
 // TODO: move interfaces to separate file
 interface HemocioneIdPoint {
   id: string;
@@ -20,6 +18,7 @@ export interface HemocioneIdPointResponse {
   link: string,
   active: boolean,
   type: string,
+  bloodBanksLocationId?: string,
   loc: {
     type: 'Point',
     coordinates: number[]
@@ -27,6 +26,7 @@ export interface HemocioneIdPointResponse {
 }
 
 async function getHemocioneIdsPoints(after?: string): Promise<HemocioneIdPoint[] | undefined> {
+  const config = useRuntimeConfig()
   try {
     console.log(`${config.hemocioneId.apiUrl}/points/onde-doar/sync`)
     console.log('x-secret:', config.hemocioneId.backOfficeSecret)
@@ -48,14 +48,8 @@ async function getHemocioneIdsPoints(after?: string): Promise<HemocioneIdPoint[]
   }
 }
 
-export async function handleHemocioneIdsPoints(after?: string): Promise<HemocioneIdPointResponse[]> {
-  const hemocioneIdPoints = await getHemocioneIdsPoints(after)
-
-  if (!hemocioneIdPoints) {
-    throw new Error('Failed to fetch Hemocione ID points at handleHemocioneIdsPoints');
-  }
-
-  return hemocioneIdPoints.map((hemocioneIdPoint) => ({
+export function mapHemocioneIdPointToResponse(hemocioneIdPoint: HemocioneIdPoint): HemocioneIdPointResponse {
+  return {
     name: hemocioneIdPoint.name,
     displayName: hemocioneIdPoint.displayName,
     address: hemocioneIdPoint.address,
@@ -63,9 +57,20 @@ export async function handleHemocioneIdsPoints(after?: string): Promise<Hemocion
     link: '', // TODO: Add link if available in HemocioneId provider
     active: true,
     type: 'bloodbank',
+    bloodBanksLocationId: hemocioneIdPoint.id,
     loc: {
       type: 'Point',
       coordinates: [hemocioneIdPoint.longitude, hemocioneIdPoint.latitude]
     }
-  }))
+  }
+}
+
+export async function handleHemocioneIdsPoints(after?: string): Promise<HemocioneIdPointResponse[]> {
+  const hemocioneIdPoints = await getHemocioneIdsPoints(after)
+
+  if (!hemocioneIdPoints) {
+    throw new Error('Failed to fetch Hemocione ID points at handleHemocioneIdsPoints');
+  }
+
+  return hemocioneIdPoints.map(mapHemocioneIdPointToResponse)
 }
