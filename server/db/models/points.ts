@@ -37,6 +37,11 @@ const PointsSchema = new Schema({
 		required: true,
 	},
 
+	bloodBanksLocationId: {
+		type: String,
+		required: false,
+	},
+
 	expirationDate: {
 		type: Date,
 		required: true,
