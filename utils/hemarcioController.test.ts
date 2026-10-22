@@ -37,6 +37,20 @@ describe("createHemarcioController", () => {
     expect(chat.setContext).toHaveBeenCalledTimes(2);
   });
 
+  it("nao cria enquanto a tela de localizacao esta visivel e cria uma vez quando some", async () => {
+    let promptVisible = true;
+    const { chat, sdk, controller } = setup(() => !promptVisible);
+    await controller.sync();
+    expect(sdk.createHemocioneChat).not.toHaveBeenCalled();
+    promptVisible = false;
+    await controller.sync();
+    await controller.sync();
+    expect(sdk.createHemocioneChat).toHaveBeenCalledTimes(1);
+    promptVisible = true;
+    await controller.sync();
+    expect(chat.destroy).toHaveBeenCalledTimes(1);
+  });
+
   it("destroi ao entrar em rota excluida e recria ao voltar", async () => {
     const { route, chat, sdk, controller } = setup((p) => p !== "/staff");
     await controller.sync();

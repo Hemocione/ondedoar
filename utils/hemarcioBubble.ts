@@ -11,6 +11,7 @@ export interface HemarcioVisibilityInput {
   iframedQuery: boolean;
   inIframe: boolean;
   path: string;
+  locationPromptVisible?: boolean;
 }
 
 export function resolveHemarcioEnabled(value: unknown): boolean {
@@ -19,6 +20,7 @@ export function resolveHemarcioEnabled(value: unknown): boolean {
 
 export function shouldShowHemarcio(input: HemarcioVisibilityInput): boolean {
   if (!input.enabled) return false;
+  if (input.locationPromptVisible) return false;
   if (input.iframedQuery || input.inIframe) return false;
   if (input.path === '/test' || input.path.startsWith('/test/')) return false;
   return true;
