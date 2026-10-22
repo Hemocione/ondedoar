@@ -67,6 +67,12 @@
         </UButton>
       </div>
       <p v-if="routeError" class="text-red-500 text-xs text-center mt-1">{{ routeError }}</p>
+      <HemarcioAskButton
+        v-if="hemarcioContext"
+        intent="ondedoar.ponto"
+        :context="hemarcioContext"
+        label="Como é doar aqui?"
+      />
     </div>
   </div>
 </template>
@@ -75,6 +81,7 @@
 import { useInfoStore } from "~/store/info";
 import { useMapStore } from "~/store/map";
 import { useUserStore } from "~/store/users";
+import { pointAskContext } from "~/utils/hemarcioAsk";
 
 const props = defineProps<{
   placeDetails: {
@@ -91,6 +98,8 @@ const props = defineProps<{
     coordinates?: [number, number] | string;
   };
 }>();
+
+const hemarcioContext = computed(() => pointAskContext(props.placeDetails.type));
 
 const infoStore = useInfoStore();
 const { isLoadingVisibleFeatures: loadingVisibleFeatures } =
