@@ -1,4 +1,5 @@
-export const HEMARCIO_SDK_URL = 'https://chat.hemocione.com.br/sdk/0.1.1/hemocione-sdk.js';
+// ordem de tentativa: o proximo entra no onerror do anterior
+export const HEMARCIO_SDK_URLS = ['https://chat.hemocione.com.br/sdk/0.2.0/hemocione-sdk.js'];
 
 export const HEMARCIO_BUBBLE_OPTIONS = {
   position: 'bottom-right' as const,
