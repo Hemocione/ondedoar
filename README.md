@@ -290,6 +290,34 @@ ondedoar/
 
 ---
 
+## 📍 API de pontos
+
+Rotas públicas, sem autenticação.
+
+### `GET /api/v1/points/nearby`
+
+Devolve os N pontos ativos mais próximos de uma coordenada, em ordem crescente de distância. Pontos com `expirationDate` no passado ficam de fora.
+
+| Param | Obrigatório | Regra |
+|---|---|---|
+| `lat` | sim | número de -90 a 90 |
+| `lng` | sim | número de -180 a 180 |
+| `maxDistance` | não | metros; default `5000`; máximo `50000` |
+| `limit` | não | inteiro de 1 a 20; default `5` |
+| `type` | não | igualdade exata com o `type` do ponto; até 50 caracteres |
+
+```json
+200 { "results": [ { "point": { "_id": "...", "name": "...", "loc": { "type": "Point", "coordinates": [-43.17, -22.90] }, "type": "Event" }, "distanceMeters": 1234 } ] }
+```
+
+`results` é `[]` quando nada cai no raio. Param inválido, vazio ou repetido devolve `400 { statusCode, statusMessage }` com `Invalid lat`, `Invalid lng`, `Invalid maxDistance`, `maxDistance exceeds the 50000m limit`, `Invalid limit` ou `Invalid type`. Nenhum valor é ajustado em silêncio.
+
+### `GET /api/v1/points/nearest`
+
+Aceita `lat`, `lng` e `maxDistance` (default `500`). Devolve `{ point, distanceMeters }` ou `null`. `limit` e `type` são ignorados. Números aceitam só decimal simples (`-22.9`, `500`); formas como `1e3` ou `0x10` devolvem 400.
+
+---
+
 ## 🤝 Como contribuir
 
 Contribuições são bem-vindas! Siga os passos abaixo:
