@@ -133,15 +133,20 @@ describe("createSdkLoader com lista de URLs", () => {
 });
 
 describe("pointAskContext (gate de tipo)", () => {
-  it.each(["event", "hemocenter"])("mostra e envia o contexto exato para %s", (t) => {
-    expect(pointAskContext(t)).toEqual({
+  it.each([
+    ["event", "event"],
+    ["hemocenter", "hemocenter"],
+    ["bloodbank", "hemocenter"],
+    ["hospital", "hemocenter"],
+  ])("mostra %s com pointType %s", (type, pointType) => {
+    expect(pointAskContext(type)).toEqual({
       product: "ondedoar",
       screen: "point",
-      pointType: t,
+      pointType,
     });
   });
 
-  it.each(["askforhelp", "bloodbank", "hospital", undefined])(
+  it.each(["askforhelp", "other", "toString", undefined])(
     "oculta (null) para %s",
     (t) => {
       expect(pointAskContext(t)).toBeNull();
