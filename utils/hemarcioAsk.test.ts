@@ -132,28 +132,46 @@ describe("createSdkLoader com lista de URLs", () => {
   });
 });
 
-describe("pointAskContext", () => {
-  it("inclui pointType para event e hemocenter", () => {
-    expect(pointAskContext("event")).toEqual({
+describe("pointAskContext (gate de tipo)", () => {
+  it.each(["event", "hemocenter"])("mostra e envia o contexto exato para %s", (t) => {
+    expect(pointAskContext(t)).toEqual({
       product: "ondedoar",
       screen: "point",
-      pointType: "event",
-    });
-    expect(pointAskContext("hemocenter")).toEqual({
-      product: "ondedoar",
-      screen: "point",
-      pointType: "hemocenter",
+      pointType: t,
     });
   });
 
-  it("omite pointType quando ausente ou desconhecido", () => {
-    expect(pointAskContext(undefined)).toEqual({
-      product: "ondedoar",
-      screen: "point",
+  it.each(["askforhelp", "bloodbank", "hospital", undefined])(
+    "oculta (null) para %s",
+    (t) => {
+      expect(pointAskContext(t)).toBeNull();
+    },
+  );
+});
+
+describe("checagem em voo com a flag desligada", () => {
+  it("nao deixa available virar true depois de desligar", async () => {
+    let enabled = true;
+    let release!: (v: boolean) => void;
+    const sdk = {
+      createHemocioneChat: vi.fn(),
+      canAskHemarcio: vi.fn(() => new Promise<boolean>((r) => (release = r))),
+    };
+    const controller = createHemarcioController({
+      getRoute: () => ({}),
+      isVisible: () => false,
+      isEnabled: () => enabled,
+      buildContext: () => ({}),
+      loadSdk: async () => sdk,
+      chatUrl: "x",
+      warn: vi.fn(),
     });
-    expect(pointAskContext("other")).toEqual({
-      product: "ondedoar",
-      screen: "point",
-    });
+    const pending = controller.sync();
+    await vi.waitFor(() => expect(sdk.canAskHemarcio).toHaveBeenCalled());
+    enabled = false;
+    await controller.sync();
+    release(true);
+    await pending;
+    expect(controller.isAvailable()).toBe(false);
   });
 });
