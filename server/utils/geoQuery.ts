@@ -24,8 +24,11 @@ export interface NearbyQuery {
  * coagir. Array (param repetido na query) tambem nao e coordenada.
  */
 const parseQueryNumber = (value: unknown): number => {
-  if (typeof value !== 'string' || value.trim() === '') return NaN;
-  return Number(value);
+  if (typeof value !== 'string') return NaN;
+  // Só decimal simples: Number() aceitaria '0x10' e '1e1'.
+  const trimmed = value.trim();
+  if (!/^-?\d+(\.\d+)?$/.test(trimmed)) return NaN;
+  return Number(trimmed);
 };
 
 export function parseNearbyQuery(

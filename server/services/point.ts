@@ -18,7 +18,15 @@ interface NearestPipelineParams {
 
 export function buildNearestPipeline(q: NearestPipelineParams): PipelineStage[] {
   const query: Record<string, unknown> = { active: true };
-  if (q.excludeExpired) query.expirationDate = { $gte: q.now };
+  // Ponto sem expirationDate (ausente ou null) não vence nunca: em prod nenhum
+  // banco de sangue tem o campo, então $gte sozinho zeraria o resultado.
+  if (q.excludeExpired) {
+    query.$or = [
+      { expirationDate: { $exists: false } },
+      { expirationDate: null },
+      { expirationDate: { $gte: q.now } },
+    ];
+  }
   if (q.type !== undefined) query.type = q.type;
 
   // $geoNear usa o índice 2dsphere já declarado em PointsSchema.
