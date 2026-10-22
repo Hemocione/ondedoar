@@ -1,0 +1,41 @@
+import {
+  HEMARCIO_BUBBLE_OPTIONS,
+  HEMARCIO_SDK_URL,
+  buildHemarcioContext,
+  resolveHemarcioEnabled,
+  shouldShowHemarcio,
+} from '~/utils/hemarcioBubble';
+import {
+  createHemarcioController,
+  createSdkLoader,
+  isInsideIframe,
+  readIframedQuery,
+} from '~/utils/hemarcioController';
+
+export default defineNuxtPlugin((nuxtApp) => {
+  const config = useRuntimeConfig().public;
+  const enabled = resolveHemarcioEnabled(config.hemarcioEnabled);
+  if (!enabled) return;
+
+  const router = useRouter();
+  // lido uma vez: ?iframed=true some apos a primeira navegacao
+  const iframedQuery = readIframedQuery(window.location.search);
+  const inIframe = isInsideIframe();
+
+  const controller = createHemarcioController({
+    getRoute: () => router.currentRoute.value,
+    isVisible: (route) =>
+      shouldShowHemarcio({ enabled, iframedQuery, inIframe, path: route.path }),
+    buildContext: (route) => buildHemarcioContext(route.path),
+    loadSdk: createSdkLoader(HEMARCIO_SDK_URL),
+    chatUrl: String(config.hemarcioChatUrl),
+    chatOptions: HEMARCIO_BUBBLE_OPTIONS,
+  });
+
+  nuxtApp.hook('app:mounted', () => {
+    void controller.sync();
+    router.afterEach(() => {
+      void controller.sync();
+    });
+  });
+});
