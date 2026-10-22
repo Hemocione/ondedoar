@@ -17,6 +17,10 @@ describe('shouldShowHemarcio', () => {
   it('esconde com ?iframed=true', () => {
     expect(shouldShowHemarcio({ ...base, iframedQuery: true })).toBe(false);
   });
+  it('esconde enquanto a tela de localizacao esta visivel', () => {
+    expect(shouldShowHemarcio({ ...base, locationPromptVisible: true })).toBe(false);
+    expect(shouldShowHemarcio({ ...base, locationPromptVisible: false })).toBe(true);
+  });
   it('esconde dentro de iframe', () => {
     expect(shouldShowHemarcio({ ...base, inIframe: true })).toBe(false);
   });

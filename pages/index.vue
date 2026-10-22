@@ -16,12 +16,16 @@
 <script setup lang="ts">
 import { useUserStore } from '~/store/users';
 import { useMapStore } from '~/store/map';
+import { useLocationPromptStore } from '~/store/locationPrompt';
 
 const route = useRoute();
 const userStore = useUserStore();
 const mapStore = useMapStore();
 
 const isShow = ref(false);
+const locationPrompt = useLocationPromptStore();
+watch(isShow, (v) => locationPrompt.setVisible(v));
+onBeforeUnmount(() => locationPrompt.setVisible(false));
 // TODO: MOVE THIS TO A PLUGIN LIKE CAN DONATE
 const isIframe = ref(route.query.iframed === "true")
 
