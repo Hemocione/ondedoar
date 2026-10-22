@@ -1,3 +1,4 @@
+import { useLocationPromptStore } from '~/store/locationPrompt';
 import {
   HEMARCIO_BUBBLE_OPTIONS,
   HEMARCIO_SDK_URL,
@@ -18,6 +19,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   if (!enabled) return;
 
   const router = useRouter();
+  const locationPrompt = useLocationPromptStore();
   // lido uma vez: ?iframed=true some apos a primeira navegacao
   const iframedQuery = readIframedQuery(window.location.search);
   const inIframe = isInsideIframe();
@@ -25,7 +27,13 @@ export default defineNuxtPlugin((nuxtApp) => {
   const controller = createHemarcioController({
     getRoute: () => router.currentRoute.value,
     isVisible: (route) =>
-      shouldShowHemarcio({ enabled, iframedQuery, inIframe, path: route.path }),
+      shouldShowHemarcio({
+        enabled,
+        iframedQuery,
+        inIframe,
+        path: route.path,
+        locationPromptVisible: locationPrompt.visible,
+      }),
     buildContext: (route) => buildHemarcioContext(route.path),
     loadSdk: createSdkLoader(HEMARCIO_SDK_URL),
     chatUrl: String(config.hemarcioChatUrl),
@@ -37,5 +45,11 @@ export default defineNuxtPlugin((nuxtApp) => {
     router.afterEach(() => {
       void controller.sync();
     });
+    watch(
+      () => locationPrompt.visible,
+      () => {
+        void controller.sync();
+      },
+    );
   });
 });
