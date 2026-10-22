@@ -314,7 +314,7 @@ Devolve os N pontos ativos mais próximos de uma coordenada, em ordem crescente 
 
 ### `GET /api/v1/points/nearest`
 
-Aceita `lat`, `lng` e `maxDistance` (default `500`). Devolve `{ point, distanceMeters }` ou `null`. `limit` e `type` são ignorados.
+Aceita `lat`, `lng` e `maxDistance` (default `500`). Devolve `{ point, distanceMeters }` ou `null`. `limit` e `type` são ignorados. Números aceitam só decimal simples (`-22.9`, `500`); formas como `1e3` ou `0x10` devolvem 400.
 
 ---
 

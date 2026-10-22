@@ -32,8 +32,18 @@ describe('buildNearestPipeline', () => {
     const [geoNear] = buildNearestPipeline({ ...base, excludeExpired: true });
     expect(geoQuery(geoNear)).toEqual({
       active: true,
-      expirationDate: { $gte: base.now },
+      $or: [
+        { expirationDate: { $exists: false } },
+        { expirationDate: null },
+        { expirationDate: { $gte: base.now } },
+      ],
     });
+  });
+
+  it('mantem $geoNear como primeiro estagio com excludeExpired', () => {
+    const stages = buildNearestPipeline({ ...base, excludeExpired: true });
+    expect(Object.keys(stages[0])).toEqual(['$geoNear']);
+    expect(stages[1]).toEqual({ $limit: 3 });
   });
 
   it('filtra por type quando informado', () => {

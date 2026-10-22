@@ -38,6 +38,12 @@ describe('parseNearbyQuery', () => {
     expect(errorOf({ lat: '0', lng: '0', maxDistance })).toBe('Invalid maxDistance');
   });
 
+  it.each(['0x10', '1e1', '1e3'])('recusa forma nao decimal %s', (v) => {
+    expect(errorOf({ lat: v, lng: '0' })).toBe('Invalid lat');
+    expect(errorOf({ lat: '0', lng: v })).toBe('Invalid lng');
+    expect(errorOf({ lat: '0', lng: '0', maxDistance: v })).toBe('Invalid maxDistance');
+  });
+
   it('recusa maxDistance acima do teto e aceita o teto', () => {
     expect(errorOf({ lat: '0', lng: '0', maxDistance: '50001' })).toBe(
       'maxDistance exceeds the 50000m limit',
@@ -46,7 +52,7 @@ describe('parseNearbyQuery', () => {
     expect(r.ok && r.value.maxDistanceMeters).toBe(50000);
   });
 
-  it.each(['0', '21', '2.5', '-1', 'abc', ''])('recusa limit %j', (limit) => {
+  it.each(['0', '21', '2.5', '5.5', '1e1', '0x10', '-1', 'abc', ''])('recusa limit %j', (limit) => {
     expect(errorOf({ lat: '0', lng: '0', limit })).toBe('Invalid limit');
   });
 
@@ -55,7 +61,7 @@ describe('parseNearbyQuery', () => {
     expect(r.ok && r.value.limit).toBe(Number(limit));
   });
 
-  it.each(['', ['a', 'b'], 'x'.repeat(51)])('recusa type %j', (type) => {
+  it.each(['', ['a', 'b'], { a: 'b' }, 'x'.repeat(51)])('recusa type %j', (type) => {
     expect(errorOf({ lat: '0', lng: '0', type })).toBe('Invalid type');
   });
 
