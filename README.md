@@ -160,6 +160,12 @@ HEMOCIONE_ASK_FOR_HELP_SECRET=secret
 # Chave de evento do Inngest (obtenha em https://www.inngest.com/)
 INNGEST_EVENT_KEY=devInngestApiKey
 
+# ─── Chat do Hemárcio (bolha no mapa) ──────────────────────────────────────────
+# Desligado por padrão. Use true para ver a bolha (vale em runtime, sem rebuild).
+NUXT_PUBLIC_HEMARCIO_ENABLED=false
+# Padrão: chat.d.hemocione.com.br fora de produção e chat.hemocione.com.br em produção
+# NUXT_PUBLIC_HEMARCIO_CHAT_URL=https://chat.d.hemocione.com.br
+
 # ─── Vercel (definido automaticamente em deploys na Vercel) ────────────────────
 # VERCEL_ENV=production
 # VERCEL_URL=seu-projeto.vercel.app
