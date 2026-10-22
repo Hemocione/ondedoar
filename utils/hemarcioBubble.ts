@@ -1,9 +1,9 @@
-export const HEMARCIO_SDK_URL = 'https://chat.hemocione.com.br/sdk/0.1.0/hemocione-sdk.js';
+export const HEMARCIO_SDK_URL = 'https://chat.hemocione.com.br/sdk/0.1.1/hemocione-sdk.js';
 
 export const HEMARCIO_BUBBLE_OPTIONS = {
   position: 'bottom-right' as const,
-  // sobe a bolha acima do puxador da gaveta de resultados no celular
-  offset: { x: 16, y: 88 },
+  // o puxador e o contador da gaveta ficam centralizados; o canto direito esta livre
+  offset: { x: 16, y: 16 },
 };
 
 export interface HemarcioVisibilityInput {
