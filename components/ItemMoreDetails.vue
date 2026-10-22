@@ -68,6 +68,7 @@
       </div>
       <p v-if="routeError" class="text-red-500 text-xs text-center mt-1">{{ routeError }}</p>
       <HemarcioAskButton
+        v-if="hemarcioContext"
         intent="ondedoar.ponto"
         :context="hemarcioContext"
         label="Como é doar aqui?"
