@@ -22,10 +22,9 @@ const getSiteUrl = () => {
 };
 
 const hemarcioChatUrl =
-  process.env.HEMARCIO_CHAT_URL ||
-  (process.env.VERCEL_ENV === "production"
+  process.env.VERCEL_ENV === "production"
     ? "https://chat.hemocione.com.br"
-    : "https://chat.d.hemocione.com.br");
+    : "https://chat.d.hemocione.com.br";
 
 const siteUrl = getSiteUrl();
 console.log("Site URL:", siteUrl);
@@ -77,7 +76,8 @@ export default defineNuxtConfig({
       siteUrl,
       hemocioneIdUrl: process.env.HEMOCIONEID_URL ?? "http://localhost:8080",
       hemocioneIdApiUrl: process.env.HEMOCIONEID_API_URL ?? "http://localhost:8080",
-      hemarcioEnabled: process.env.HEMARCIO_ENABLED === "true",
+      // sobrescreva em runtime com NUXT_PUBLIC_HEMARCIO_ENABLED / NUXT_PUBLIC_HEMARCIO_CHAT_URL
+      hemarcioEnabled: false,
       hemarcioChatUrl,
     },
     db: {

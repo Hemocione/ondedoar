@@ -5,26 +5,12 @@ import {
   resolveHemarcioEnabled,
   shouldShowHemarcio,
 } from '~/utils/hemarcioBubble';
-
-function isInsideIframe(): boolean {
-  try {
-    return window.self !== window.top;
-  } catch {
-    return true;
-  }
-}
-
-function loadSdk(): Promise<void> {
-  if (window.HemocioneSDK) return Promise.resolve();
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = HEMARCIO_SDK_URL;
-    script.async = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error('Falha ao carregar o SDK do Hemarcio'));
-    document.head.appendChild(script);
-  });
-}
+import {
+  createHemarcioController,
+  createSdkLoader,
+  isInsideIframe,
+  readIframedQuery,
+} from '~/utils/hemarcioController';
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig().public;
@@ -32,44 +18,24 @@ export default defineNuxtPlugin((nuxtApp) => {
   if (!enabled) return;
 
   const router = useRouter();
-  const iframedQuery = new URLSearchParams(window.location.search).get('iframed') === 'true';
+  // lido uma vez: ?iframed=true some apos a primeira navegacao
+  const iframedQuery = readIframedQuery(window.location.search);
   const inIframe = isInsideIframe();
-  const visibleFor = (path: string) => shouldShowHemarcio({ enabled, iframedQuery, inIframe, path });
 
-  let chat: HemarcioChatHandle | null = null;
-  let loading = false;
-
-  async function sync(path: string) {
-    if (!visibleFor(path)) {
-      chat?.destroy();
-      chat = null;
-      return;
-    }
-    if (chat) {
-      chat.setContext(buildHemarcioContext(path));
-      return;
-    }
-    if (loading) return;
-    loading = true;
-    try {
-      await loadSdk();
-      if (!visibleFor(router.currentRoute.value.path) || chat) return;
-      chat = window.HemocioneSDK!.createHemocioneChat({
-        chatUrl: String(config.hemarcioChatUrl),
-        context: buildHemarcioContext(router.currentRoute.value.path),
-        ...HEMARCIO_BUBBLE_OPTIONS,
-      });
-    } catch (err) {
-      console.warn(err);
-    } finally {
-      loading = false;
-    }
-  }
+  const controller = createHemarcioController({
+    getRoute: () => router.currentRoute.value,
+    isVisible: (route) =>
+      shouldShowHemarcio({ enabled, iframedQuery, inIframe, path: route.path }),
+    buildContext: (route) => buildHemarcioContext(route.path),
+    loadSdk: createSdkLoader(HEMARCIO_SDK_URL),
+    chatUrl: String(config.hemarcioChatUrl),
+    chatOptions: HEMARCIO_BUBBLE_OPTIONS,
+  });
 
   nuxtApp.hook('app:mounted', () => {
-    sync(router.currentRoute.value.path);
-    router.afterEach((to) => {
-      sync(to.path);
+    void controller.sync();
+    router.afterEach(() => {
+      void controller.sync();
     });
   });
 });

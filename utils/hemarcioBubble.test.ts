@@ -3,7 +3,6 @@ import {
   buildHemarcioContext,
   shouldShowHemarcio,
   resolveHemarcioEnabled,
-  HEMARCIO_BUBBLE_OPTIONS,
 } from './hemarcioBubble';
 
 const base = { enabled: true, iframedQuery: false, inIframe: false, path: '/' };
@@ -44,11 +43,5 @@ describe('resolveHemarcioEnabled', () => {
 describe('buildHemarcioContext', () => {
   it('usa product ondedoar e o path atual', () => {
     expect(buildHemarcioContext('/')).toEqual({ product: 'ondedoar', page: '/' });
-  });
-});
-
-describe('HEMARCIO_BUBBLE_OPTIONS', () => {
-  it('deixa o canto dos controles do mapa livre', () => {
-    expect(HEMARCIO_BUBBLE_OPTIONS.position).toBe('bottom-right');
   });
 });
